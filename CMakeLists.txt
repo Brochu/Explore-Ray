@@ -7,6 +7,7 @@ set (DEBUG_OPTIONS /Zi /Od)
 set (RELEASE_OPTIONS /O2)
 
 set (headers
+    ${CMAKE_CURRENT_LIST_DIR}/include/raylib/raygui.h
 )
 
 set (source
