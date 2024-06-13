@@ -1,5 +1,8 @@
 #include <stdio.h>
+
 #include "raylib.h"
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
 
 #define WIDTH 800
 #define HEIGHT 800
@@ -15,6 +18,10 @@ int main(int argc, char **argv) {
 
         ClearBackground(BLACK);
         DrawText("Hello to first Raylib window", 0, 0, 20, LIGHTGRAY);
+
+        if (GuiButton((Rectangle){24, 24, 130, 30}, "#191#Output to cmdline")) {
+            printf("CLICKED!\n");
+        }
 
         EndDrawing();
     }
