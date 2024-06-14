@@ -11,6 +11,8 @@
 #define B_WIDTH 75.f
 #define B_HEIGHT 30.f
 
+bool checked = false;
+
 int main(int argc, char **argv) {
     printf("[MAIN] Program START\n");
 
@@ -20,7 +22,7 @@ int main(int argc, char **argv) {
     while(!WindowShouldClose()) {
         BeginDrawing();
 
-        ClearBackground(BLACK);
+        ClearBackground(WHITE);
         DrawText("Hello to first Raylib window", 0, 750, 20, LIGHTGRAY);
 
         char buttonText[255];
@@ -33,6 +35,11 @@ int main(int argc, char **argv) {
                 printf("CLICKED on index = %i!\n", i);
             }
         }
+
+        if (GuiLabelButton( (Rectangle){150, 775, 130, 30}, "This label clickable" )) {
+            printf("Label clicked\n");
+        }
+        GuiCheckBox( (Rectangle){300, 775, 20, 20}, "CHECKBOX", &checked);
 
         EndDrawing();
     }
