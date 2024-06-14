@@ -22,11 +22,11 @@ int main(int argc, char **argv) {
     while(!WindowShouldClose()) {
         BeginDrawing();
 
-        ClearBackground(WHITE);
+        ClearBackground(BLACK);
         DrawText("Hello to first Raylib window", 0, 750, 20, LIGHTGRAY);
 
         char buttonText[255];
-        for (int i = 1; i <= 222; i++) {
+        for (int i = 0; i < 222; i++) {
             int col = i / 25;
             int row = i % 25;
             sprintf_s(buttonText, 255, B_TEXT, i, i);
@@ -39,7 +39,9 @@ int main(int argc, char **argv) {
         if (GuiLabelButton( (Rectangle){150, 775, 130, 30}, "This label clickable" )) {
             printf("Label clicked\n");
         }
-        GuiCheckBox( (Rectangle){300, 775, 20, 20}, "CHECKBOX", &checked);
+        if (GuiCheckBox( (Rectangle){300, 775, 20, 20}, "CHECKBOX", &checked)) {
+            printf("Checkbox %s\n", checked ? "CHECKED" : "UNCHECKED");
+        }
 
         EndDrawing();
     }
