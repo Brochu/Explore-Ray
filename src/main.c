@@ -20,7 +20,7 @@ void DrawIconSwatch() {
         int row = i % 25;
         sprintf_s(buttonText, 255, B_TEXT, i, i);
 
-        if (GuiButton((Rectangle){(col * B_WIDTH), (row * B_HEIGHT), B_WIDTH, B_HEIGHT}, buttonText)) {
+        if (GuiButton((Rectangle){(col * B_WIDTH + 15), (row * B_HEIGHT + 15), B_WIDTH, B_HEIGHT}, buttonText)) {
             printf("CLICKED on index = %i!\n", i);
         }
     }
@@ -45,6 +45,7 @@ int main(int argc, char **argv) {
         if (GuiCheckBox( (Rectangle){300, 775, 20, 20}, "CHECKBOX", &checked)) {
             printf("Checkbox %s\n", checked ? "CHECKED" : "UNCHECKED");
         }
+        GuiStatusBar( (Rectangle) {0, 0, 800, 10}, "status : ONLINE");
 
         EndDrawing();
     }
