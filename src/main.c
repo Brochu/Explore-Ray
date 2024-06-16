@@ -1,30 +1,12 @@
 #include <stdio.h>
 
+#include "iconswatch.h"
 #include "raylib.h"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
 #define WIDTH 800
-#define HEIGHT 800
-
-#define B_TEXT "#%i# Icon %i"
-#define B_WIDTH 85.f
-#define B_HEIGHT 30.f
-
-bool checked = false;
-
-void DrawIconSwatch() {
-    char buttonText[255];
-    for (int i = 0; i < 222; i++) {
-        int col = i / 25;
-        int row = i % 25;
-        sprintf_s(buttonText, 255, B_TEXT, i, i);
-
-        if (GuiButton((Rectangle){(col * B_WIDTH + 15), (row * B_HEIGHT + 15), B_WIDTH, B_HEIGHT}, buttonText)) {
-            printf("CLICKED on index = %i!\n", i);
-        }
-    }
-}
+#define HEIGHT 600
 
 int main(int argc, char **argv) {
     printf("[MAIN] Program START\n");
@@ -35,17 +17,9 @@ int main(int argc, char **argv) {
 
     while(!WindowShouldClose()) {
         BeginDrawing();
-        ClearBackground(BLACK);
 
+        ClearBackground(BLACK);
         DrawIconSwatch();
-        DrawText("Hello to first Raylib window", 0, 750, 20, LIGHTGRAY);
-        if (GuiLabelButton( (Rectangle){150, 775, 130, 30}, "This label clickable" )) {
-            printf("Label clicked\n");
-        }
-        if (GuiCheckBox( (Rectangle){300, 775, 20, 20}, "CHECKBOX", &checked)) {
-            printf("Checkbox %s\n", checked ? "CHECKED" : "UNCHECKED");
-        }
-        GuiStatusBar( (Rectangle) {0, 0, 800, 10}, "status : ONLINE");
 
         EndDrawing();
     }
