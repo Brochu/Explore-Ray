@@ -15,9 +15,9 @@ int main(int argc, char **argv) {
     printf("[MAIN] Parsing particle effects catalog...\n");
     Catalog c = ParseCatalog();
     for (int i = 0; i < c.size; ++i) {
-        printf("\t- '%s'\n", c.names[i]);
+        printf("'%s', ", c.names[i]);
     }
-    printf("[MAIN] DONE (%zu items parsed)\n", c.size);
+    printf("\n[MAIN] DONE (%zu items parsed)\n", c.size);
 
     printf("[MAIN] Drawing main window...\n");
     InitWindow(WIDTH, HEIGHT, "[ALPHA] Raylib Exploration");
