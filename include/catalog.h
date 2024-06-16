@@ -7,3 +7,4 @@ typedef struct {
 } Catalog;
 
 Catalog ParseCatalog();
+void DeleteCatalog(Catalog *c);

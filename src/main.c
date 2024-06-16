@@ -34,6 +34,7 @@ int main(int argc, char **argv) {
     }
 
     CloseWindow();
+    DeleteCatalog(&c);
 
     printf("[MAIN] DONE\n");
     printf("[MAIN] Program END\n");

@@ -32,3 +32,8 @@ Catalog ParseCatalog() {
 
     return res;
 }
+
+void DeleteCatalog(Catalog *c) {
+    free(c->_nameblock);
+    free(c->names);
+}
