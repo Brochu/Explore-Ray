@@ -12,6 +12,7 @@ set (headers
 
 set (source
     ${CMAKE_CURRENT_LIST_DIR}/src/main.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/iconswatch.c
 )
 
 set (libs
