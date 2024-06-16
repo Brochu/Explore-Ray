@@ -8,6 +8,7 @@ set (RELEASE_OPTIONS /O2)
 
 set (headers
     ${CMAKE_CURRENT_LIST_DIR}/include/raylib/raygui.h
+    ${CMAKE_CURRENT_LIST_DIR}/include/iconswatch.h
 )
 
 set (source
