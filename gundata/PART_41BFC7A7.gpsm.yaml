@@ -1,0 +1,69 @@
+DNAType: GPSM<UniqueID32>
+PSLT: {CNST: 0x00000001}
+MAXP: {CNST: 0x00000001}
+GRTE: {CNST: 1}
+LTME: {CNST: 0x000000A0}
+MBSP: {CNST: 0x00000004}
+SIZE: {CNST: 0}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/TXTR_BAF74BDA.png}
+PMOP:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 3}
+  - {CNST: 3.75}
+PMRT:
+  CNST:
+  - {CNST: -30}
+  - {CNST: 0}
+  - {CNST: 0}
+PMSC:
+  CNST:
+  - {CNST: 0.9}
+  - {CNST: 3}
+  - {CNST: 9}
+PMCL:
+  FADE:
+    a:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+    b:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0.498039}
+      - {CNST: 0}
+    endFrame:
+      RLPT:
+        percent: {CNST: 100}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+PMAB: True
+PMUS: True
+PMOO: False

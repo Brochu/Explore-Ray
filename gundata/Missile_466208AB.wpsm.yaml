@@ -1,0 +1,31 @@
+DNAType: WPSM<UniqueID32>
+IVEC:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0.2}
+  - {CNST: 0}
+PSVM:
+  WIND:
+    windVelocity:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0.8}
+      - {CNST: 0}
+    factor: {CNST: 0.03}
+PSLT: {CNST: 0x00000200}
+PSCL:
+  CNST:
+  - {CNST: 3}
+  - {CNST: 3}
+  - {CNST: 3}
+TRAT: {CNST: 360}
+APSM: {CNST: MP1/SamGunFx/PART_869CC8BE.gpsm.yaml}
+ASW1: {CNST: MP1/SamGunFx/SWHC_0EE85DDD.swsh.yaml}
+ASW2: {CNST: MP1/SamGunFx/SWHC_970A3BDC.swsh.yaml}
+ASW3: {CNST: MP1/SamGunFx/SWHC_CF66821D.swsh.yaml}
+COLR: {CNST: MP1/SamGunFx/CRSC_D27D6EDD.crsm.yaml}
+VMD2: True
+APSO: True
+HOMG: True
+AP11: True
+AP21: True

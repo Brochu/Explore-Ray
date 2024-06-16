@@ -1,0 +1,72 @@
+DNAType: GPSM<UniqueID32>
+PSLT: {CNST: 0x00000008}
+MAXP: {CNST: 0x00000010}
+GRTE: {CNST: 1}
+LTME:
+  RAND:
+    a: {CNST: 0x0000000A}
+    b: {CNST: 0x00000018}
+EMTR:
+  SETR:
+    ILOC:
+      ANGC:
+        angleXBias: {CNST: 0}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 360}
+        angleYRange: {CNST: 360}
+        magnitude: {CNST: 0.1}
+    IVEC: {}
+MBSP: {CNST: 0x00000004}
+SIZE:
+  IRND:
+    a: {CNST: 0.5}
+    b: {CNST: 1}
+ROTA:
+  IRND:
+    a: {CNST: -360}
+    b: {CNST: 360}
+TEXR:
+  ATEX:
+    tex: MP1/SamGunFx/electricalA_D7714ADE.png
+    tileW: {CNST: 0x00000020}
+    tileH: {CNST: 0x00000020}
+    strideW: {CNST: 0x00000020}
+    strideH: {CNST: 0x00000020}
+    cycleFrames: {CNST: 0x00000040}
+    loop: True
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+KSSM:
+  a: 0x00000000
+  b: 0x00000001
+  endFrame: 0x00000078
+  d: 0x00000000
+  spawns:
+  - startFrame: 0x00000000
+    systems:
+    - {id: MP1/SamGunFx/PART_562044B1.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+AAPH: True
+PMOO: False

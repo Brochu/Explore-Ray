@@ -1,0 +1,94 @@
+DNAType: GPSM<UniqueID32>
+PSLT: {CNST: 0x0000001E}
+MAXP: {CNST: 0x00000020}
+GRTE: {CNST: 1}
+LTME:
+  RAND:
+    a: {CNST: 0x00000018}
+    b: {CNST: 0x00000040}
+EMTR:
+  SETR:
+    ILOC:
+      ANGC:
+        angleXBias: {CNST: 0}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 360}
+        angleYRange: {CNST: 360}
+        magnitude: {CNST: 3}
+    IVEC:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0.01}
+MBSP: {CNST: 0x00000004}
+SIZE: {CNST: 0}
+ROTA: {CNST: 0}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/glow2_29782CA6.png}
+PMDL: {CNST: MP1/SamGunFx/CMDL_44EC766D.blend}
+PMRT:
+  RTOV:
+    a:
+      RAND:
+        a: {CNST: -360}
+        b: {CNST: 360}
+PMCL:
+  CFDE:
+    a:
+      CNST:
+      - {CNST: 0.996078}
+      - {CNST: 0.996078}
+      - {CNST: 0.996078}
+      - {CNST: 0}
+    b:
+      CNST:
+      - {CNST: 0.996078}
+      - {CNST: 0.996078}
+      - {CNST: 0.996078}
+      - {CNST: 0.75}
+    startFrame:
+      RLPT:
+        percent: {CNST: 25}
+    endFrame:
+      RLPT:
+        percent: {CNST: 100}
+VEL1:
+  IMPL:
+    implodePoint:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 1}
+    velocityScale: {CNST: 0.05}
+    maxRadius: {CNST: 10000}
+    minRadius: {CNST: 1}
+    enableMinRadius: True
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+AAPH: True
+PMAB: True
+OPTS: True
+PMOO: False

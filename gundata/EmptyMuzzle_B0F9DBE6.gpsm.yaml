@@ -1,0 +1,39 @@
+DNAType: GPSM<UniqueID32>
+MAXP: {CNST: 0x00000000}
+GRTE: {CNST: 1}
+LTME: {CNST: 0x00000080}
+EMTR:
+  SETR:
+    ILOC:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+    IVEC: {}
+MBSP: {CNST: 0x00000004}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+PMOO: False

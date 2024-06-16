@@ -1,0 +1,86 @@
+DNAType: SWSH<UniqueID32>
+PSLT: {CNST: 0x0000000B}
+TIME: {CNST: 1}
+LRAD: {CNST: 0.05}
+RRAD: {CNST: 1}
+LENG: {CNST: 0x00000013}
+COLR:
+  CNST:
+  - {CNST: 0.27451}
+  - {CNST: 0.160784}
+  - {CNST: 1}
+  - MULT:
+      a: {CNST: 0.5}
+      b:
+        KEYE:
+          percentageTween: 0x00000000
+          unk1: 0x00000000
+          loop: False
+          unk2: 0x01
+          loopEnd: 0x00000012
+          loopStart: 0x00000000
+          keys:
+          - 1
+          - 1.0031192
+          - 1.0113426
+          - 1.0229688
+          - 1.0362962
+          - 1.0496238
+          - 1.06125
+          - 1.0694734
+          - 1.0725926
+          - 1.0689063
+          - 1.056713
+          - 1.0343113
+          - 1
+          - 0.85104
+          - 0.63152
+          - 0.38847998
+          - 0.16895999
+          - 0.02
+SIDE: {CNST: 0x00000003}
+IROT:
+  RAND:
+    a: {CNST: 0}
+    b: {CNST: 360}
+POFS:
+  CIRC:
+    circleOffset:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+    circleNormal:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 1}
+      - {CNST: 0}
+    angleConstant:
+      RAND:
+        a: {CNST: 0}
+        b: {CNST: 360}
+    angleLinear: {CNST: 0}
+    circleRadius:
+      KEYE:
+        percentageTween: 0x00000000
+        unk1: 0x00000000
+        loop: False
+        unk2: 0x01
+        loopEnd: 0x00000009
+        loopStart: 0x00000000
+        keys:
+        - 0
+        - 0.1
+        - 0.10524782
+        - 0.10728863
+        - 0.10699709
+        - 0.10524782
+        - 0.10291545
+        - 0.10087464
+        - 0.1
+SPLN: {CNST: 0x00000000}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/TXTR_4F8F47E9.png}
+TSPN: {CNST: 0x00000001}
+LLRD: True
+AALP: True

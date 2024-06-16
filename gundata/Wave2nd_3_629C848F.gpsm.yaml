@@ -1,0 +1,105 @@
+DNAType: GPSM<UniqueID32>
+MAXP: {CNST: 0x00000006}
+GRTE: {CNST: 1}
+COLR:
+  FADE:
+    a:
+      CNST:
+      - {CNST: 0.666667}
+      - {CNST: 0}
+      - {CNST: 1}
+      - {CNST: 1}
+    b:
+      CNST:
+      - {CNST: 0.333333}
+      - {CNST: 0}
+      - {CNST: 0.498039}
+      - {CNST: 0}
+    endFrame: {CNST: 6}
+LTME: {CNST: 0x00000006}
+EMTR:
+  SEMR:
+    position:
+      CNST:
+      - {CNST: 0}
+      - KEYE:
+          percentageTween: 0x00000000
+          unk1: 0x00000000
+          loop: True
+          unk2: 0x01
+          loopEnd: 0x00000020
+          loopStart: 0x00000000
+          keys:
+          - 0.55
+          - 0.54028904
+          - 0.52897185
+          - 0.51615924
+          - 0.501962
+          - 0.4864909
+          - 0.46985668
+          - 0.45217013
+          - 0.433542
+          - 0.41408312
+          - 0.3939042
+          - 0.37311605
+          - 0.35182944
+          - 0.3301551
+          - 0.30820385
+          - 0.2860864
+          - 0.2639136
+          - 0.24179618
+          - 0.21984494
+          - 0.19817059
+          - 0.17688398
+          - 0.1560958
+          - 0.1359169
+          - 0.11645799
+          - 0.09782989
+          - 0.08014333
+          - 0.06350913
+          - 0.048038
+          - 0.033840768
+          - 0.021028163
+          - 0.009710996
+          - 0
+      - {CNST: 0}
+    velocity:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+MBSP: {CNST: 0x00000004}
+SIZE: {CNST: 0.4}
+ROTA:
+  IRND:
+    a: {CNST: -360}
+    b: {CNST: 360}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/glowR_262026CA.png}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+AAPH: True
+PMOO: False

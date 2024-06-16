@@ -1,0 +1,44 @@
+DNAType: GPSM<UniqueID32>
+PSLT: {CNST: 0x00000001}
+MAXP: {CNST: 0x00000000}
+GRTE: {CNST: 0}
+LTME: {CNST: 0x00000080}
+MBSP: {CNST: 0x00000004}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+KSSM:
+  a: 0x00000000
+  b: 0x00000001
+  endFrame: 0x00000078
+  d: 0x00000000
+  spawns:
+  - startFrame: 0x00000000
+    systems:
+    - {id: MP1/SamGunFx/PART_3647E1D9.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+    - {id: MP1/SamGunFx/PART_7DD5D180.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+    - {id: MP1/SamGunFx/PART_2344DEA0.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+    - {id: MP1/SamGunFx/PART_A8629EDE.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+PMOO: False

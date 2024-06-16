@@ -1,0 +1,100 @@
+DNAType: GPSM<UniqueID32>
+SEED: {CNST: 0x00000005}
+MAXP: {CNST: 0x00000004}
+GRTE: {CNST: 1}
+LTME:
+  IRND:
+    a: {CNST: 0x00000006}
+    b: {CNST: 0x0000000C}
+EMTR:
+  SEMR:
+    position:
+      CNST:
+      - RAND:
+          a: {CNST: -0.005}
+          b: {CNST: 0.005}
+      - RAND:
+          a: {CNST: 0.425}
+          b: {CNST: 0.35}
+      - RAND:
+          a: {CNST: 0}
+          b: {CNST: 0.085}
+    velocity:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+MBSP: {CNST: 0x00000004}
+SIZE: {CNST: 0}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/TXTR_E66C6949.png}
+PMOP:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0.02}
+  - {CNST: 0.08}
+PMRT:
+  CNST:
+  - {CNST: 0}
+  - IRND:
+      a: {CNST: -30}
+      b: {CNST: 45}
+  - {CNST: 0}
+PMSC:
+  CNST:
+  - {CNST: 0.075}
+  - {CNST: 0.1}
+  - LFTW:
+      a: {CNST: 0.1}
+      b: {CNST: 0.25}
+PMCL:
+  FADE:
+    a:
+      CNST:
+      - {CNST: 0.215686}
+      - {CNST: 0.529412}
+      - {CNST: 1}
+      - {CNST: 1}
+    b:
+      CNST:
+      - {CNST: 0.333333}
+      - {CNST: 0.666667}
+      - {CNST: 1}
+      - {CNST: 0.3}
+    endFrame:
+      RLPT:
+        percent: {CNST: 100}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+ADV1:
+  MULT:
+    a: {CNST: 0.0025}
+    b:
+      RLPT:
+        percent: {CNST: 100}
+PMAB: True
+PMUS: True
+PMOO: False

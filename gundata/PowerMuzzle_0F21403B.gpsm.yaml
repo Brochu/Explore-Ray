@@ -1,0 +1,74 @@
+DNAType: GPSM<UniqueID32>
+PSTS: {CNST: 1}
+MAXP: {CNST: 0x00000009}
+GRTE: {CNST: 1}
+COLR:
+  FADE:
+    a:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0.3}
+    b:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 0.643137}
+      - {CNST: 0.066667}
+      - {CNST: 0.15}
+    endFrame: {CNST: 6}
+LTME: {CNST: 0x00000006}
+EMTR:
+  SETR:
+    ILOC:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+    IVEC: {}
+MBSP: {CNST: 0x00000004}
+SIZE:
+  IRND:
+    a: {CNST: 0.25}
+    b: {CNST: 0.38}
+ROTA:
+  IRND:
+    a: {CNST: -360}
+    b: {CNST: 360}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/burst2still_EEFE25E0.png}
+VEL1:
+  WIND:
+    windVelocity:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+    factor: {CNST: 0}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+AAPH: True
+PMOO: False

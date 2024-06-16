@@ -1,0 +1,81 @@
+DNAType: GPSM<UniqueID32>
+MAXP: {CNST: 0x00000010}
+GRTE: {CNST: 1}
+COLR:
+  FADE:
+    a:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0.5}
+    b:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 1}
+      - {CNST: 0}
+    endFrame:
+      RLPT:
+        percent: {CNST: 100}
+LTME:
+  RAND:
+    a: {CNST: 0x00000008}
+    b: {CNST: 0x00000010}
+EMTR:
+  SETR:
+    ILOC:
+      ANGC:
+        angleXBias: {CNST: 0}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 360}
+        angleYRange: {CNST: 360}
+        magnitude: {CNST: 0.3}
+    IVEC: {}
+MBSP: {CNST: 0x00000004}
+SIZE:
+  RAND:
+    a: {CNST: 0.8}
+    b: {CNST: 2}
+ROTA:
+  IRND:
+    a: {CNST: -360}
+    b: {CNST: 360}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/glow2_29782CA6.png}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+KSSM:
+  a: 0x00000000
+  b: 0x00000001
+  endFrame: 0x00000078
+  d: 0x00000000
+  spawns:
+  - startFrame: 0x00000000
+    systems:
+    - {id: MP1/SamGunFx/PART_9D58E24F.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+AAPH: True
+PMOO: False

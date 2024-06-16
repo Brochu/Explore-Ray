@@ -1,0 +1,99 @@
+DNAType: GPSM<UniqueID32>
+PSLT: {CNST: 0x00000010}
+MAXP: {CNST: 0x00000000}
+GRTE: {CNST: 0}
+LTME: {CNST: 0x00000080}
+MBSP: {CNST: 0x00000004}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+KSSM:
+  a: 0x00000000
+  b: 0x00000001
+  endFrame: 0x00000078
+  d: 0x00000000
+  spawns:
+  - startFrame: 0x00000000
+    systems:
+    - {id: MP1/SamGunFx/PART_9971AF90.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+    - {id: MP1/SamGunFx/PART_AB69E618.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+    - {id: MP1/SamGunFx/PART_328B8019.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+    - {id: MP1/SamGunFx/PART_E5EBD978.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+    - {id: MP1/SamGunFx/PART_5F5EDA78.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+  - startFrame: 0x00000002
+    systems:
+    - {id: MP1/SamGunFx/PART_3FDB8B2A.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+  - startFrame: 0x00000003
+    systems:
+    - {id: MP1/SamGunFx/PART_AF601D5F.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+  - startFrame: 0x00000006
+    systems:
+    - {id: MP1/SamGunFx/PART_C11D1651.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+    - {id: MP1/SamGunFx/PART_E82603D2.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+    - {id: MP1/SamGunFx/PART_0093C991.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+LTYP: {CNST: 0x00000001}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 0.615686}
+  - {CNST: 0}
+  - {CNST: 1}
+LINT:
+  KEYE:
+    percentageTween: 0x00000000
+    unk1: 0x00000000
+    loop: False
+    unk2: 0x01
+    loopEnd: 0x00000023
+    loopStart: 0x00000000
+    keys:
+    - 1
+    - 0.99489933
+    - 0.9898929
+    - 0.9848915
+    - 0.9798059
+    - 0.9745469
+    - 0.9690254
+    - 0.96315205
+    - 0.9568378
+    - 0.94999343
+    - 0.9425297
+    - 0.9343574
+    - 0.92538744
+    - 0.91553056
+    - 0.9046976
+    - 0.8927993
+    - 0.87974656
+    - 0.86545014
+    - 0.8498208
+    - 0.8327694
+    - 0.8142068
+    - 0.7940437
+    - 0.772191
+    - 0.7244436
+    - 0.66605866
+    - 0.5993219
+    - 0.5265189
+    - 0.44993553
+    - 0.37185743
+    - 0.29457036
+    - 0.22035994
+    - 0.15151203
+    - 0.09031225
+    - 0.039046314
+    - 0
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000002}
+LFOR: {CNST: 0.05}
+LSLA: {CNST: 45}
+PMOO: False

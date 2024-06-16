@@ -1,0 +1,67 @@
+DNAType: GPSM<UniqueID32>
+MAXP: {CNST: 0x00000003}
+GRTE:
+  RAND:
+    a: {CNST: 0.3}
+    b: {CNST: 1}
+COLR:
+  FADE:
+    a:
+      CNST:
+      - {CNST: 0.890196}
+      - {CNST: 0.431373}
+      - {CNST: 0}
+      - {CNST: 0.75}
+    b:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0.75}
+    endFrame:
+      RLPT:
+        percent: {CNST: 100}
+LTME: {CNST: 0x00000008}
+EMTR:
+  SETR:
+    ILOC:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+    IVEC: {}
+MBSP: {CNST: 0x00000004}
+SIZE: {CNST: 0.3}
+ROTA:
+  RAND:
+    a: {CNST: -360}
+    b: {CNST: 360}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/glow15_BE5BB014.png}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+AAPH: True
+PMOO: False

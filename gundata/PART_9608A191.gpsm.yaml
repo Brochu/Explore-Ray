@@ -1,0 +1,96 @@
+DNAType: GPSM<UniqueID32>
+MAXP: {CNST: 0x0000001E}
+GRTE: {CNST: 0.7}
+COLR:
+  FADE:
+    a:
+      FADE:
+        a:
+          CNST:
+          - {CNST: 1}
+          - {CNST: 1}
+          - {CNST: 1}
+          - {CNST: 0}
+        b:
+          CNST:
+          - {CNST: 1}
+          - {CNST: 1}
+          - {CNST: 1}
+          - {CNST: 0.175}
+        endFrame: {CNST: 4}
+    b:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0}
+    endFrame:
+      RLPT:
+        percent: {CNST: 100}
+LTME:
+  RAND:
+    a: {CNST: 0x00000028}
+    b: {CNST: 0x00000040}
+EMTR:
+  SETR:
+    ILOC:
+      ANGC:
+        angleXBias: {CNST: 0}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 360}
+        angleYRange: {CNST: 360}
+        magnitude: {CNST: 0.3}
+    IVEC: {}
+MBSP: {CNST: 0x00000004}
+SIZE:
+  IRND:
+    a: {CNST: 1}
+    b: {CNST: 2}
+ROTA:
+  IRND:
+    a: {CNST: -360}
+    b: {CNST: 360}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/glow7_79B5BD15.png}
+VEL1:
+  GRAV:
+    acceleration:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: -0.001}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+KSSM:
+  a: 0x00000000
+  b: 0x00000001
+  endFrame: 0x00000078
+  d: 0x00000000
+  spawns:
+  - startFrame: 0x00000000
+    systems:
+    - {id: MP1/SamGunFx/PART_0DADEDFE.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+LTYP: {CNST: 0x00000001}
+LCLR:
+  CNST:
+  - {CNST: 0.160784}
+  - {CNST: 0.301961}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 7.5}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000002}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+PMOO: False

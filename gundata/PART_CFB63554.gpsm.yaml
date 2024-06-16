@@ -1,0 +1,94 @@
+DNAType: GPSM<UniqueID32>
+MAXP: {CNST: 0x0000000B}
+GRTE: {CNST: 1}
+COLR:
+  FADE:
+    a:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0.6}
+    b:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+    endFrame: {CNST: 8}
+LTME: {CNST: 0x0000000A}
+EMTR:
+  SETR:
+    ILOC:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+    IVEC:
+      CIRC:
+        circleOffset:
+          CNST:
+          - {CNST: 0}
+          - {CNST: 0}
+          - {CNST: 0}
+        circleNormal:
+          CNST:
+          - {CNST: 0}
+          - {CNST: -0.05}
+          - {CNST: 0}
+        angleConstant: {CNST: 0}
+        angleLinear: {CNST: 100}
+        circleRadius: {CNST: 0.05}
+MBSP: {CNST: 0x00000004}
+SIZE:
+  SCAL:
+    dv: {CNST: 0.4}
+ROTA:
+  SCAL:
+    dv: {CNST: 50}
+TEXR:
+  ATEX:
+    tex: MP1/SamGunFx/TXTR_FEB6DBF9.png
+    tileW: {CNST: 0x00000020}
+    tileH: {CNST: 0x00000020}
+    strideW: {CNST: 0x00000020}
+    strideH: {CNST: 0x00000020}
+    cycleFrames: {CNST: 0x00000040}
+    loop: True
+VEL1:
+  GRAV:
+    acceleration:
+      CNST:
+      - {CNST: 0}
+      - {CNST: -0.05}
+      - {CNST: 0}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000001}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 0.847059}
+  - {CNST: 0.537255}
+  - {CNST: 1}
+LINT: {CNST: 25}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000002}
+LFOR: {CNST: 10}
+LSLA: {CNST: 45}
+SORT: True
+LIT_: True
+AAPH: True
+VMD1: True
+PMOO: False

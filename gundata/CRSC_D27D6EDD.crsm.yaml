@@ -1,0 +1,18 @@
+DNAType: CRSM<UniqueID32>
+DEFS: {CNST: MP1/SamGunFx/PART_A594B6AE.gpsm.yaml}
+DDCL: {CNST: MP1/SamGunFx/Decal_scorch_F1576127.dpsm.yaml}
+CODL: {CNST: MP1/SamGunFx/Decal_scorch_F1576127.dpsm.yaml}
+MEDL: {CNST: MP1/SamGunFx/Decal_scorch_F1576127.dpsm.yaml}
+GRDL: {CNST: MP1/SamGunFx/Decal_scorch_F1576127.dpsm.yaml}
+ICDL: {CNST: MP1/SamGunFx/Decal_scorch_F1576127.dpsm.yaml}
+WODL: {CNST: MP1/SamGunFx/Decal_scorch_F1576127.dpsm.yaml}
+DSFX: 0x000000C0
+CSFX: 0x000000C0
+DSHX: 0x0000012F
+SHFX: 0x0000012F
+4DRN: 0x00000221
+BHFX: 0x0000012F
+PBHX: 0x0000012F
+6DRN: 0x00001381
+RNGE: 90
+FOFF: 1

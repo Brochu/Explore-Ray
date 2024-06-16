@@ -1,0 +1,212 @@
+DNAType: GPSM<UniqueID32>
+MAXP: {CNST: 0x00000020}
+GRTE:
+  KEYE:
+    percentageTween: 0x00000000
+    unk1: 0x00000000
+    loop: False
+    unk2: 0x00
+    loopEnd: 0x00000078
+    loopStart: 0x00000000
+    keys:
+    - 1
+    - 0.9
+    - 0.8
+    - 0.7
+    - 0.6
+    - 0.5
+    - 0.4
+    - 0.3
+    - 0.2
+    - 0.1
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+COLR:
+  FADE:
+    a:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0.2}
+    b:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0}
+    endFrame: {CNST: 64}
+LTME: {CNST: 0x00000040}
+EMTR:
+  SPHE:
+    sphereOrigin:
+      CNST:
+      - {CNST: 0}
+      - RAND:
+          a: {CNST: 0.1}
+          b: {CNST: 0.5}
+      - {CNST: 0.01}
+    sphereRadius: {CNST: 0.1}
+    magnitude: {CNST: 0.005}
+MBSP: {CNST: 0x00000004}
+SIZE:
+  IRND:
+    a: {CNST: 0.2}
+    b: {CNST: 0.35}
+ROTA:
+  IRND:
+    a: {CNST: 0}
+    b: {CNST: 350}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/zorch1_snow2_30E7FF06.png}
+VEL1:
+  WIND:
+    windVelocity:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0.001}
+    factor: {CNST: 0.1}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+KSSM:
+  a: 0x00000000
+  b: 0x00000001
+  endFrame: 0x00000078
+  d: 0x00000000
+  spawns:
+  - startFrame: 0x00000000
+    systems:
+    - {id: MP1/SamGunFx/PART_515D16EE.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+PMOO: False

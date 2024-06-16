@@ -1,0 +1,5 @@
+DNAType: WPSM<UniqueID32>
+PSLT: {CNST: 0x00000080}
+COLR: {CNST: MP1/SamGunFx/CRSC_E7D207EC.crsm.yaml}
+VMD2: True
+APSO: True

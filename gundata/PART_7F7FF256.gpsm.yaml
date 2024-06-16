@@ -1,0 +1,73 @@
+DNAType: GPSM<UniqueID32>
+POFS:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0.3}
+MAXP: {CNST: 0x0000000C}
+GRTE: {CNST: 1}
+COLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 0.15}
+LTME:
+  RAND:
+    a: {CNST: 0x00000008}
+    b: {CNST: 0x00000010}
+EMTR:
+  SETR:
+    ILOC:
+      ANGC:
+        angleXBias: {CNST: 0}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 360}
+        angleYRange: {CNST: 360}
+        magnitude: {CNST: 0.2}
+    IVEC: {}
+MBSP: {CNST: 0x00000004}
+SIZE:
+  IRND:
+    a: {CNST: 0.4}
+    b: {CNST: 0.8}
+ROTA:
+  IRND:
+    a: {CNST: -360}
+    b: {CNST: 360}
+TEXR:
+  ATEX:
+    tex: MP1/SamGunFx/electrical_4E470390.png
+    tileW: {CNST: 0x00000020}
+    tileH: {CNST: 0x00000020}
+    strideW: {CNST: 0x00000020}
+    strideH: {CNST: 0x00000020}
+    cycleFrames: {CNST: 0x00000040}
+    loop: True
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+AAPH: True
+PMOO: False

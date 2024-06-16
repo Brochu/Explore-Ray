@@ -1,0 +1,106 @@
+DNAType: GPSM<UniqueID32>
+PSLT: {CNST: 0x00000001}
+POFS:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 1}
+MAXP: {CNST: 0x00000006}
+GRTE:
+  PULS:
+    aDuration: {CNST: 0x00000001}
+    bDuration: {CNST: 0x0000270F}
+    a: {CNST: 10}
+    b: {CNST: 0}
+LTME:
+  RAND:
+    a: {CNST: 0x00000018}
+    b: {CNST: 0x00000028}
+EMTR:
+  SETR:
+    ILOC:
+      ANGC:
+        angleXBias: {CNST: 0}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 360}
+        angleYRange: {CNST: 360}
+        magnitude: {CNST: 1}
+    IVEC:
+      ANGC:
+        angleXBias: {CNST: 90}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 180}
+        angleYRange: {CNST: 180}
+        magnitude:
+          RAND:
+            a: {CNST: 0.1}
+            b: {CNST: 0.5}
+MBSP: {CNST: 0x00000004}
+SIZE: {CNST: 0}
+PMDL: {CNST: MP1/SamGunFx/CMDL_C27804C3.blend}
+PMRT:
+  CNST:
+  - PAP1: {}
+  - SCAL:
+      dv: {CNST: 5}
+  - {CNST: 0}
+PMSC:
+  RTOV:
+    a:
+      PAP2: {}
+PMCL:
+  CFDE:
+    a:
+      CNST:
+      - {CNST: 0.992157}
+      - {CNST: 0.992157}
+      - {CNST: 0.992157}
+      - {CNST: 0.75}
+    b:
+      CNST:
+      - {CNST: 0.996078}
+      - {CNST: 0.996078}
+      - {CNST: 0.996078}
+      - {CNST: 0}
+    startFrame:
+      RLPT:
+        percent: {CNST: 100}
+    endFrame:
+      RLPT:
+        percent: {CNST: 85}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+ADV1:
+  IRND:
+    a: {CNST: 0}
+    b: {CNST: 360}
+ADV2:
+  IRND:
+    a: {CNST: 2.5}
+    b: {CNST: 3}
+PMAB: True
+OPTS: True
+PMOO: False

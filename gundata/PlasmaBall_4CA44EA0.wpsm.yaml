@@ -1,0 +1,45 @@
+DNAType: WPSM<UniqueID32>
+IVEC:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+PSVM:
+  WIND:
+    windVelocity:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 3}
+      - {CNST: 0}
+    factor:
+      KEYE:
+        percentageTween: 0x00000000
+        unk1: 0x00000000
+        loop: False
+        unk2: 0x00
+        loopEnd: 0x00000010
+        loopStart: 0x00000000
+        keys:
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 1
+        - 1
+        - 1
+        - 1
+        - 1
+        - 1
+        - 1
+        - 1
+        - 1
+        - 1
+        - 1
+PSLT: {CNST: 0x00000030}
+APSM: {CNST: MP1/SamGunFx/PART_12E26DEF.gpsm.yaml}
+COLR: {CNST: MP1/SamGunFx/CRSC_C2ECA4DF.crsm.yaml}
+VMD2: True
+APSO: True
+EWTR: False
+LWTR: False

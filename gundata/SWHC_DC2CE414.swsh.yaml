@@ -1,0 +1,39 @@
+DNAType: SWSH<UniqueID32>
+PSLT: {CNST: 0x00000028}
+TIME: {CNST: 1}
+LRAD:
+  LFTW:
+    a: {CNST: 0.1}
+    b: {CNST: 0}
+RRAD: {CNST: 1}
+LENG: {CNST: 0x0000000C}
+COLR:
+  FADE:
+    a:
+      CNST:
+      - {CNST: 0.333333}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0.375}
+    b:
+      CNST:
+      - {CNST: 0.666667}
+      - {CNST: 0}
+      - {CNST: 1}
+      - {CNST: 0}
+    endFrame:
+      RLPT:
+        percent: {CNST: 100}
+SIDE: {CNST: 0x00000003}
+IROT:
+  SCAL:
+    dv: {CNST: 5}
+POFS:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+SPLN: {CNST: 0x00000000}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/glow7_79B5BD15.png}
+LLRD: True

@@ -1,0 +1,10 @@
+DNAType: CRSM<UniqueID32>
+DEFS: {CNST: MP1/SamGunFx/PART_B31928E0.gpsm.yaml}
+DDCL: {CNST: MP1/SamGunFx/DPSC_4960169D.dpsm.yaml}
+CODL: {CNST: MP1/SamGunFx/DPSC_4960169D.dpsm.yaml}
+MEDL: {CNST: MP1/SamGunFx/DPSC_4960169D.dpsm.yaml}
+GRDL: {CNST: MP1/SamGunFx/DPSC_4960169D.dpsm.yaml}
+ICDL: {CNST: MP1/SamGunFx/DPSC_4960169D.dpsm.yaml}
+WODL: {CNST: MP1/SamGunFx/DPSC_4960169D.dpsm.yaml}
+RNGE: 50
+FOFF: 0.2

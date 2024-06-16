@@ -1,0 +1,107 @@
+DNAType: GPSM<UniqueID32>
+LENG: {CNST: 1}
+WIDT: {CNST: 1}
+MAXP: {CNST: 0x00000012}
+GRTE:
+  RAND:
+    a: {CNST: 0.1}
+    b: {CNST: 0.5}
+COLR:
+  FADE:
+    a:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0}
+      - {CNST: 1}
+    b:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+    endFrame:
+      RLPT:
+        percent: {CNST: 100}
+LTME:
+  RAND:
+    a: {CNST: 0x00000020}
+    b: {CNST: 0x00000040}
+EMTR:
+  SETR:
+    ILOC:
+      CIRC:
+        circleOffset:
+          CNST:
+          - {CNST: 0}
+          - {CNST: 0}
+          - {CNST: 0.05}
+        circleNormal:
+          CNST:
+          - {CNST: 0}
+          - {CNST: 0}
+          - {CNST: 1}
+        angleConstant: {CNST: 0}
+        angleLinear: {CNST: 70}
+        circleRadius: {CNST: 0.06}
+    IVEC:
+      ANGC:
+        angleXBias: {CNST: 0}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 30}
+        angleYRange: {CNST: 30}
+        magnitude:
+          RAND:
+            a: {CNST: 0.005}
+            b: {CNST: 0.01}
+MBSP: {CNST: 0x00000004}
+SIZE:
+  IRND:
+    a: {CNST: 0.01}
+    b: {CNST: 0.03}
+ROTA:
+  RAND:
+    a: {CNST: -360}
+    b: {CNST: 360}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/glow2_29782CA6.png}
+VEL1:
+  GRAV:
+    acceleration:
+      CNST:
+      - RAND:
+          a: {CNST: -0.001}
+          b: {CNST: 0.001}
+      - RAND:
+          a: {CNST: -0.001}
+          b: {CNST: 0.001}
+      - RAND:
+          a: {CNST: -0.001}
+          b: {CNST: 0.001}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+AAPH: True
+PMOO: False

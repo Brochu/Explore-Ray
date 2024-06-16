@@ -1,0 +1,14 @@
+DNAType: WPSM<UniqueID32>
+IVEC:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0.8}
+  - {CNST: 0}
+PSLT: {CNST: 0x00000200}
+APSM: {CNST: MP1/SamGunFx/PART_9608A191.gpsm.yaml}
+APS2: {CNST: MP1/SamGunFx/PART_5A3387FD.gpsm.yaml}
+ASW1: {CNST: MP1/SamGunFx/SWHC_DC2CE414.swsh.yaml}
+COLR: {CNST: MP1/SamGunFx/CRSC_D8A600AF.crsm.yaml}
+VMD2: True
+APSO: True
+AP11: True

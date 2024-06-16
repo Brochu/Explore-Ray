@@ -1,0 +1,97 @@
+DNAType: GPSM<UniqueID32>
+PSLT: {CNST: 0x00000001}
+MAXP: {CNST: 0x00000023}
+GRTE:
+  PULS:
+    aDuration: {CNST: 0x00000001}
+    bDuration: {CNST: 0x0000270F}
+    a: {CNST: 50}
+    b: {CNST: 0}
+COLR:
+  FADE:
+    a:
+      CNST:
+      - {CNST: 0.666667}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0.75}
+    b:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0}
+    endFrame:
+      RLPT:
+        percent: {CNST: 100}
+LTME:
+  RAND:
+    a: {CNST: 0x00000018}
+    b: {CNST: 0x00000040}
+EMTR:
+  SETR:
+    ILOC:
+      ANGC:
+        angleXBias: {CNST: 0}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 360}
+        angleYRange: {CNST: 360}
+        magnitude: {CNST: 0.1}
+    IVEC:
+      ANGC:
+        angleXBias: {CNST: 0}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 360}
+        angleYRange: {CNST: 360}
+        magnitude:
+          RAND:
+            a: {CNST: 0.1}
+            b: {CNST: 0.5}
+MBSP: {CNST: 0x00000004}
+SIZE:
+  IRND:
+    a: {CNST: 0.07}
+    b: {CNST: 0.2}
+ROTA:
+  RAND:
+    a: {CNST: -360}
+    b: {CNST: 360}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/zorch1_B8ACF65E.png}
+VEL1:
+  GRAV:
+    acceleration:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - CHAN:
+          a: {CNST: 0}
+          b: {CNST: -0.01}
+          thresholdFrame: {CNST: 0x00000018}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+AAPH: True
+PMOO: False

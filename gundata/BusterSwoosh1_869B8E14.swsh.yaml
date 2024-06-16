@@ -1,0 +1,30 @@
+DNAType: SWSH<UniqueID32>
+TIME: {CNST: 1}
+LRAD:
+  LFTW:
+    a: {CNST: 0.2}
+    b: {CNST: 0.33333}
+RRAD: {CNST: 0.66667}
+LENG: {CNST: 0x00000019}
+COLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 0.5}
+SIDE: {CNST: 0x00000003}
+IROT:
+  SCAL:
+    dv: {CNST: 10}
+SPLN: {CNST: 0x00000000}
+TEXR:
+  ATEX:
+    tex: MP1/SamGunFx/electrical_4E470390.png
+    tileW: {CNST: 0x00000020}
+    tileH: {CNST: 0x00000020}
+    strideW: {CNST: 0x00000020}
+    strideH: {CNST: 0x00000020}
+    cycleFrames: {CNST: 0x00000020}
+    loop: True
+LLRD: True
+AALP: True

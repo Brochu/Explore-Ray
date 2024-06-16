@@ -1,0 +1,96 @@
+DNAType: GPSM<UniqueID32>
+PSLT: {CNST: 0x00000018}
+LENG:
+  IRND:
+    a: {CNST: 3}
+    b: {CNST: 10}
+WIDT: {CNST: 2}
+MAXP: {CNST: 0x00000010}
+GRTE: {CNST: 16}
+COLR:
+  CFDE:
+    a:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0.225}
+    b:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0}
+    startFrame:
+      RLPT:
+        percent: {CNST: 80}
+    endFrame:
+      RLPT:
+        percent: {CNST: 100}
+LTME:
+  RAND:
+    a: {CNST: 0x00000020}
+    b: {CNST: 0x0000002D}
+EMTR:
+  SETR:
+    ILOC:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+    IVEC:
+      ANGC:
+        angleXBias: {CNST: 0}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 360}
+        angleYRange: {CNST: 360}
+        magnitude:
+          RAND:
+            a: {CNST: 0.07}
+            b: {CNST: 0.13}
+MBSP: {CNST: 0x00000004}
+SIZE:
+  LFTW:
+    a: {CNST: 1}
+    b: {CNST: 4}
+ROTA:
+  IRND:
+    a: {CNST: -360}
+    b: {CNST: 360}
+TEXR:
+  ATEX:
+    tex: MP1/SamGunFx/electricalA_D7714ADE.png
+    tileW: {CNST: 0x00000020}
+    tileH: {CNST: 0x00000020}
+    strideW: {CNST: 0x00000020}
+    strideH: {CNST: 0x00000020}
+    cycleFrames: {CNST: 0x00000010}
+    loop: True
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+AAPH: True
+OPTS: True
+PMOO: False

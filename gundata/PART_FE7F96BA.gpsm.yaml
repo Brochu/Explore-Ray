@@ -1,0 +1,69 @@
+DNAType: GPSM<UniqueID32>
+PSLT: {CNST: 0x00000001}
+MAXP: {CNST: 0x00000001}
+GRTE: {CNST: 1}
+LTME: {CNST: 0x00000019}
+EMTR:
+  SETR:
+    ILOC:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+    IVEC: {}
+MBSP: {CNST: 0x00000004}
+SIZE: {CNST: 0}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/TXTR_801AC712.png}
+PMDL: {CNST: MP1/SamGunFx/CMDL_56A2B4E2.blend}
+PMRT:
+  CNST:
+  - {CNST: -60}
+  - {CNST: 190}
+  - {CNST: 0}
+PMSC:
+  CNST:
+  - LFTW:
+      a: {CNST: 1}
+      b: {CNST: 2}
+  - LFTW:
+      a: {CNST: 0}
+      b: {CNST: 9}
+  - LFTW:
+      a: {CNST: 1}
+      b: {CNST: 2}
+PMCL:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 0.75}
+NCSY: {CNST: 0x00000001}
+CSSD: {CNST: 0x0000003C}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+PMAB: True
+OPTS: True
+PMOO: False

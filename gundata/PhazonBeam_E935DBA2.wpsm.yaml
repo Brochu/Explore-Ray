@@ -1,0 +1,68 @@
+DNAType: WPSM<UniqueID32>
+IORN:
+  CNST:
+  - RAND:
+      a: {CNST: -2}
+      b: {CNST: 2}
+  - {CNST: 0}
+  - RAND:
+      a: {CNST: -2}
+      b: {CNST: 2}
+IVEC:
+  ADD_:
+    a:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+    b:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+PSOV:
+  ANGC:
+    angleXBias: {CNST: 0}
+    angleYBias: {CNST: 0}
+    angleXRange: {CNST: 360}
+    angleYRange: {CNST: 360}
+    magnitude:
+      RAND:
+        a: {CNST: 1}
+        b: {CNST: 10}
+PSVM:
+  WIND:
+    windVelocity:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 6}
+      - {CNST: 0}
+    factor:
+      KEYE:
+        percentageTween: 0x00000000
+        unk1: 0x00000000
+        loop: False
+        unk2: 0x01
+        loopEnd: 0x00000009
+        loopStart: 0x00000000
+        keys:
+        - 0
+        - 0.273843
+        - 0.31063166
+        - 0.34852844
+        - 0.38597235
+        - 0.42140245
+        - 0.4532577
+        - 0.47997722
+        - 0.5
+PSLT: {CNST: 0x0000000B}
+TRAT: {CNST: 10}
+APSM: {CNST: MP1/SamGunFx/PART_DFD8915F.gpsm.yaml}
+APS2: {CNST: MP1/SamGunFx/PART_5C764CFA.gpsm.yaml}
+ASW1: {CNST: MP1/SamGunFx/SWHC_AF83C794.swsh.yaml}
+COLR: {CNST: MP1/SamGunFx/CRSC_9C223FB2.crsm.yaml}
+VMD2: True
+APSO: True
+HOMG: True
+EWTR: False
+LWTR: False

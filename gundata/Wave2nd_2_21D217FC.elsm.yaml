@@ -1,0 +1,83 @@
+DNAType: ELSM<UniqueID32>
+SLIF:
+  RAND:
+    a: {CNST: 0x00000001}
+    b: {CNST: 0x00000006}
+GRAT:
+  RAND:
+    a: {CNST: 0.1}
+    b: {CNST: 0.3}
+SCNT: {CNST: 0x00000010}
+SSEG: {CNST: 0x00000010}
+IEMT:
+  SEMR:
+    position:
+      CIRC:
+        circleOffset:
+          CNST:
+          - {CNST: 0}
+          - {CNST: 0}
+          - {CNST: 0}
+        circleNormal:
+          CNST:
+          - {CNST: 0}
+          - {CNST: 1}
+          - {CNST: 0}
+        angleConstant: {CNST: 0}
+        angleLinear:
+          RAND:
+            a: {CNST: -30}
+            b: {CNST: 30}
+        circleRadius: {CNST: 0.11}
+    velocity:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+FEMT:
+  SEMR:
+    position:
+      CIRC:
+        circleOffset:
+          CNST:
+          - {CNST: 0}
+          - RAND:
+              a: {CNST: 0.3}
+              b: {CNST: 0.5}
+          - {CNST: 0}
+        circleNormal:
+          CNST:
+          - {CNST: 0}
+          - {CNST: 1}
+          - {CNST: 0}
+        angleConstant: {CNST: 0}
+        angleLinear: {CNST: 50}
+        circleRadius: {CNST: 0.08}
+    velocity:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+AMPL: {CNST: 0.08}
+LWD1: {CNST: 1}
+LWD2: {CNST: 4}
+LWD3: {CNST: 8}
+LCL1:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 0.498039}
+LCL2:
+  CNST:
+  - {CNST: 0.333333}
+  - {CNST: 0.666667}
+  - {CNST: 1}
+  - {CNST: 0.4}
+LCL3:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0.294118}
+GPSM: {CNST: MP1/SamGunFx/PART_2199CEB6.gpsm.yaml}

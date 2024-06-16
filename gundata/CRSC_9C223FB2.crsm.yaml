@@ -1,0 +1,4 @@
+DNAType: CRSM<UniqueID32>
+DEFS: {CNST: MP1/SamGunFx/PART_AB80E035.gpsm.yaml}
+RNGE: 100
+FOFF: 0.2

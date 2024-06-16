@@ -1,0 +1,109 @@
+DNAType: GPSM<UniqueID32>
+PSLT: {CNST: 0x00000001}
+POFS:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 1}
+SEED: {CNST: 0x00000042}
+MAXP: {CNST: 0x00000008}
+GRTE:
+  PULS:
+    aDuration: {CNST: 0x00000001}
+    bDuration: {CNST: 0x0000270F}
+    a: {CNST: 10}
+    b: {CNST: 0}
+LTME:
+  RAND:
+    a: {CNST: 0x00000020}
+    b: {CNST: 0x00000040}
+EMTR:
+  SETR:
+    ILOC:
+      ANGC:
+        angleXBias: {CNST: 0}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 180}
+        angleYRange: {CNST: 180}
+        magnitude: {CNST: 1}
+    IVEC:
+      ANGC:
+        angleXBias: {CNST: 90}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 180}
+        angleYRange: {CNST: 180}
+        magnitude:
+          RAND:
+            a: {CNST: 0.1}
+            b: {CNST: 0.5}
+MBSP: {CNST: 0x00000004}
+SIZE: {CNST: 0}
+PMDL: {CNST: MP1/SamGunFx/CMDL_56A2B4E2.blend}
+PMRT:
+  CNST:
+  - {CNST: 0}
+  - SCAL:
+      dv: {CNST: 5}
+  - {CNST: 0}
+PMSC:
+  CNST:
+  - {CNST: 2}
+  - {CNST: 0.5}
+  - {CNST: 0.5}
+PMCL:
+  CFDE:
+    a:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0.75}
+    b:
+      CNST:
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0}
+    startFrame:
+      RLPT:
+        percent: {CNST: 60}
+    endFrame:
+      RLPT:
+        percent: {CNST: 100}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+KSSM:
+  a: 0x00000000
+  b: 0x00000001
+  endFrame: 0x00000078
+  d: 0x00000000
+  spawns:
+  - startFrame: 0x00000000
+    systems:
+    - {id: MP1/SamGunFx/PART_901D8911.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+    - {id: MP1/SamGunFx/PART_09FFEF10.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+PMAB: True
+PMOO: False

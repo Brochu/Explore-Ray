@@ -1,0 +1,57 @@
+DNAType: GPSM<UniqueID32>
+PSLT: {CNST: 0x0000004C}
+MAXP: {CNST: 0x00000000}
+GRTE: {CNST: 1}
+LTME: {CNST: 0x00000080}
+MBSP: {CNST: 0x00000004}
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+KSSM:
+  a: 0x00000000
+  b: 0x00000001
+  endFrame: 0x00000078
+  d: 0x00000000
+  spawns:
+  - startFrame: 0x00000000
+    systems:
+    - {id: MP1/SamGunFx/PART_9FB7D346.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+  - startFrame: 0x0000000F
+    systems:
+    - {id: MP1/SamGunFx/PART_A90A0DE4.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+  - startFrame: 0x0000001E
+    systems:
+    - {id: MP1/SamGunFx/PART_19D37E66.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+  - startFrame: 0x0000002D
+    systems:
+    - {id: MP1/SamGunFx/PART_41BFC7A7.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+  - startFrame: 0x0000003C
+    systems:
+    - {id: MP1/SamGunFx/PART_80311867.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+  - startFrame: 0x0000004B
+    systems:
+    - {id: MP1/SamGunFx/PART_6884D224.gpsm.yaml, a: 0x00000000, b: 0x00000000, c: 0x00000000}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+AAPH: True
+PMOO: False

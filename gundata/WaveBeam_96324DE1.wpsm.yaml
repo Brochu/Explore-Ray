@@ -1,0 +1,157 @@
+DNAType: WPSM<UniqueID32>
+IVEC:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0.8}
+  - {CNST: -0.2}
+PSVM:
+  WIND:
+    windVelocity:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0.8}
+      - ADD_:
+          a:
+            KEYE:
+              percentageTween: 0x00000000
+              unk1: 0x00000000
+              loop: False
+              unk2: 0x00
+              loopEnd: 0x00000078
+              loopStart: 0x00000000
+              keys:
+              - 0
+              - 0
+              - 0
+              - 1
+              - 0
+              - 0
+              - -1
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+          b:
+            SINE:
+              frequency: {CNST: 30}
+              amplitude: {CNST: 1.5}
+              phase: {CNST: 45}
+    factor: {CNST: 0.1}
+PSLT: {CNST: 0x00000080}
+TRAT: {CNST: 360}
+APSM: {CNST: MP1/SamGunFx/PART_B0E15535.gpsm.yaml}
+APS2: {CNST: MP1/SamGunFx/PART_A7E26DDF.gpsm.yaml}
+ASW1: {CNST: MP1/SamGunFx/SWHC_50B245B9.swsh.yaml}
+COLR: {CNST: MP1/SamGunFx/CRSC_B6D2B6A0.crsm.yaml}
+VMD2: True
+HOMG: True
+AP11: True

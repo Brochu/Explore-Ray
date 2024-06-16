@@ -1,0 +1,94 @@
+DNAType: GPSM<UniqueID32>
+PSLT: {CNST: 0x0000000C}
+LENG:
+  IRND:
+    a: {CNST: 10}
+    b: {CNST: 30}
+WIDT: {CNST: 1}
+MAXP: {CNST: 0x00000014}
+GRTE: {CNST: 1}
+COLR:
+  FADE:
+    a:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 1}
+      - {CNST: 0.75}
+    b:
+      CNST:
+      - {CNST: 0.333333}
+      - {CNST: 1}
+      - {CNST: 1}
+      - {CNST: 0.75}
+    endFrame:
+      RLPT:
+        percent: {CNST: 100}
+LTME:
+  RAND:
+    a: {CNST: 0x00000008}
+    b: {CNST: 0x0000000C}
+EMTR:
+  SETR:
+    ILOC:
+      ANGC:
+        angleXBias: {CNST: 0}
+        angleYBias: {CNST: 0}
+        angleXRange: {CNST: 360}
+        angleYRange: {CNST: 360}
+        magnitude: {CNST: 4}
+    IVEC: {}
+MBSP: {CNST: 0x00000004}
+SIZE:
+  IRND:
+    a: {CNST: 0.5}
+    b: {CNST: 1}
+TEXR:
+  CNST: {tex: MP1/SamGunFx/glow11_25CAF202.png}
+VEL1:
+  WIND:
+    windVelocity:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0}
+    factor: {CNST: 1}
+VEL2:
+  EMPL:
+    implodePoint:
+      CNST:
+      - {CNST: 0}
+      - {CNST: 0}
+      - {CNST: 0.3}
+    velocityScale: {CNST: 0.055}
+    maxRadius: {CNST: 10000}
+    minRadius: {CNST: 1}
+    enableMinRadius: True
+NCSY: {CNST: 0x00000001}
+NDSY: {CNST: 0x00000001}
+PISY: {CNST: 0x00000010}
+SISY: {CNST: 0x00000010}
+LTYP: {CNST: 0x00000000}
+LCLR:
+  CNST:
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+  - {CNST: 1}
+LINT: {CNST: 1}
+LOFF:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 0}
+  - {CNST: 0}
+LDIR:
+  CNST:
+  - {CNST: 0}
+  - {CNST: 1}
+  - {CNST: 0}
+LFOT: {CNST: 0x00000001}
+LFOR: {CNST: 1}
+LSLA: {CNST: 45}
+LINE: True
+AAPH: True
+PMOO: False
