@@ -26,16 +26,14 @@ void SplitOnce(char *str, const char *delim, char **f, size_t *fs, char **s, siz
 char *_nameblock = NULL;
 char *_pathblock = NULL;
 
-Catalog ParseCatalog() {
+void ParseCatalog(Catalog *c) {
     char *txt = LoadFileText(PATH);
 
     _nameblock = malloc(MAX_COUNT * NAME_SIZE);
     _pathblock = malloc(MAX_COUNT * PATH_SIZE);
-    Catalog res = {
-        .size = 0,
-        .names = calloc(MAX_COUNT, sizeof(char*)),
-        .paths = calloc(MAX_COUNT, sizeof(char*)),
-    };
+    c->size = 0;
+    c->names = calloc(MAX_COUNT, sizeof(char*));
+    c->paths = calloc(MAX_COUNT, sizeof(char*));
 
     char *token, *next_token;
     token = strtok_s(txt, "\n", &next_token);
@@ -44,22 +42,20 @@ Catalog ParseCatalog() {
         size_t nsize, psize = 0;
         SplitOnce(token, ":", &name, &nsize, &path, &psize);
 
-        memcpy_s(NAME_AT(res.size), nsize, name, nsize);
-        _nameblock[res.size * NAME_SIZE + nsize] = '\0';//'*';
-        _nameblock[res.size * NAME_SIZE + NAME_SIZE - 1] = '|';
+        memcpy_s(NAME_AT(c->size), nsize, name, nsize);
+        _nameblock[c->size * NAME_SIZE + nsize] = '\0';//'*';
+        _nameblock[c->size * NAME_SIZE + NAME_SIZE - 1] = '|';
 
-        memcpy_s(PATH_AT(res.size), psize, path, psize);
-        _pathblock[res.size * PATH_SIZE + psize] = '\0';//'*';
-        _pathblock[res.size * PATH_SIZE + PATH_SIZE - 1] = '|';
+        memcpy_s(PATH_AT(c->size), psize, path, psize);
+        _pathblock[c->size * PATH_SIZE + psize] = '\0';//'*';
+        _pathblock[c->size * PATH_SIZE + PATH_SIZE - 1] = '|';
 
-        res.names[res.size] = NAME_AT(res.size);
-        res.paths[res.size] = PATH_AT(res.size);
+        c->names[c->size] = NAME_AT(c->size);
+        c->paths[c->size] = PATH_AT(c->size);
 
-        res.size++;
+        c->size++;
         token = strtok_s(NULL, "\n", &next_token);
     }
-
-    return res;
 }
 
 void DeleteCatalog(Catalog *c) {

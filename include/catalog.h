@@ -2,9 +2,9 @@
 typedef struct {
     size_t size;
 
-    char **names;
+    const char **names;
     char **paths;
 } Catalog;
 
-Catalog ParseCatalog();
+void ParseCatalog(Catalog *c);
 void DeleteCatalog(Catalog *c);
