@@ -18,8 +18,8 @@ void SplitOnce(char *str, const char *delim, char **f, size_t *fs, char **s, siz
     if (*pos != '\0') {
         *f = str;
         *fs = pos - str;
-        *s = pos + 2;
-        *ss = len - *fs - 2;
+        *s = pos + 2 + 13;
+        *ss = len - *fs - 2 - 13;
     }
 }
 
