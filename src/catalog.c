@@ -1,6 +1,5 @@
 #include "catalog.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "raylib.h"
@@ -44,8 +43,6 @@ Catalog ParseCatalog() {
         char *name, *path = NULL;
         size_t nsize, psize = 0;
         SplitOnce(token, ":", &name, &nsize, &path, &psize);
-        //printf("[NAME] (%zu) -> '%s'\n", nsize, name);
-        //printf("[PATH] (%zu) -> '%s'\n", psize, path);
 
         memcpy_s(NAME_AT(res.size), nsize, name, nsize);
         _nameblock[res.size * NAME_SIZE + nsize] = '\0';//'*';
