@@ -1,8 +1,7 @@
-#include <stdio.h>
-
 #include "iconswatch.h"
-#include "catalog.h"
+#include "partviewer.h"
 
+#include <stdio.h>
 #include "raylib.h"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
@@ -12,15 +11,11 @@
 
 int main(int argc, char **argv) {
     printf("[MAIN] Program START\n");
-    printf("[MAIN] Parsing particle effects catalog...\n");
-    Catalog c = ParseCatalog();
-    for (int i = 0; i < c.size; ++i) {
-        printf("- '%s' :\n\t-> '%s'\n", c.names[i], c.paths[i]);
-    }
-    printf("[MAIN] DONE (%zu items parsed)\n", c.size);
-
     printf("[MAIN] Drawing main window...\n");
+
     InitWindow(WIDTH, HEIGHT, "[ALPHA] Raylib Exploration");
+    InitParticleViewer();
+
     SetTargetFPS(60);
     GuiLoadStyle("styles/style_cyber.rgs");
 
@@ -28,14 +23,18 @@ int main(int argc, char **argv) {
         BeginDrawing();
 
         ClearBackground(BLACK);
-        DrawIconSwatch();
+        if (argc > 1 && strcmp(argv[1], "-icons") == 0) {
+            DrawIconSwatch();
+        }
+        else if (argc > 1 && strcmp(argv[1], "-particles") == 0) {
+            DrawParticleViewer();
+        }
 
         EndDrawing();
     }
 
+    DropParticleViewer();
     CloseWindow();
-    DeleteCatalog(&c);
-
     printf("[MAIN] Program END\n");
     return 0;
 }
