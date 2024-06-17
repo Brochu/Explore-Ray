@@ -10,12 +10,14 @@ set (headers
     ${CMAKE_CURRENT_LIST_DIR}/include/raylib/raygui.h
     ${CMAKE_CURRENT_LIST_DIR}/include/iconswatch.h
     ${CMAKE_CURRENT_LIST_DIR}/include/catalog.h
+    ${CMAKE_CURRENT_LIST_DIR}/include/partviewer.h
 )
 
 set (source
     ${CMAKE_CURRENT_LIST_DIR}/src/main.c
     ${CMAKE_CURRENT_LIST_DIR}/src/iconswatch.c
     ${CMAKE_CURRENT_LIST_DIR}/src/catalog.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/partviewer.c
 )
 
 set (libs
