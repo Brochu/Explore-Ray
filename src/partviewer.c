@@ -23,7 +23,7 @@ void DrawParticleViewer() {
         picking = !picking;
     }
 
-    GuiStatusBar(RECT(0, 585, 800, 15), TextFormat("selected effect: %s", cat.names[pickidx]));
+    GuiStatusBar(RECT(0, 585, 800, 15), TextFormat("current path: %s", cat.paths[pickidx]));
 }
 
 void DropParticleViewer() {
