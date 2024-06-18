@@ -23,6 +23,7 @@ set (source
 set (libs
     raylib.lib
     WinMM.lib
+    yaml
 )
 
 add_executable (Explore-Ray
@@ -37,6 +38,7 @@ target_include_directories(Explore-Ray
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/include
         ${CMAKE_CURRENT_LIST_DIR}/include/raylib
+        ${CMAKE_CURRENT_LIST_DIR}/include/yaml
 )
 target_link_directories(Explore-Ray
     PRIVATE
