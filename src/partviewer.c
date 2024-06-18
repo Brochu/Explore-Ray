@@ -3,8 +3,10 @@
 
 #include "raygui.h"
 #include <stddef.h>
+#include <stdio.h>
 #include <string.h>
 
+#define FOLDER "gundata"
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
 
 Catalog cat;
@@ -12,27 +14,42 @@ Catalog cat;
 const char *options = NULL;
 int pickidx = 0;
 bool picking = false;
+char *data = NULL;
+Vector2 scroll = { 0 };
+Rectangle view = { 0 };
 
-bool test = false;
+void LoadParticleEffect(int idx) {
+    if (data != NULL) {
+        UnloadFileText(data);
+    }
+
+    char path[128];
+    sprintf_s(path, 128, "%s/%s", FOLDER, cat.paths[pickidx]);
+    data = LoadFileText(path);
+}
 
 void InitParticleViewer() {
     ParseCatalog(&cat);
-    options = TextJoin(cat.names, cat.size, ";");
+    options = TextJoin(cat.names, (int)cat.size, ";");
+    LoadParticleEffect(pickidx);
 }
 
 void DrawParticleViewer() {
     GuiLabel(RECT(0, 0, 800, 15), "MP1 - Particle System Viewer");
+    GuiStatusBar(RECT(0, 585, 800, 15), TextFormat("current file: %s", cat.paths[pickidx]));
+
+    GuiScrollPanel(RECT(15, 60, 775, 450), "DATA", RECT(0, 0, 340, 340), &scroll, &view);
+
+    BeginScissorMode((int)view.x, (int)view.y, (int)view.width, (int)view.height);
+    GuiLabel((Rectangle){15 + scroll.x, 60 + scroll.y, 340, 340}, "CONTENT HERE");
+    EndScissorMode();
+
     if (GuiDropdownBox(RECT(15, 30, 250, 15), options, &pickidx, picking)) {
+        if (picking) {
+            LoadParticleEffect(pickidx);
+        }
         picking = !picking;
     }
-
-    GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_WORD);
-    if (GuiTextBox(RECT(15, 60, 775, 450), options, strlen(options), test)) {
-        test = !test;
-    }
-    GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_NONE);
-
-    GuiStatusBar(RECT(0, 585, 800, 15), TextFormat("current path: %s", cat.paths[pickidx]));
 }
 
 void DropParticleViewer() {
