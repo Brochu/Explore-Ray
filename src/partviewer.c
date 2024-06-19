@@ -44,10 +44,12 @@ void DrawParticleViewer() {
     GuiLabel(RECT(0, 0, 800, 15), "MP1 - Particle System Viewer");
     GuiStatusBar(RECT(0, 585, 800, 15), TextFormat("current file: %s", cat.paths[pickidx]));
 
-    GuiScrollPanel(RECT(15, 60, 775, 450), "DATA", RECT(0, 0, 340, 340), &scroll, &view);
+    GuiScrollPanel(RECT(15, 60, 775, 450), NULL, RECT(0, 0, 340, 340), &scroll, &view);
 
+    char contents[128];
+    sprintf_s(contents, 128, "PSLT: %i", fx.lifetime);
     BeginScissorMode((int)view.x, (int)view.y, (int)view.width, (int)view.height);
-    GuiLabel((Rectangle){15 + scroll.x, 60 + scroll.y, 340, 340}, "CONTENT HERE");
+    GuiLabel((Rectangle){15 + scroll.x, 60 + scroll.y, 340, 340}, contents);
     EndScissorMode();
 
     if (GuiDropdownBox(RECT(15, 30, 250, 15), options, &pickidx, picking)) {
