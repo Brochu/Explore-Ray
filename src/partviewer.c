@@ -1,5 +1,6 @@
 #include "partviewer.h"
 #include "catalog.h"
+#include "partfx.h"
 
 #include "raygui.h"
 #include <stddef.h>
@@ -10,11 +11,13 @@
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
 
 Catalog cat;
+partfx_t fx;
 
 const char *options = NULL;
 int pickidx = 0;
 bool picking = false;
 char *data = NULL;
+
 Vector2 scroll = { 0 };
 Rectangle view = { 0 };
 
@@ -26,10 +29,13 @@ void LoadParticleEffect(int idx) {
     char path[128];
     sprintf_s(path, 128, "%s/%s", FOLDER, cat.paths[pickidx]);
     data = LoadFileText(path);
+    partfx_parse(&fx, data, strlen(data));
 }
 
 void InitParticleViewer() {
     ParseCatalog(&cat);
+    partfx_init(&fx);
+
     options = TextJoin(cat.names, (int)cat.size, ";");
     LoadParticleEffect(pickidx);
 }
@@ -53,5 +59,8 @@ void DrawParticleViewer() {
 }
 
 void DropParticleViewer() {
+    UnloadFileText(data);
+
+    partfx_delete(&fx);
     DeleteCatalog(&cat);
 }
