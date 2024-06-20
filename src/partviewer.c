@@ -47,7 +47,10 @@ void DrawParticleViewer() {
     GuiScrollPanel(RECT(15, 60, 775, 450), NULL, RECT(0, 0, 340, 340), &scroll, &view);
 
     char contents[128];
-    sprintf_s(contents, 128, "PSLT: %i", fx.lifetime);
+    int lifetime = 0;
+    partfx_query(&fx, LIFETIME, &lifetime);
+    sprintf_s(contents, 128, "PSLT: %i", lifetime);
+
     BeginScissorMode((int)view.x, (int)view.y, (int)view.width, (int)view.height);
     GuiLabel((Rectangle){15 + scroll.x, 60 + scroll.y, 340, 340}, contents);
     EndScissorMode();

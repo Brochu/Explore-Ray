@@ -4,6 +4,12 @@
 #include <stdio.h>
 #include "yaml.h"
 
+typedef struct {
+    partfx_prop_t prop;
+    int val;
+    //TODO: Handle different constant types (float, vectors, ...)
+} partfx_cnst_t;
+
 void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
 }
@@ -19,30 +25,33 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
     // Set input string
     yaml_parser_set_input_string(&parser, (unsigned char *)data, length);
 
-    void *target = NULL;
+    int targetIdx = -1;
     do {
         if (!yaml_parser_parse(&parser, &event)) {
             printf("Parser error %d\n", parser.error);
             exit(EXIT_FAILURE);
         }
 
-        if (target != NULL) {
+        if (targetIdx != -1) {
             if (event.type == YAML_MAPPING_START_EVENT) {
                 do {
                     yaml_parser_parse(&parser, &event);
                     yaml_parser_parse(&parser, &event);
-                    int *val = (int*)target;
-                    *val = atoi((char*)event.data.scalar.value + 2); //WOW, check how to parse hex values
+
+                    partfx_cnst_t *c = malloc(sizeof(partfx_cnst_t));
+                    c->prop.query = CONST;
+                    c->val = atoi((char*)event.data.scalar.value + 2);
+                    pfx->_props[targetIdx] = (partfx_prop_t *)c;
 
                     yaml_parser_parse(&parser, &event);
                     //TODO: Need to split this in functions to handle mappings + different types
                 } while(event.type != YAML_MAPPING_END_EVENT);
             }
-            target = NULL;
+            targetIdx = -1;
         }
 
         if (event.type == YAML_SCALAR_EVENT && strcmp((char *)event.data.scalar.value, "PSLT") == 0) {
-            target = &pfx->lifetime;
+            targetIdx = LIFETIME;
         }
         //TODO: Add more needed parameters here
 
@@ -73,7 +82,19 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
     yaml_parser_delete(&parser);
 }
 
+void partfx_query(partfx_t *pfx, ParticleProps prop, void *out) {
+    if (pfx->_props[prop]->query == CONST) {
+        int *value = (int*)out;
+        *value = ((partfx_cnst_t*)pfx->_props[prop])->val;
+    }
+}
+
 void partfx_delete(partfx_t *pfx) {
-    //TODO: Cleanup resources
+    for (int i = 0; i < PROP_COUNT; ++i) {
+        if (pfx->_props[i] != NULL) {
+            free(pfx->_props[i]);
+        }
+    }
+
     memset(pfx, 0, sizeof(partfx_t));
 }
