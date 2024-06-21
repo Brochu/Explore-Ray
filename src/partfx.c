@@ -42,7 +42,7 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
 
                     partfx_cnst_t *c = malloc(sizeof(partfx_cnst_t));
                     c->prop.query = CONST;
-                    c->val = atoi((char*)event.data.scalar.value + 2);
+                    c->val = strtol((char *)event.data.scalar.value, NULL, 0);
                     pfx->_props[targetIdx] = (partfx_prop_t *)c;
 
                     yaml_parser_parse(&parser, &event);
