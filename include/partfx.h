@@ -1,6 +1,7 @@
 
 typedef enum {
     LIFETIME,
+    MAX_PARTICLES,
     PROP_COUNT,
 } ParticleProps;
 
