@@ -14,6 +14,10 @@ typedef struct {
 } partfx_prop_t;
 
 typedef struct {
+    size_t length;
+    size_t p; //Progress in frame #
+    float t; //Progress in normalized value
+
     partfx_prop_t *_props[PROP_COUNT];
 } partfx_t;
 

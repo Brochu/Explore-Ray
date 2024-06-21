@@ -2,6 +2,7 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "yaml.h"
 
 typedef struct {
@@ -20,7 +21,8 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
 
     // Initialize parser
     if(!yaml_parser_initialize(&parser)) {
-        fputs("Failed to initialize parser!\n", stderr);
+        printf("Failed to initialize parser!\n");
+        exit(EXIT_FAILURE);
     }
     // Set input string
     yaml_parser_set_input_string(&parser, (unsigned char *)data, length);
