@@ -11,6 +11,17 @@
 
 int main(int argc, char **argv) {
     printf("[MAIN] Program START\n");
+    if (argc > 1 && strcmp(argv[1], "-strtest") == 0) {
+        char *og = "0123456789012345678901234567890123456789";
+        char dest[64];
+
+        size_t s = strlen(og) - 1;
+        printf("strlen = %zu\n", s);
+
+        strcpy_s(dest, 64, og);
+        printf("og = '%s', dest = '%s'\n", og, dest);
+        return 0;
+    }
 
     printf("[MAIN] Drawing main window...\n");
     InitWindow(WIDTH, HEIGHT, "[ALPHA] Raylib Exploration");
