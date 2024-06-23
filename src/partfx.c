@@ -7,7 +7,8 @@
 
 typedef struct {
     partfx_prop_t prop;
-    int val;
+    int intval;
+    char *strval;
     //TODO: Handle different constant types (float, vectors, ...)
 } partfx_cnst_t;
 
@@ -27,14 +28,14 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
     // Set input string
     yaml_parser_set_input_string(&parser, (unsigned char *)data, length);
 
-    int targetIdx = -1;
+    ParticleProps targetProp = -1;
     do {
         if (!yaml_parser_parse(&parser, &event)) {
             printf("Parser error %d\n", parser.error);
             exit(EXIT_FAILURE);
         }
 
-        if (targetIdx != -1) {
+        if (targetProp != -1) {
             if (event.type == YAML_MAPPING_START_EVENT) {
                 do {
                     yaml_parser_parse(&parser, &event);
@@ -42,22 +43,30 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
 
                     partfx_cnst_t *c = malloc(sizeof(partfx_cnst_t));
                     c->prop.query = CONST;
-                    c->val = strtol((char *)event.data.scalar.value, NULL, 0);
-                    pfx->_props[targetIdx] = (partfx_prop_t *)c;
+                    if (targetProp == TEXTURE) {
+                        c->strval = "*texture here*";
+                    }
+                    else {
+                        c->intval = strtol((char *)event.data.scalar.value, NULL, 0);
+                    }
+                    pfx->_props[targetProp] = (partfx_prop_t *)c;
 
                     yaml_parser_parse(&parser, &event);
                     //TODO: Need to split this in functions to handle mappings + different types
                 } while(event.type != YAML_MAPPING_END_EVENT);
             }
-            targetIdx = -1;
+            targetProp = -1;
         }
 
         if (event.type == YAML_SCALAR_EVENT) {
             if (strcmp((char *)event.data.scalar.value, "PSLT") == 0) {
-                targetIdx = LIFETIME;
+                targetProp = LIFETIME;
             }
             if (strcmp((char *)event.data.scalar.value, "MAXP") == 0) {
-                targetIdx = MAX_PARTICLES;
+                targetProp = MAX_PARTICLES;
+            }
+            if (strcmp((char *)event.data.scalar.value, "TEXR") == 0) {
+                targetProp = TEXTURE;
             }
             //TODO: Add more needed parameters here
         }
@@ -85,8 +94,14 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
 
 void partfx_query(partfx_t *pfx, ParticleProps prop, void *out) {
     if (pfx->_props[prop]->query == CONST) {
-        int *value = (int*)out;
-        *value = ((partfx_cnst_t*)pfx->_props[prop])->val;
+        if (prop == TEXTURE) {
+            char **value = (char**)out;
+            *value = ((partfx_cnst_t*)pfx->_props[prop])->strval;
+        }
+        else {
+            int *value = (int*)out;
+            *value = ((partfx_cnst_t*)pfx->_props[prop])->intval;
+        }
     }
 }
 
