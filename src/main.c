@@ -15,10 +15,10 @@ int main(int argc, char **argv) {
         char *og = "0123456789012345678901234567890123456789";
         char dest[64];
 
-        size_t s = strlen(og) - 1;
+        size_t s = strlen(og);
         printf("strlen = %zu\n", s);
 
-        strcpy_s(dest, 64, og);
+        strncpy_s(dest, 64, og, s);
         printf("og = '%s', dest = '%s'\n", og, dest);
         return 0;
     }
