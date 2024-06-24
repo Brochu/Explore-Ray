@@ -47,10 +47,8 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
                     if (targetProp == TEXTURE) {
                         yaml_parser_parse(&parser, &event);
                         yaml_parser_parse(&parser, &event);
-                        char *tex = (char*)event.data.scalar.value;
-                        size_t len = strlen(tex);
-                        if (len > 0) {
-                            strncpy_s(c->strval, 64, tex, len);
+                        if (event.data.scalar.length > 0) {
+                            strncpy_s(c->strval, 64, (char*)event.data.scalar.value, event.data.scalar.length);
                         }
                     }
                     else {
