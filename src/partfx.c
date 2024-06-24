@@ -6,6 +6,14 @@
 #include <string.h>
 #include "yaml.h"
 
+#define print_problem(parser) \
+    do { \
+        printf("[YAML] ERROR:\n%s : %zu (%i)\n", \
+            parser.problem,                      \
+            parser.problem_offset,               \
+            parser.problem_value);               \
+    } while(0)
+
 typedef struct {
     partfx_prop_t prop;
     int intval;
@@ -19,81 +27,75 @@ void partfx_init(partfx_t *pfx) {
 
 void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
     yaml_parser_t parser;
-    yaml_event_t  event;
+    yaml_document_t doc;
+    memset(&doc, 0, sizeof(yaml_document_t));
+    yaml_node_t *node = NULL;
 
     // Initialize parser
     if(!yaml_parser_initialize(&parser)) {
         printf("Failed to initialize parser!\n");
+        print_problem(parser);
         exit(EXIT_FAILURE);
     }
     // Set input string
     yaml_parser_set_input_string(&parser, (unsigned char *)data, length);
+    if (!yaml_parser_load(&parser, &doc)) {
+        printf("Failed to parse yaml document!\n");
+        print_problem(parser);
+        yaml_parser_delete(&parser);
+        exit(EXIT_FAILURE);
+    }
 
-    ParticleProps targetProp = -1;
-    do {
-        if (!yaml_parser_parse(&parser, &event)) {
-            printf("Parser error %d\n", parser.error);
-            exit(EXIT_FAILURE);
-        }
+    int i = 2;
+    while (1) {
+        node = yaml_document_get_node(&doc, i);
+        if (!node) break;
 
-        if (targetProp != -1) {
-            if (event.type == YAML_MAPPING_START_EVENT) {
-                do {
-                    yaml_parser_parse(&parser, &event);
-                    yaml_parser_parse(&parser, &event);
+        if (node->type == YAML_SCALAR_NODE) {
+            yaml_node_t *query = NULL;
+            yaml_node_t *value = NULL;
+            ParticleProps targetProp = -1;
 
-                    partfx_cnst_t *c = malloc(sizeof(partfx_cnst_t));
-                    c->prop.query = CONST;
-                    if (targetProp == TEXTURE) {
-                        yaml_parser_parse(&parser, &event);
-                        yaml_parser_parse(&parser, &event);
-                        if (event.data.scalar.length > 0) {
-                            strncpy_s(c->strval, 64, (char*)event.data.scalar.value, event.data.scalar.length);
-                        }
-                    }
-                    else {
-                        c->intval = strtol((char *)event.data.scalar.value, NULL, 0);
-                    }
-                    pfx->_props[targetProp] = (partfx_prop_t *)c;
-
-                    yaml_parser_parse(&parser, &event);
-                    //TODO: Need to split this in functions to handle mappings + different types
-                } while(event.type != YAML_MAPPING_END_EVENT);
-            }
-            targetProp = -1;
-        }
-
-        if (event.type == YAML_SCALAR_EVENT) {
-            if (strcmp((char *)event.data.scalar.value, "PSLT") == 0) {
+            if (strcmp((char *)node->data.scalar.value, "PSLT") == 0) {
+                printf("[YAML] Found PSLT value\n");
                 targetProp = LIFETIME;
+                ++i; // Have to skip mapping node
+                query = yaml_document_get_node(&doc, ++i);
+                value = yaml_document_get_node(&doc, ++i);
             }
-            if (strcmp((char *)event.data.scalar.value, "MAXP") == 0) {
+            else if (strcmp((char *)node->data.scalar.value, "MAXP") == 0) {
+                printf("[YAML] Found MAXP value\n");
                 targetProp = MAX_PARTICLES;
+                ++i; // Have to skip mapping node
+                query = yaml_document_get_node(&doc, ++i);
+                value = yaml_document_get_node(&doc, ++i);
             }
-            if (strcmp((char *)event.data.scalar.value, "TEXR") == 0) {
+            else if (strcmp((char *)node->data.scalar.value, "TEXR") == 0) {
+                printf("[YAML] Found TEXR value\n");
                 targetProp = TEXTURE;
+                ++i; // Have to skip mapping node
+                query = yaml_document_get_node(&doc, ++i);
+                i+=2;
+                value = yaml_document_get_node(&doc, ++i);
             }
-            //TODO: Add more needed parameters here
-        }
 
-        // case YAML_NO_EVENT: assert(0); break;
-        // case YAML_STREAM_START_EVENT: break;
-        // case YAML_STREAM_END_EVENT: break;
-        // case YAML_DOCUMENT_START_EVENT: break;
-        // case YAML_DOCUMENT_END_EVENT: break;
-        // case YAML_SEQUENCE_START_EVENT: break;
-        // case YAML_SEQUENCE_END_EVENT: break;
-        // case YAML_MAPPING_START_EVENT: break;
-        // case YAML_MAPPING_END_EVENT: break;
-        // case YAML_ALIAS_EVENT:  printf("Got alias (anchor %s)\n", event.data.alias.anchor); break;
-        // case YAML_SCALAR_EVENT: printf("Got scalar (value %s)\n", event.data.scalar.value); break;
-        if(event.type != YAML_STREAM_END_EVENT) {
-            yaml_event_delete(&event);
+            if (targetProp != -1) {
+                partfx_cnst_t *c = malloc(sizeof(partfx_cnst_t));
+                c->prop.query = CONST;
+                if (targetProp == TEXTURE) {
+                    strncpy_s(c->strval, 64, (char *)value->data.scalar.value, value->data.scalar.length);
+                }
+                else {
+                    c->intval = strtol((char *)value->data.scalar.value, NULL, 0);
+                }
+                pfx->_props[targetProp] = (partfx_prop_t *)c;
+                printf("[%s] '%s'\n", query->data.scalar.value, value->data.scalar.value);
+            }
         }
-    } while(event.type != YAML_STREAM_END_EVENT);
-    yaml_event_delete(&event);
-
+        ++i;
+    }
     // Cleanup
+    yaml_document_delete(&doc);
     yaml_parser_delete(&parser);
 }
 
