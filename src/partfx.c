@@ -3,12 +3,13 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "yaml.h"
 
 typedef struct {
     partfx_prop_t prop;
     int intval;
-    char *strval;
+    char strval[64];
     //TODO: Handle different constant types (float, vectors, ...)
 } partfx_cnst_t;
 
@@ -44,7 +45,13 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
                     partfx_cnst_t *c = malloc(sizeof(partfx_cnst_t));
                     c->prop.query = CONST;
                     if (targetProp == TEXTURE) {
-                        c->strval = "*texture here*";
+                        yaml_parser_parse(&parser, &event);
+                        yaml_parser_parse(&parser, &event);
+                        char *tex = (char*)event.data.scalar.value;
+                        size_t len = strlen(tex);
+                        if (len > 0) {
+                            strncpy_s(c->strval, 64, tex, len);
+                        }
                     }
                     else {
                         c->intval = strtol((char *)event.data.scalar.value, NULL, 0);
@@ -93,6 +100,8 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
 }
 
 void partfx_query(partfx_t *pfx, ParticleProps prop, void *out) {
+    if (pfx->_props[prop] == NULL) return;
+
     if (pfx->_props[prop]->query == CONST) {
         if (prop == TEXTURE) {
             char **value = (char**)out;
