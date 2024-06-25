@@ -85,16 +85,21 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             check_prop(TEXTURE, i, type);
 
             if (targetProp != -1) {
-                partfx_cnst_t *c = malloc(sizeof(partfx_cnst_t));
-                //TODO: Need to use the query node
-                c->prop.query = CONST;
-                if (type == STR) {
-                    strncpy_s(c->strval, 64, (char *)value->data.scalar.value, value->data.scalar.length);
+                partfx_prop_t *c = NULL;
+                //TODO: Handle different query types
+                if (strcmp((char *)query->data.scalar.value, "CNST") == 0) {
+                    c = malloc(sizeof(partfx_cnst_t));
+                    c->query = CONST;
+
+                    partfx_cnst_t *cnst = (partfx_cnst_t *)c;
+                    if (type == STR) {
+                        strncpy_s(cnst->strval, 64, (char *)value->data.scalar.value, value->data.scalar.length);
+                    }
+                    else if (type == INT) {
+                        cnst->intval = strtol((char *)value->data.scalar.value, NULL, 0);
+                    }
                 }
-                else if (type == INT) {
-                    c->intval = strtol((char *)value->data.scalar.value, NULL, 0);
-                }
-                pfx->_props[targetProp] = (partfx_prop_t *)c;
+                pfx->_props[targetProp] = c;
             }
         }
         ++i;
