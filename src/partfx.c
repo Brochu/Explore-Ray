@@ -86,6 +86,7 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
 
             if (targetProp != -1) {
                 partfx_cnst_t *c = malloc(sizeof(partfx_cnst_t));
+                //TODO: Need to use the query node
                 c->prop.query = CONST;
                 if (type == STR) {
                     strncpy_s(c->strval, 64, (char *)value->data.scalar.value, value->data.scalar.length);
@@ -94,7 +95,6 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
                     c->intval = strtol((char *)value->data.scalar.value, NULL, 0);
                 }
                 pfx->_props[targetProp] = (partfx_prop_t *)c;
-                printf("[%s] '%s'\n", query->data.scalar.value, value->data.scalar.value);
             }
         }
         ++i;
