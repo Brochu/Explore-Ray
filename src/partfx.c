@@ -6,7 +6,18 @@
 #include <string.h>
 #include "yaml.h"
 
-static const char *nameLUT[PROP_COUNT] = { "PSLT", "MAXP", "TEXR" };
+typedef enum {
+    INT,
+    STR,
+    TYPE_COUNT,
+} PropType;
+
+typedef struct {
+    partfx_prop_t prop;
+    int intval;
+    char strval[64];
+    //TODO: Handle different constant types (float, vectors, ...)
+} partfx_cnst_t;
 
 #define print_problem(parser)                    \
     do {                                         \
@@ -16,23 +27,22 @@ static const char *nameLUT[PROP_COUNT] = { "PSLT", "MAXP", "TEXR" };
             parser.problem_value);               \
     } while(0)
 
-#define check_prop(prop, off0, off1)                                       \
+static const char *nameLUT[PROP_COUNT] = { "PSLT", "MAXP", "TEXR" };
+static const size_t off0LUT[PROP_COUNT] = { 1, 1, 1 };
+static const size_t off1LUT[PROP_COUNT] = { 0, 0, 2 };
+static const PropType typeLUT[PROP_COUNT] = { INT, INT, STR };
+
+#define check_prop(prop, idx, type)                                        \
     do {                                                                   \
         if (strcmp((char *)node->data.scalar.value, nameLUT[prop]) == 0) { \
             targetProp = prop;                                             \
-            i += off0;                                                     \
-            query = yaml_document_get_node(&doc, ++i);                     \
-            i += off1;                                                     \
-            value = yaml_document_get_node(&doc, ++i);                     \
+            type = typeLUT[prop];                                          \
+            idx += off0LUT[prop];                                          \
+            query = yaml_document_get_node(&doc, ++idx);                   \
+            idx += off1LUT[prop];                                          \
+            value = yaml_document_get_node(&doc, ++idx);                   \
         }                                                                  \
     } while (0)
-
-typedef struct {
-    partfx_prop_t prop;
-    int intval;
-    char strval[64];
-    //TODO: Handle different constant types (float, vectors, ...)
-} partfx_cnst_t;
 
 void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
@@ -68,18 +78,19 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             yaml_node_t *query = NULL;
             yaml_node_t *value = NULL;
             ParticleProps targetProp = -1;
+            PropType type = TYPE_COUNT;
 
-            check_prop(LIFETIME, 1, 0);
-            check_prop(MAX_PARTICLES, 1, 0);
-            check_prop(TEXTURE, 1, 2);
+            check_prop(LIFETIME, i, type);
+            check_prop(MAX_PARTICLES, i, type);
+            check_prop(TEXTURE, i, type);
 
             if (targetProp != -1) {
                 partfx_cnst_t *c = malloc(sizeof(partfx_cnst_t));
                 c->prop.query = CONST;
-                if (targetProp == TEXTURE) {
+                if (type == STR) {
                     strncpy_s(c->strval, 64, (char *)value->data.scalar.value, value->data.scalar.length);
                 }
-                else {
+                else if (type == INT) {
                     c->intval = strtol((char *)value->data.scalar.value, NULL, 0);
                 }
                 pfx->_props[targetProp] = (partfx_prop_t *)c;
