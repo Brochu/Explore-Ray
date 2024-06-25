@@ -6,13 +6,26 @@
 #include <string.h>
 #include "yaml.h"
 
-#define print_problem(parser) \
-    do { \
+static const char *nameLUT[PROP_COUNT] = { "PSLT", "MAXP", "TEXR" };
+
+#define print_problem(parser)                    \
+    do {                                         \
         printf("[YAML] ERROR:\n%s : %zu (%i)\n", \
             parser.problem,                      \
             parser.problem_offset,               \
             parser.problem_value);               \
     } while(0)
+
+#define check_prop(prop, off0, off1)                                       \
+    do {                                                                   \
+        if (strcmp((char *)node->data.scalar.value, nameLUT[prop]) == 0) { \
+            targetProp = prop;                                             \
+            i += off0;                                                     \
+            query = yaml_document_get_node(&doc, ++i);                     \
+            i += off1;                                                     \
+            value = yaml_document_get_node(&doc, ++i);                     \
+        }                                                                  \
+    } while (0)
 
 typedef struct {
     partfx_prop_t prop;
@@ -56,28 +69,9 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             yaml_node_t *value = NULL;
             ParticleProps targetProp = -1;
 
-            if (strcmp((char *)node->data.scalar.value, "PSLT") == 0) {
-                printf("[YAML] Found PSLT value\n");
-                targetProp = LIFETIME;
-                ++i; // Have to skip mapping node
-                query = yaml_document_get_node(&doc, ++i);
-                value = yaml_document_get_node(&doc, ++i);
-            }
-            else if (strcmp((char *)node->data.scalar.value, "MAXP") == 0) {
-                printf("[YAML] Found MAXP value\n");
-                targetProp = MAX_PARTICLES;
-                ++i; // Have to skip mapping node
-                query = yaml_document_get_node(&doc, ++i);
-                value = yaml_document_get_node(&doc, ++i);
-            }
-            else if (strcmp((char *)node->data.scalar.value, "TEXR") == 0) {
-                printf("[YAML] Found TEXR value\n");
-                targetProp = TEXTURE;
-                ++i; // Have to skip mapping node
-                query = yaml_document_get_node(&doc, ++i);
-                i+=2;
-                value = yaml_document_get_node(&doc, ++i);
-            }
+            check_prop(LIFETIME, 1, 0);
+            check_prop(MAX_PARTICLES, 1, 0);
+            check_prop(TEXTURE, 1, 2);
 
             if (targetProp != -1) {
                 partfx_cnst_t *c = malloc(sizeof(partfx_cnst_t));

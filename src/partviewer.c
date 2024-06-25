@@ -54,7 +54,7 @@ void DrawParticleViewer() {
     partfx_query(&fx, LIFETIME, &lifetime);
     partfx_query(&fx, MAX_PARTICLES, &maxparticles);
     partfx_query(&fx, TEXTURE, &texname);
-    sprintf_s(contents, 128, "PSLT: %i ; MAXP: %i ; TEXR: '%s'", lifetime, maxparticles, texname);
+    sprintf_s(contents, 128, "PSLT: %i\nMAXP: %i\nTEXR: '%s'", lifetime, maxparticles, texname);
 
     BeginScissorMode((int)view.x, (int)view.y, (int)view.width, (int)view.height);
     GuiLabel((Rectangle){15 + scroll.x, 60 + scroll.y, 340, 340}, contents);
