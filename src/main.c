@@ -2,6 +2,7 @@
 #include "partviewer.h"
 
 #include <stdio.h>
+#include <time.h>
 #include "raylib.h"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
@@ -10,6 +11,9 @@
 #define HEIGHT 600
 
 int main(int argc, char **argv) {
+    time_t t;
+    srand((unsigned) time(&t));
+
     printf("[MAIN] Program START\n");
     if (argc > 1 && strcmp(argv[1], "-strtest") == 0) {
         char *og = "0123456789012345678901234567890123456789";
@@ -20,6 +24,16 @@ int main(int argc, char **argv) {
 
         strncpy_s(dest, 64, og, s);
         printf("og = '%s', dest = '%s'\n", og, dest);
+        return 0;
+    }
+
+    if (argc > 1 && strcmp(argv[1], "-randtest") == 0) {
+        float lo = 10.2f;
+        float hi = 15.8f;
+        for (int i = 0; i < 25; ++i) {
+            float r = lo + ((float)rand() / RAND_MAX) * (hi - lo);
+            printf("Generated a random number = %f\n", r);
+        }
         return 0;
     }
 
