@@ -8,6 +8,7 @@ typedef enum {
 
 typedef enum {
     CONST,
+    RAND,
     QUERY_COUNT,
 } PropQuery;
 

@@ -21,6 +21,12 @@ typedef struct {
     //TODO: How should we handle vectors?
 } partfx_cnst_t;
 
+typedef struct {
+    partfx_prop_t prop;
+    float a;
+    float b;
+} partfx_rand_t;
+
 #define print_problem(parser)                    \
     do {                                         \
         printf("[YAML] ERROR:\n%s : %zu (%i)\n", \
@@ -105,6 +111,15 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
                         cnst->flval = strtof((char *)value->data.scalar.value, NULL);
                     }
                 }
+                else if (strcmp((char *)query->data.scalar.value, "RAND") == 0) {
+                    //TODO: Handle random parsing
+                    c = malloc(sizeof(partfx_rand_t));
+                    c->query = RAND;
+
+                    partfx_rand_t *rand = (partfx_rand_t *)c;
+                    rand->a = 0.f;
+                    rand->b = 1.f;
+                }
                 pfx->_props[targetProp] = c;
             }
         }
@@ -127,6 +142,9 @@ void partfx_query(partfx_t *pfx, ParticleProps prop, void *out) {
             int *value = (int*)out;
             *value = ((partfx_cnst_t*)pfx->_props[prop])->intval;
         }
+    }
+    else if (pfx->_props[prop]->query == RAND) {
+        //TODO: Implement random query
     }
 }
 
