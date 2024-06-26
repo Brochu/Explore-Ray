@@ -9,6 +9,7 @@
 typedef enum {
     INT,
     STR,
+    FLOAT,
     TYPE_COUNT,
 } PropType;
 
@@ -16,7 +17,8 @@ typedef struct {
     partfx_prop_t prop;
     int intval;
     char strval[64];
-    //TODO: Handle different constant types (float, vectors, ...)
+    float flval;
+    //TODO: How should we handle vectors?
 } partfx_cnst_t;
 
 #define print_problem(parser)                    \
@@ -80,6 +82,7 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             ParticleProps targetProp = -1;
             PropType type = TYPE_COUNT;
 
+            //TODO: Still not too happy with this
             check_prop(LIFETIME, i, type);
             check_prop(MAX_PARTICLES, i, type);
             check_prop(TEXTURE, i, type);
@@ -97,6 +100,9 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
                     }
                     else if (type == INT) {
                         cnst->intval = strtol((char *)value->data.scalar.value, NULL, 0);
+                    }
+                    else if (type == FLOAT) {
+                        cnst->flval = strtof((char *)value->data.scalar.value, NULL);
                     }
                 }
                 pfx->_props[targetProp] = c;
