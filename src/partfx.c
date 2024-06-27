@@ -32,8 +32,19 @@ typedef struct {
             parser.problem_value);               \
     } while(0)
 
+//TODO: Is there a way to sync this with the props with XMacros
 static const char *nameLUT[PROP_COUNT] = { "PSLT", "MAXP", "TEXR", "GRTE" };
-static const PropType typeLUT[PROP_COUNT] = { INT, INT, STR, FLOAT };
+static const PropType typeLUT[PROP_COUNT] = { INT, INT, STRING, FLOAT };
+
+void check_prop(yaml_document_t *doc, int *i, yaml_node_t *n, ParticleProps *target, PropType *type) {
+    for (int i = 0; i < PROP_COUNT; ++i) {
+        if (strcmp(nameLUT[i], (char *)n->data.scalar.value) == 0) {
+            printf("Found valid prop: '%s'\n", n->data.scalar.value);
+            *target = (ParticleProps)i;
+            *type = typeLUT[i];
+        }
+    }
+}
 
 void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
@@ -66,7 +77,13 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
         if (!node) break;
 
         if (node->type == YAML_SCALAR_NODE) {
-            printf("Node value -> '%s'\n", node->data.scalar.value);
+            ParticleProps target = -1;
+            PropType type = -1;
+            check_prop(&doc, &i, node, &target, &type);
+
+            if (target >= 0) {
+                printf("Found prop index %i, of type %i\n", target, type);
+            }
         }
         ++i;
     }
@@ -76,16 +93,21 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
 }
 
 void partfx_query(partfx_t *pfx, ParticleProps prop, void *out) {
-    if (pfx->_props[prop] == NULL) return;
+    partfx_prop_t *p = pfx->_props[prop];
+    if (p == NULL) return;
 
-    if (pfx->_props[prop]->query == CONST) {
-        if (prop == TEXTURE) {
-            char **value = (char**)out;
-            *value = ((partfx_cnst_t*)pfx->_props[prop])->strval;
+    if (p->query == CONST) {
+        if (p->type == INT) {
+            int *value = (int *)out;
+            *value = ((partfx_cnst_t *)pfx->_props[prop])->intval;
         }
-        else {
-            int *value = (int*)out;
-            *value = ((partfx_cnst_t*)pfx->_props[prop])->intval;
+        else if (p->type == STRING) {
+            char **value = (char **)out;
+            *value = ((partfx_cnst_t *)pfx->_props[prop])->strval;
+        }
+        else if (p->type == FLOAT) {
+            float *value = (float *)out;
+            *value = ((partfx_cnst_t *)pfx->_props[prop])->flval;
         }
     }
     else if (pfx->_props[prop]->query == RAND) {
@@ -101,6 +123,5 @@ void partfx_delete(partfx_t *pfx) {
             free(pfx->_props[i]);
         }
     }
-
     memset(pfx, 0, sizeof(partfx_t));
 }

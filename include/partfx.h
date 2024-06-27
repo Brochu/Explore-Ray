@@ -15,7 +15,7 @@ typedef enum {
 
 typedef enum {
     INT,
-    STR,
+    STRING,
     FLOAT,
     TYPE_COUNT,
 } PropType;
