@@ -35,10 +35,10 @@ typedef struct {
             parser.problem_value);               \
     } while(0)
 
-static const char *nameLUT[PROP_COUNT] = { "PSLT", "MAXP", "TEXR" };
-static const size_t off0LUT[PROP_COUNT] = { 1, 1, 1 };
-static const size_t off1LUT[PROP_COUNT] = { 0, 0, 2 };
-static const PropType typeLUT[PROP_COUNT] = { INT, INT, STR };
+static const char *nameLUT[PROP_COUNT] = { "PSLT", "MAXP", "TEXR", "GRTE" };
+static const size_t off0LUT[PROP_COUNT] = { 1, 1, 1, 1 };
+static const size_t off1LUT[PROP_COUNT] = { 0, 0, 2, 1 };
+static const PropType typeLUT[PROP_COUNT] = { INT, INT, STR, FLOAT };
 
 #define check_prop(prop, idx, type)                                        \
     do {                                                                   \
@@ -92,6 +92,7 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             check_prop(LIFETIME, i, type);
             check_prop(MAX_PARTICLES, i, type);
             check_prop(TEXTURE, i, type);
+            check_prop(GEN_RATE, i, type);
 
             if (targetProp != -1) {
                 partfx_prop_t *c = NULL;
@@ -117,8 +118,12 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
                     c->query = RAND;
 
                     partfx_rand_t *rand = (partfx_rand_t *)c;
-                    rand->a = 0.f;
-                    rand->b = 1.f;
+                    i += 3;
+                    yaml_node_t *nodeA = yaml_document_get_node(&doc, i);
+                    i += 4;
+                    yaml_node_t *nodeB = yaml_document_get_node(&doc, i);
+                    rand->a = strtof((char *)nodeA->data.scalar.value, NULL);
+                    rand->b = strtof((char *)nodeB->data.scalar.value, NULL);
                 }
                 pfx->_props[targetProp] = c;
             }
