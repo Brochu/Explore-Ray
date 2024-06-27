@@ -13,8 +13,16 @@ typedef enum {
     QUERY_COUNT,
 } PropQuery;
 
+typedef enum {
+    INT,
+    STR,
+    FLOAT,
+    TYPE_COUNT,
+} PropType;
+
 typedef struct {
     PropQuery query;
+    PropType type;
 } partfx_prop_t;
 
 typedef struct {
