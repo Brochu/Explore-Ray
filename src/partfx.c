@@ -144,7 +144,9 @@ void partfx_query(partfx_t *pfx, ParticleProps prop, void *out) {
         }
     }
     else if (pfx->_props[prop]->query == RAND) {
-        //TODO: Implement random query
+        partfx_rand_t *r = (partfx_rand_t *)pfx->_props[prop];
+        float *value = (float *)out;
+        *value = r->a + ((float)rand() / RAND_MAX) * (r->b - r->a);
     }
 }
 
