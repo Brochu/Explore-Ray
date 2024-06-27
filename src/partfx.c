@@ -35,6 +35,8 @@ typedef struct {
             parser.problem_value);               \
     } while(0)
 
+//TODO: Need to rework this, offsets should not be tied to property name
+// also this sucks LUL
 static const char *nameLUT[PROP_COUNT] = { "PSLT", "MAXP", "TEXR", "GRTE" };
 static const size_t off0LUT[PROP_COUNT] = { 1, 1, 1, 1 };
 static const size_t off1LUT[PROP_COUNT] = { 0, 0, 2, 1 };
