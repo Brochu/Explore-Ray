@@ -54,7 +54,19 @@ void parse_prop_cnst(yaml_document_t *doc, int *i, PropType type, partfx_prop_t 
             break;
         }
     }
-    printf("[PARSE] Need to parse a constant prop, '%i', '%s'\n", node->type, node->data.scalar.value);
+    printf("[PARSE] Need to parse a constant prop, '%i', '%s'\n", type, node->data.scalar.value);
+
+    partfx_cnst_t *cnst = malloc(sizeof(partfx_cnst_t));
+    if (type == INT) {
+        cnst->intval = strtol((char *)node->data.scalar.value, NULL, 0);
+    }
+    else if (type == STRING) {
+        strncpy_s(cnst->strval, 64, (char *)node->data.scalar.value, node->data.scalar.length);
+    }
+    else if (type == FLOAT) {
+        cnst->flval = strtof((char *)node->data.scalar.value, NULL);
+    }
+    *p = (partfx_prop_t *)cnst;
 }
 
 void parse_prop_rand(yaml_document_t *doc, int *i, PropType type, partfx_prop_t **p) {
