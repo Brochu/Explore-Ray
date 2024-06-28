@@ -82,6 +82,8 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             check_prop(&doc, &i, node, &target, &type);
 
             if (target >= 0) {
+                //TODO: Actually parse the prop
+                // We need to differenciate between prop types, CNST, Random, Lerps, etc
                 printf("Found prop index %i, of type %i\n", target, type);
             }
         }
