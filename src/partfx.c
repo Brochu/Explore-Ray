@@ -46,6 +46,57 @@ void check_prop(yaml_document_t *doc, int *i, yaml_node_t *n, ParticleProps *tar
     }
 }
 
+void parse_prop_cnst(yaml_document_t *doc, int *i, PropType type, partfx_prop_t **p) {
+    yaml_node_t *node = NULL;
+    while (1) {
+        node = yaml_document_get_node(doc, ++(*i));
+        if (node->type != YAML_MAPPING_NODE && strcmp((char *)node->data.scalar.value, "tex") != 0) {
+            break;
+        }
+    }
+    printf("[PARSE] Need to parse a constant prop, '%i', '%s'\n", node->type, node->data.scalar.value);
+}
+
+void parse_prop_rand(yaml_document_t *doc, int *i, PropType type, partfx_prop_t **p) {
+    yaml_node_t *node = NULL;
+    while (1) {
+        node = yaml_document_get_node(doc, ++(*i));
+        if (node->type != YAML_MAPPING_NODE) {
+            break;
+        }
+    }
+    //TODO: I would like to find a better way to handle offets with MAPPING_START/_END nodes
+    (*i)+= 3;
+    yaml_node_t *a = yaml_document_get_node(doc, (*i));
+    (*i)+= 4;
+    yaml_node_t *b = yaml_document_get_node(doc, (*i));
+    printf("[PARSE] Need to parse a random prop, a='%s'; b'%s'\n", a->data.scalar.value, b->data.scalar.value);
+
+    partfx_rand_t *rand = malloc(sizeof(partfx_rand_t));
+    rand->a = strtof((char *)a->data.scalar.value, NULL);
+    rand->b = strtof((char *)b->data.scalar.value, NULL);
+    *p = (partfx_prop_t *)rand;
+}
+
+void parse_prop(yaml_document_t *doc, int *i, PropType type, PropQuery *query, partfx_prop_t **p) {
+    yaml_node_t *ntype = NULL;
+    while (1) {
+        ntype = yaml_document_get_node(doc, ++(*i));
+        if (ntype->type == YAML_MAPPING_NODE) continue;
+
+        if (ntype->type == YAML_SCALAR_NODE && strcmp((char *)ntype->data.scalar.value, "CNST") == 0) {
+            parse_prop_cnst(doc, i, type, p);
+            *query = CONST;
+            return;
+        }
+        else if (ntype->type == YAML_SCALAR_NODE && strcmp((char *)ntype->data.scalar.value, "RAND") == 0) {
+            parse_prop_rand(doc, i, type, p);
+            *query = RAND;
+            return;
+        }
+    }
+}
+
 void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
 }
@@ -79,12 +130,18 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
         if (node->type == YAML_SCALAR_NODE) {
             ParticleProps target = -1;
             PropType type = -1;
+            PropQuery query = -1;
             check_prop(&doc, &i, node, &target, &type);
 
             if (target >= 0) {
-                //TODO: Actually parse the prop
-                // We need to differenciate between prop types, CNST, Random, Lerps, etc
-                printf("Found prop index %i, of type %i\n", target, type);
+                partfx_prop_t *p = NULL;
+                parse_prop(&doc, &i, type, &query, &p);
+
+                if (p != NULL) {
+                    p->type = type;
+                    p->query = query;
+                    pfx->_props[target] = p;
+                }
             }
         }
         ++i;
