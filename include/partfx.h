@@ -30,6 +30,7 @@ typedef struct {
     size_t p; //Progress in frame #
     float t; //Progress in normalized value
 
+    //TODO: Find a way to preallocate X props (with max concrete prop size), let's say X = 100?
     partfx_prop_t *_props[PROP_COUNT];
 } partfx_t;
 
