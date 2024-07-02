@@ -24,7 +24,7 @@ Rectangle view = { 0 };
 void LoadParticleEffect(int idx) {
     if (data != NULL) {
         UnloadFileText(data);
-        partfx_delete(&fx);
+        partfx_reset(&fx);
     }
 
     char path[128];

@@ -113,6 +113,16 @@ void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
 }
 
+void partfx_reset(partfx_t *pfx) {
+    //TODO: Change logic here when memory arena is setup
+    for (int i = 0; i < PROP_COUNT; ++i) {
+        if (pfx->_props[i] != NULL) {
+            free(pfx->_props[i]);
+        }
+    }
+    memset(pfx, 0, sizeof(partfx_t));
+}
+
 void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
     yaml_parser_t parser;
     yaml_document_t doc;
