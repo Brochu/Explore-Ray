@@ -32,6 +32,37 @@ typedef struct {
             parser.problem_value);               \
     } while(0)
 
+#define ARENA_SIZE 4096
+static char *arena = NULL;
+static char *next = NULL;
+
+void arena_init() {
+    arena = malloc(ARENA_SIZE);
+    if (arena == NULL) {
+        assert(false && "Could not allocate arena for partfx");
+    }
+    memset(arena, 0, ARENA_SIZE);
+    next = arena;
+}
+void *arena_alloc(size_t size) {
+    if ((next + size) > arena + ARENA_SIZE) {
+        assert(false && "partfx arena ran out of memory");
+    }
+
+    void *res = next;
+    next += size;
+    return res;
+}
+void arena_reset() {
+    next = arena;
+}
+void arena_clear() {
+    free(arena);
+
+    arena = NULL;
+    next = NULL;
+}
+
 //TODO: Is there a way to sync this with the props with XMacros
 static const char *nameLUT[PROP_COUNT] = { "PSLT", "MAXP", "TEXR", "GRTE" };
 static const PropType typeLUT[PROP_COUNT] = { INT, INT, STRING, FLOAT };
@@ -111,6 +142,10 @@ void parse_prop(yaml_document_t *doc, int *i, PropType type, PropQuery *query, p
 
 void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
+
+    if (arena == NULL) {
+        arena_init();
+    }
 }
 
 void partfx_reset(partfx_t *pfx) {
@@ -121,6 +156,7 @@ void partfx_reset(partfx_t *pfx) {
         }
     }
     memset(pfx, 0, sizeof(partfx_t));
+    arena_reset();
 }
 
 void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
@@ -205,4 +241,5 @@ void partfx_delete(partfx_t *pfx) {
         }
     }
     memset(pfx, 0, sizeof(partfx_t));
+    arena_clear();
 }
