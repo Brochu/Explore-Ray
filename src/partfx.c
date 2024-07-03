@@ -282,21 +282,29 @@ void partfx_query(partfx_t *pfx, ParticleProps prop, void *out) {
     if (p->query == CONST) {
         if (p->type == INT) {
             int *value = (int *)out;
-            *value = ((partfx_cnst_t *)pfx->_props[prop])->intval;
+            *value = ((partfx_cnst_t *)p)->intval;
         }
         else if (p->type == STRING) {
             char **value = (char **)out;
-            *value = ((partfx_cnst_t *)pfx->_props[prop])->strval;
+            *value = ((partfx_cnst_t *)p)->strval;
         }
         else if (p->type == FLOAT) {
             float *value = (float *)out;
-            *value = ((partfx_cnst_t *)pfx->_props[prop])->flval;
+            *value = ((partfx_cnst_t *)p)->flval;
         }
     }
-    else if (pfx->_props[prop]->query == RAND) {
-        partfx_rand_t *r = (partfx_rand_t *)pfx->_props[prop];
+    else if (p->query == RAND) {
+        partfx_rand_t *r = (partfx_rand_t *)p;
         float *value = (float *)out;
         *value = r->a + ((float)rand() / RAND_MAX) * (r->b - r->a);
+    }
+    else if (p->query == CFDE) {
+        Vector4 *value = (Vector4 *)out;
+        value->x = 1.f;
+        value->y = 2.f;
+        value->z = 3.f;
+        value->w = 4.f;
+        //TODO: Implement lerp based off of current pfx progress
     }
 }
 

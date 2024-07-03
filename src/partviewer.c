@@ -52,15 +52,18 @@ void DrawParticleViewer() {
     int maxparticles = 0;
     char *texname = NULL;
     float random = 0.f;
+    Vector4 color = { 0 };
     partfx_query(&fx, LIFETIME, &lifetime);
     partfx_query(&fx, MAX_PARTICLES, &maxparticles);
     partfx_query(&fx, TEXTURE, &texname);
     partfx_query(&fx, GEN_RATE, &random);
-    sprintf_s(contents, 128, "PSLT: %i\nMAXP: %i\nTEXR: '%s'\nGRTE: %f",
+    partfx_query(&fx, COLOR, &color);
+    sprintf_s(contents, 128, "PSLT: %i\nMAXP: %i\nTEXR: '%s'\nGRTE: %f\nCOLR: (%f, %f, %f, %f)",
               lifetime,
               maxparticles,
               texname,
-              random
+              random,
+              color.x, color.y, color.z, color.w
     );
 
     BeginScissorMode((int)view.x, (int)view.y, (int)view.width, (int)view.height);
