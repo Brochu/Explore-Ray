@@ -29,7 +29,7 @@ typedef struct {
 } partfx_prop_t;
 
 typedef struct {
-    size_t length;
+    size_t length; //Total amount of frames
     size_t p; //Progress in frame #
     float t; //Progress in normalized value
 

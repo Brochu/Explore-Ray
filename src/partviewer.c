@@ -14,7 +14,7 @@ Catalog cat;
 partfx_t fx;
 
 const char *options = NULL;
-int pickidx = 0;
+int pickidx = 10;
 bool picking = false;
 char *data = NULL;
 
