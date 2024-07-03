@@ -4,12 +4,14 @@ typedef enum {
     MAX_PARTICLES,
     TEXTURE,
     GEN_RATE,
+    COLOR,
     PROP_COUNT,
 } ParticleProps;
 
 typedef enum {
     CONST,
     RAND,
+    CFDE,
     QUERY_COUNT,
 } PropQuery;
 
@@ -17,6 +19,7 @@ typedef enum {
     INT,
     STRING,
     FLOAT,
+    VEC4,
     TYPE_COUNT,
 } PropType;
 

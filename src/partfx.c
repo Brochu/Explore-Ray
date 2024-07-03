@@ -24,6 +24,14 @@ typedef struct {
     float b;
 } partfx_rand_t;
 
+typedef struct {
+    partfx_prop_t prop;
+    Vector4 a;
+    Vector4 b;
+    size_t startFrame;
+    size_t endFrame;
+} partfx_cfde_t;
+
 #define print_problem(parser)                    \
     do {                                         \
         printf("[YAML] ERROR:\n%s : %zu (%i)\n", \
@@ -64,8 +72,8 @@ void arena_clear() {
 }
 
 //TODO: Is there a way to sync this with the props with XMacros
-static const char *nameLUT[PROP_COUNT] = { "PSLT", "MAXP", "TEXR", "GRTE" };
-static const PropType typeLUT[PROP_COUNT] = { INT, INT, STRING, FLOAT };
+static const char *nameLUT[PROP_COUNT] = { "PSLT", "MAXP", "TEXR", "GRTE", "COLR" };
+static const PropType typeLUT[PROP_COUNT] = { INT, INT, STRING, FLOAT, VEC4 };
 
 void check_prop(yaml_document_t *doc, int *i, yaml_node_t *n, ParticleProps *target, PropType *type) {
     for (int i = 0; i < PROP_COUNT; ++i) {
@@ -121,7 +129,66 @@ void parse_prop_rand(yaml_document_t *doc, int *i, PropType type, partfx_prop_t 
     *p = (partfx_prop_t *)rand;
 }
 
-void parse_prop(yaml_document_t *doc, int *i, PropType type, PropQuery *query, partfx_prop_t **p) {
+void parse_prop_cfde(yaml_document_t *doc, int *i, PropType type, partfx_prop_t **p) {
+    yaml_node_t *node = NULL;
+    while (1) {
+        node = yaml_document_get_node(doc, ++(*i));
+        if (node->type != YAML_MAPPING_NODE) {
+            break;
+        }
+    }
+
+    (*i) += 3;
+    Vector4 a;
+    (*i) += 3;
+    node = yaml_document_get_node(doc, *i);
+    a.x = strtof((char *)node->data.scalar.value, NULL);
+    (*i) += 3;
+    node = yaml_document_get_node(doc, *i);
+    a.y = strtof((char *)node->data.scalar.value, NULL);
+    (*i) += 3;
+    node = yaml_document_get_node(doc, *i);
+    a.z = strtof((char *)node->data.scalar.value, NULL);
+    (*i) += 3;
+    node = yaml_document_get_node(doc, *i);
+    a.w = strtof((char *)node->data.scalar.value, NULL);
+
+    (*i) += 4;
+    Vector4 b;
+    (*i) += 3;
+    node = yaml_document_get_node(doc, *i);
+    b.x = strtof((char *)node->data.scalar.value, NULL);
+    (*i) += 3;
+    node = yaml_document_get_node(doc, *i);
+    b.y = strtof((char *)node->data.scalar.value, NULL);
+    (*i) += 3;
+    node = yaml_document_get_node(doc, *i);
+    b.z = strtof((char *)node->data.scalar.value, NULL);
+    (*i) += 3;
+    node = yaml_document_get_node(doc, *i);
+    b.w = strtof((char *)node->data.scalar.value, NULL);
+
+    (*i) += 4;
+    node = yaml_document_get_node(doc, *i);
+    size_t start = strtol((char *)node->data.scalar.value, NULL, 10);
+
+    (*i) += 4;
+    node = yaml_document_get_node(doc, *i);
+    size_t end = strtol((char *)node->data.scalar.value, NULL, 10);
+
+    printf("[PARSE] Need to parse a cfde prop:\n");
+    printf("\ta: (%f, %f, %f, %f)\n", a.x, a.y, a.z, a.w);
+    printf("\tb: (%f, %f, %f, %f)\n", b.x, b.y, b.z, b.w);
+    printf("\tstartFrame=%zu ; endFrame=%zu\n", start, end);
+    partfx_cfde_t *cfde = arena_alloc(sizeof(partfx_cfde_t));
+    cfde->a = a;
+    cfde->b = b;
+    cfde->startFrame = start;
+    cfde->endFrame = end;
+    *p = (partfx_prop_t *)cfde;
+}
+
+void parse_prop(yaml_document_t *doc, int *i, PropType type, partfx_prop_t **p) {
     yaml_node_t *ntype = NULL;
     while (1) {
         ntype = yaml_document_get_node(doc, ++(*i));
@@ -129,12 +196,20 @@ void parse_prop(yaml_document_t *doc, int *i, PropType type, PropQuery *query, p
 
         if (ntype->type == YAML_SCALAR_NODE && strcmp((char *)ntype->data.scalar.value, "CNST") == 0) {
             parse_prop_cnst(doc, i, type, p);
-            *query = CONST;
+            (*p)->type = type;
+            (*p)->query = CONST;
             return;
         }
         else if (ntype->type == YAML_SCALAR_NODE && strcmp((char *)ntype->data.scalar.value, "RAND") == 0) {
             parse_prop_rand(doc, i, type, p);
-            *query = RAND;
+            (*p)->type = type;
+            (*p)->query = RAND;
+            return;
+        }
+        else if (ntype->type == YAML_SCALAR_NODE && strcmp((char *)ntype->data.scalar.value, "CFDE") == 0) {
+            parse_prop_cfde(doc, i, type, p);
+            (*p)->type = type;
+            (*p)->query = CFDE;
             return;
         }
     }
@@ -182,16 +257,13 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
         if (node->type == YAML_SCALAR_NODE) {
             ParticleProps target = -1;
             PropType type = -1;
-            PropQuery query = -1;
             check_prop(&doc, &i, node, &target, &type);
 
             if (target >= 0) {
                 partfx_prop_t *p = NULL;
-                parse_prop(&doc, &i, type, &query, &p);
+                parse_prop(&doc, &i, type, &p);
 
                 if (p != NULL) {
-                    p->type = type;
-                    p->query = query;
                     pfx->_props[target] = p;
                 }
             }
