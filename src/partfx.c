@@ -87,7 +87,7 @@ void parse_prop_cnst(yaml_document_t *doc, int *i, PropType type, partfx_prop_t 
     }
     printf("[PARSE] Need to parse a constant prop, '%i', '%s'\n", type, node->data.scalar.value);
 
-    partfx_cnst_t *cnst = malloc(sizeof(partfx_cnst_t));
+    partfx_cnst_t *cnst = arena_alloc(sizeof(partfx_cnst_t));
     if (type == INT) {
         cnst->intval = strtol((char *)node->data.scalar.value, NULL, 0);
     }
@@ -115,7 +115,7 @@ void parse_prop_rand(yaml_document_t *doc, int *i, PropType type, partfx_prop_t 
     yaml_node_t *b = yaml_document_get_node(doc, (*i));
     printf("[PARSE] Need to parse a random prop, a='%s'; b'%s'\n", a->data.scalar.value, b->data.scalar.value);
 
-    partfx_rand_t *rand = malloc(sizeof(partfx_rand_t));
+    partfx_rand_t *rand = arena_alloc(sizeof(partfx_rand_t));
     rand->a = strtof((char *)a->data.scalar.value, NULL);
     rand->b = strtof((char *)b->data.scalar.value, NULL);
     *p = (partfx_prop_t *)rand;
@@ -149,14 +149,8 @@ void partfx_init(partfx_t *pfx) {
 }
 
 void partfx_reset(partfx_t *pfx) {
-    //TODO: Change logic here when memory arena is setup
-    for (int i = 0; i < PROP_COUNT; ++i) {
-        if (pfx->_props[i] != NULL) {
-            free(pfx->_props[i]);
-        }
-    }
-    memset(pfx, 0, sizeof(partfx_t));
     arena_reset();
+    memset(pfx, 0, sizeof(partfx_t));
 }
 
 void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
@@ -235,11 +229,6 @@ void partfx_query(partfx_t *pfx, ParticleProps prop, void *out) {
 }
 
 void partfx_delete(partfx_t *pfx) {
-    for (int i = 0; i < PROP_COUNT; ++i) {
-        if (pfx->_props[i] != NULL) {
-            free(pfx->_props[i]);
-        }
-    }
-    memset(pfx, 0, sizeof(partfx_t));
     arena_clear();
+    memset(pfx, 0, sizeof(partfx_t));
 }
