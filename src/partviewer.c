@@ -53,11 +53,11 @@ void DrawParticleViewer() {
     char *texname = NULL;
     float random = 0.f;
     Vector4 color = { 0 };
-    partfx_query(&fx, LIFETIME, &lifetime);
-    partfx_query(&fx, MAX_PARTICLES, &maxparticles);
-    partfx_query(&fx, TEXTURE, &texname);
-    partfx_query(&fx, GEN_RATE, &random);
-    partfx_query(&fx, COLOR, &color);
+    //partfx_query(&fx, LIFETIME, &lifetime);
+    //partfx_query(&fx, MAX_PARTICLES, &maxparticles);
+    //partfx_query(&fx, TEXTURE, &texname);
+    //partfx_query(&fx, GEN_RATE, &random);
+    //partfx_query(&fx, COLOR, &color);
     sprintf_s(contents, 128, "PSLT: %i\nMAXP: %i\nTEXR: '%s'\nGRTE: %f\nCOLR: (%f, %f, %f, %f)",
               lifetime,
               maxparticles,
