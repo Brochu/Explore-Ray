@@ -1,10 +1,16 @@
 #ifndef PARTFX_H
 #define PARTFX_H
 
-#define MAX_NODES 128
+#define MAX_NODES 512
+
+struct partfx_val_t {
+    struct partfx_val_t *value;
+};
+typedef struct partfx_val_t partfx_val_t;
 
 typedef struct {
-    int type;
+    const char *name;
+    struct partfx_val_t *val;
 } partfx_node_t;
 
 typedef struct {
