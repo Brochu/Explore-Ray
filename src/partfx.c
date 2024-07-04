@@ -49,6 +49,7 @@ void arena_clear() {
             parser.problem_value);               \
     } while(0)
 
+
 void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
 
@@ -83,10 +84,15 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
         exit(EXIT_FAILURE);
     }
 
-    int i = 2;
+    int i = 4;
+    size_t idx = 0;
     while (1) {
         node = yaml_document_get_node(&doc, i);
         if (node == NULL) break;
+
+        //printf("[Node at %i][SCALAR] '%s'\n", i, node->data.scalar.value);
+        //strncpy_s(pfx->_props[idx].name, 32, (char *)node->data.scalar.value, node->data.scalar.length);
+        //idx++;
 
         if (node->type == YAML_SCALAR_NODE) {
             printf("[Node at %i][SCALAR] '%s'\n", i, node->data.scalar.value);
@@ -110,7 +116,7 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
                 printf("\t- at: %i\n", list[j]);
             }
         }
-        ++i;
+        i++;
     }
     // Cleanup
     yaml_document_delete(&doc);
