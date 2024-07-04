@@ -49,6 +49,10 @@ void arena_clear() {
             parser.problem_value);               \
     } while(0)
 
+typedef struct {
+    partfx_node_t node;
+    partfx_node_t *value;
+} partfx_map_t;
 
 void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
@@ -86,21 +90,32 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
 
     int i = 4;
     size_t idx = 0;
+    partfx_node_t *current = NULL;
     while (1) {
         node = yaml_document_get_node(&doc, i);
-        if (node == NULL) break;
+        if (node == NULL || i > 11) break;
 
-        //printf("[Node at %i][SCALAR] '%s'\n", i, node->data.scalar.value);
-        //strncpy_s(pfx->_props[idx].name, 32, (char *)node->data.scalar.value, node->data.scalar.length);
-        //idx++;
+        current = arena_alloc(sizeof(partfx_map_t));
+        printf("Parsing prop: '%s'\n", node->data.scalar.value);
+        strncpy_s(current->type, 32, (char *)node->data.scalar.value, node->data.scalar.length);
 
+        node = yaml_document_get_node(&doc, ++i);
         if (node->type == YAML_SCALAR_NODE) {
-            printf("[Node at %i][SCALAR] '%s'\n", i, node->data.scalar.value);
+            printf("[VAL] '%s'\n", node->data.scalar.value);
         }
         else if (node->type == YAML_MAPPING_NODE) {
             yaml_node_pair_t *pair = node->data.mapping.pairs.start;
-            printf("[Node at %i][MAPPING] key: %i ; value: %i\n", i, pair->key, pair->value);
+            yaml_node_t *key = yaml_document_get_node(&doc, pair->key);
+            yaml_node_t *value = yaml_document_get_node(&doc, pair->value);
+            printf("[MAP] [%i] '%s' -> [%i] '%s'\n", pair->key, key->data.scalar.value, pair->value, value->data.scalar.value);
+            i = pair->value + 1;
         }
+        else if (node->type == YAML_SEQUENCE_NODE) {
+            printf("[Node at %i][SEQ]\n", i);
+        }
+
+        pfx->_props[idx++] = current;
+        /*
         else if (node->type == YAML_SEQUENCE_NODE) {
             yaml_node_item_t *start = node->data.sequence.items.start;
             yaml_node_item_t *top = node->data.sequence.items.top;
@@ -116,7 +131,7 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
                 printf("\t- at: %i\n", list[j]);
             }
         }
-        i++;
+        */
     }
     // Cleanup
     yaml_document_delete(&doc);
