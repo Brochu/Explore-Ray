@@ -7,15 +7,7 @@
 
 #include "yaml.h"
 
-#define MAX_ITEMS 1024
-#define print_problem(parser)                    \
-    do {                                         \
-        printf("[YAML] ERROR:\n%s : %zu (%i)\n", \
-            parser.problem,                      \
-            parser.problem_offset,               \
-            parser.problem_value);               \
-    } while(0)
-
+// ARENA ------------------------
 #define ARENA_SIZE 4096
 static char *arena = NULL;
 static char *next = NULL;
@@ -46,6 +38,16 @@ void arena_clear() {
     arena = NULL;
     next = NULL;
 }
+// ARENA ------------------------
+
+#define MAX_ITEMS 1024
+#define print_problem(parser)                    \
+    do {                                         \
+        printf("[YAML] ERROR:\n%s : %zu (%i)\n", \
+            parser.problem,                      \
+            parser.problem_offset,               \
+            parser.problem_value);               \
+    } while(0)
 
 void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
