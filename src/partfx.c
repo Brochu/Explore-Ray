@@ -40,19 +40,63 @@ void arena_clear() {
 }
 // ARENA ------------------------
 
-#define MAX_ITEMS 1024
+const char *event_str(yaml_event_type_t type) {
+    switch (type) {
+    case YAML_NO_EVENT:             return "NOP";
+    case YAML_STREAM_START_EVENT:   return "ST+";
+    case YAML_STREAM_END_EVENT:     return "ST-";
+    case YAML_DOCUMENT_START_EVENT: return "DC+";
+    case YAML_DOCUMENT_END_EVENT:   return "DC-";
+    case YAML_ALIAS_EVENT:          return "ALS";
+    case YAML_SCALAR_EVENT:         return "SCL";
+    case YAML_SEQUENCE_START_EVENT: return "SQ+";
+    case YAML_SEQUENCE_END_EVENT:   return "SQ-";
+    case YAML_MAPPING_START_EVENT:  return "MP+";
+    case YAML_MAPPING_END_EVENT:    return "MP-";
+    }
+
+    return "N/A";
+}
+
 #define print_problem(parser)                    \
     do {                                         \
         printf("[YAML] ERROR:\n%s : %zu (%i)\n", \
-            parser.problem,                      \
-            parser.problem_offset,               \
-            parser.problem_value);               \
+            parser->problem,                      \
+            parser->problem_offset,               \
+            parser->problem_value);               \
     } while(0)
+#define MAX_ITEMS 512
+
+void next_event(yaml_parser_t *parser, yaml_event_t *e) {
+    if (!yaml_parser_parse(parser, e)) {
+        printf("Failed to parse next event!\n");
+        print_problem(parser);
+        exit(EXIT_FAILURE);
+    }
+}
+void print_event(yaml_event_t e) {
+    printf("[type=%s]", event_str(e.type));
+    if (e.type == YAML_SCALAR_EVENT) {
+        printf(" '%s'\n", e.data.scalar.value);
+    } else {
+        printf("\n");
+    }
+}
 
 typedef struct {
     partfx_node_t node;
     partfx_node_t *value;
 } partfx_map_t;
+
+typedef struct {
+    partfx_node_t node;
+    partfx_node_t *value[MAX_ITEMS];
+    size_t len;
+} partfx_seq_t;
+
+typedef struct {
+    partfx_node_t node;
+} partfx_val_t;
 
 void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
@@ -68,73 +112,70 @@ void partfx_reset(partfx_t *pfx) {
 }
 
 void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
-    yaml_parser_t parser;
-    yaml_document_t doc;
-    memset(&doc, 0, sizeof(yaml_document_t));
-    yaml_node_t *node = NULL;
+    yaml_parser_t parser = { 0 };
+    yaml_event_t e = { 0 };
 
     // Initialize parser
     if(!yaml_parser_initialize(&parser)) {
         printf("Failed to initialize parser!\n");
-        print_problem(parser);
+        print_problem((&parser));
         exit(EXIT_FAILURE);
     }
     // Set input string
     yaml_parser_set_input_string(&parser, (unsigned char *)data, length);
-    if (!yaml_parser_load(&parser, &doc)) {
-        printf("Failed to parse yaml document!\n");
-        print_problem(parser);
-        yaml_parser_delete(&parser);
-        exit(EXIT_FAILURE);
+    while (e.type != YAML_MAPPING_START_EVENT) {
+        next_event(&parser, &e);
     }
 
-    int i = 4;
-    size_t idx = 0;
-    partfx_node_t *current = NULL;
-    while (1) {
-        node = yaml_document_get_node(&doc, i);
-        if (node == NULL || i > 11) break;
-
-        current = arena_alloc(sizeof(partfx_map_t));
-        printf("Parsing prop: '%s'\n", node->data.scalar.value);
-        strncpy_s(current->type, 32, (char *)node->data.scalar.value, node->data.scalar.length);
-
-        node = yaml_document_get_node(&doc, ++i);
-        if (node->type == YAML_SCALAR_NODE) {
-            printf("[VAL] '%s'\n", node->data.scalar.value);
-        }
-        else if (node->type == YAML_MAPPING_NODE) {
-            yaml_node_pair_t *pair = node->data.mapping.pairs.start;
-            yaml_node_t *key = yaml_document_get_node(&doc, pair->key);
-            yaml_node_t *value = yaml_document_get_node(&doc, pair->value);
-            printf("[MAP] [%i] '%s' -> [%i] '%s'\n", pair->key, key->data.scalar.value, pair->value, value->data.scalar.value);
-            i = pair->value + 1;
-        }
-        else if (node->type == YAML_SEQUENCE_NODE) {
-            printf("[Node at %i][SEQ]\n", i);
+    do {
+        next_event(&parser, &e);
+        print_event(e);
+        if (e.type == YAML_STREAM_END_EVENT) {
+            break;
         }
 
-        pfx->_props[idx++] = current;
-        /*
-        else if (node->type == YAML_SEQUENCE_NODE) {
-            yaml_node_item_t *start = node->data.sequence.items.start;
-            yaml_node_item_t *top = node->data.sequence.items.top;
-
-            yaml_node_item_t list[MAX_ITEMS];
-            size_t len = 0;
-            while (*start != *top) {
-                list[len++] = *start;
-                start++;
-            }
-            printf("[Node at %i][SEQ]\n", i);
-            for (int j = 0; j < len; ++j) {
-                printf("\t- at: %i\n", list[j]);
+        next_event(&parser, &e);
+        print_event(e);
+        int stack = 0;
+        if (e.type == YAML_MAPPING_START_EVENT) {
+            stack++;
+            while (stack > 0) {
+                next_event(&parser, &e);
+                print_event(e);
+                if (e.type == YAML_MAPPING_START_EVENT) {
+                    stack++;
+                }
+                else if (e.type == YAML_MAPPING_END_EVENT) {
+                    stack--;
+                }
             }
         }
-        */
+        printf("\n");
+
+        if (e.type != YAML_STREAM_END_EVENT) {
+            yaml_event_delete(&e);
+        }
+    } while(e.type != YAML_STREAM_END_EVENT);
+    yaml_event_delete(&e);
+
+/*
+else if (node->type == YAML_SEQUENCE_NODE) {
+    yaml_node_item_t *start = node->data.sequence.items.start;
+    yaml_node_item_t *top = node->data.sequence.items.top;
+
+    yaml_node_item_t list[MAX_ITEMS];
+    size_t len = 0;
+    while (*start != *top) {
+        list[len++] = *start;
+        start++;
     }
+    printf("[Node at %i][SEQ]\n", i);
+    for (int j = 0; j < len; ++j) {
+        printf("\t- at: %i\n", list[j]);
+    }
+}
+*/
     // Cleanup
-    yaml_document_delete(&doc);
     yaml_parser_delete(&parser);
 }
 
