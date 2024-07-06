@@ -14,6 +14,7 @@ typedef struct {
     float t; //Progress in normalized value
 
     //TODO: Find a way to preallocate X props (with max concrete prop size), let's say X = 100?
+    //TODO: Maybe we only store indices in the yaml_document_t??
     partfx_node_t *_props[MAX_NODES];
 } partfx_t;
 
