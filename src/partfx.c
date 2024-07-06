@@ -113,7 +113,7 @@ void partfx_reset(partfx_t *pfx) {
 
 void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
     yaml_parser_t parser = { 0 };
-    yaml_event_t e = { 0 };
+    yaml_document_t doc;
 
     // Initialize parser
     if(!yaml_parser_initialize(&parser)) {
@@ -121,61 +121,29 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
         print_problem((&parser));
         exit(EXIT_FAILURE);
     }
+
     // Set input string
     yaml_parser_set_input_string(&parser, (unsigned char *)data, length);
-    while (e.type != YAML_MAPPING_START_EVENT) {
-        next_event(&parser, &e);
+    if (!yaml_parser_load(&parser, &doc)) {
+        printf("Failed to load yaml document!\n");
+        print_problem((&parser));
+        exit(EXIT_FAILURE);
     }
 
-    do {
-        next_event(&parser, &e);
-        print_event(e);
-        if (e.type == YAML_STREAM_END_EVENT) {
-            break;
-        }
-
-        next_event(&parser, &e);
-        print_event(e);
-        int stack = 0;
-        if (e.type == YAML_MAPPING_START_EVENT) {
-            stack++;
-            while (stack > 0) {
-                next_event(&parser, &e);
-                print_event(e);
-                if (e.type == YAML_MAPPING_START_EVENT) {
-                    stack++;
-                }
-                else if (e.type == YAML_MAPPING_END_EVENT) {
-                    stack--;
-                }
-            }
-        }
-        printf("\n");
-
-        if (e.type != YAML_STREAM_END_EVENT) {
-            yaml_event_delete(&e);
-        }
-    } while(e.type != YAML_STREAM_END_EVENT);
-    yaml_event_delete(&e);
-
-/*
-else if (node->type == YAML_SEQUENCE_NODE) {
-    yaml_node_item_t *start = node->data.sequence.items.start;
-    yaml_node_item_t *top = node->data.sequence.items.top;
-
-    yaml_node_item_t list[MAX_ITEMS];
-    size_t len = 0;
-    while (*start != *top) {
-        list[len++] = *start;
-        start++;
+    yaml_node_t *root = yaml_document_get_root_node(&doc);
+    if (root->type == YAML_SCALAR_NODE) {
+        printf("[SCALAR] Value = '%s'\n", root->data.scalar.value);
     }
-    printf("[Node at %i][SEQ]\n", i);
-    for (int j = 0; j < len; ++j) {
-        printf("\t- at: %i\n", list[j]);
+    else if (root->type == YAML_MAPPING_NODE) {
+        yaml_node_pair_t *pair = root->data.mapping.pairs.start;
+        printf("[MAPPING] %i -> %i\n", pair->key, pair->value);
     }
-}
-*/
+    else if (root->type == YAML_SEQUENCE_NODE) {
+        printf("[SEQUENCE]\n");
+    }
+
     // Cleanup
+    yaml_document_delete(&doc);
     yaml_parser_delete(&parser);
 }
 
