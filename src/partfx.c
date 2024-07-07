@@ -8,6 +8,8 @@
 #include "yaml.h"
 
 // ARENA ------------------------
+// This works since we always have only one partfx active at once
+//TODO: Look into making this in a way that we can load multiple particles at once?
 #define ARENA_SIZE 4096
 static char *arena = NULL;
 static char *next = NULL;
@@ -47,22 +49,6 @@ void arena_clear() {
             parser->problem_offset,               \
             parser->problem_value);               \
     } while(0)
-#define MAX_ITEMS 512
-
-typedef struct {
-    partfx_node_t node;
-    partfx_node_t *value;
-} partfx_map_t;
-
-typedef struct {
-    partfx_node_t node;
-    partfx_node_t *value[MAX_ITEMS];
-    size_t len;
-} partfx_seq_t;
-
-typedef struct {
-    partfx_node_t node;
-} partfx_val_t;
 
 void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
@@ -71,9 +57,6 @@ void partfx_init(partfx_t *pfx) {
         arena_init();
     }
 }
-
-//TODO: Find a way to sync this with enum with Xmacros
-static const char *prop_names[PROP_COUNT] = { "PSLT", "MAXP" };
 
 void partfx_reset(partfx_t *pfx) {
     arena_reset();
@@ -120,13 +103,10 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
     // Cleanup
     yaml_document_delete(&doc);
     yaml_parser_delete(&parser);
-
-    for (int i = 0; i < PROP_COUNT; ++i) {
-        printf("[PROP TYPE] -> '%s'\n", prop_names[i]);
-    }
 }
 
 void partfx_query(partfx_t *pfx, const char *name, void *out) {
+    //TODO: Working on new parsing, need different queries
 }
 
 void partfx_delete(partfx_t *pfx) {
