@@ -50,6 +50,23 @@ void arena_clear() {
             parser->problem_value);               \
     } while(0)
 
+const char *event_str(yaml_event_type_t type) {
+    switch (type) {
+        case YAML_NO_EVENT: return "NOP";
+        case YAML_STREAM_START_EVENT: return "ST+";
+        case YAML_STREAM_END_EVENT: return "ST-";
+        case YAML_DOCUMENT_START_EVENT: return "DC+";
+        case YAML_DOCUMENT_END_EVENT: return "DC-";
+        case YAML_ALIAS_EVENT: return "ALI";
+        case YAML_SCALAR_EVENT: return "VAL";
+        case YAML_SEQUENCE_START_EVENT: return "SQ+";
+        case YAML_SEQUENCE_END_EVENT: return "SQ-";
+        case YAML_MAPPING_START_EVENT: return "MP+";
+        case YAML_MAPPING_END_EVENT: return "MP-";
+        default: return "N/A";
+    }
+}
+
 void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
 
@@ -65,7 +82,7 @@ void partfx_reset(partfx_t *pfx) {
 
 void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
     yaml_parser_t parser = { 0 };
-    yaml_document_t doc;
+    yaml_event_t e;
 
     // Initialize parser
     if(!yaml_parser_initialize(&parser)) {
@@ -76,32 +93,28 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
 
     // Set input string
     yaml_parser_set_input_string(&parser, (unsigned char *)data, length);
-    if (!yaml_parser_load(&parser, &doc)) {
-        printf("Failed to load yaml document!\n");
-        print_problem((&parser));
-        exit(EXIT_FAILURE);
-    }
 
-    int i = 2;
-    while (1) {
-        yaml_node_t *node = yaml_document_get_node(&doc, i);
-        if (node == NULL) break;
+    partfx_node_t *current = NULL;
+    int stack = 0;
+    do {
+        if (!yaml_parser_parse(&parser, &e)) {
+            printf("Could not parse next event!\n");
+            print_problem((&parser));
+            exit(EXIT_FAILURE);
+        }
 
-        if (node->type == YAML_SCALAR_NODE) {
-            printf("[SCALAR] Value = '%s'\n", node->data.scalar.value);
+        //TODO: Goal here is to use current and stack to keep status between loops
+        // For now, just create a list of top level nodes
+        if (e.type == YAML_SCALAR_EVENT) {
+            printf("[%s] -> '%s'\n", event_str(e.type), e.data.scalar.value);
         }
-        else if (node->type == YAML_MAPPING_NODE) {
-            yaml_node_pair_t *pair = node->data.mapping.pairs.start;
-            printf("[MAPPING] %i -> %i\n", pair->key, pair->value);
+        else {
+            printf("[%s]\n", event_str(e.type));
         }
-        else if (node->type == YAML_SEQUENCE_NODE) {
-            printf("[SEQUENCE]\n");
-        }
-        ++i;
-    }
+    } while(e.type != YAML_STREAM_END_EVENT);
 
     // Cleanup
-    yaml_document_delete(&doc);
+    yaml_event_delete(&e);
     yaml_parser_delete(&parser);
 }
 
