@@ -40,24 +40,6 @@ void arena_clear() {
 }
 // ARENA ------------------------
 
-const char *event_str(yaml_event_type_t type) {
-    switch (type) {
-    case YAML_NO_EVENT:             return "NOP";
-    case YAML_STREAM_START_EVENT:   return "ST+";
-    case YAML_STREAM_END_EVENT:     return "ST-";
-    case YAML_DOCUMENT_START_EVENT: return "DC+";
-    case YAML_DOCUMENT_END_EVENT:   return "DC-";
-    case YAML_ALIAS_EVENT:          return "ALS";
-    case YAML_SCALAR_EVENT:         return "SCL";
-    case YAML_SEQUENCE_START_EVENT: return "SQ+";
-    case YAML_SEQUENCE_END_EVENT:   return "SQ-";
-    case YAML_MAPPING_START_EVENT:  return "MP+";
-    case YAML_MAPPING_END_EVENT:    return "MP-";
-    }
-
-    return "N/A";
-}
-
 #define print_problem(parser)                    \
     do {                                         \
         printf("[YAML] ERROR:\n%s : %zu (%i)\n", \
@@ -66,22 +48,6 @@ const char *event_str(yaml_event_type_t type) {
             parser->problem_value);               \
     } while(0)
 #define MAX_ITEMS 512
-
-void next_event(yaml_parser_t *parser, yaml_event_t *e) {
-    if (!yaml_parser_parse(parser, e)) {
-        printf("Failed to parse next event!\n");
-        print_problem(parser);
-        exit(EXIT_FAILURE);
-    }
-}
-void print_event(yaml_event_t e) {
-    printf("[type=%s]", event_str(e.type));
-    if (e.type == YAML_SCALAR_EVENT) {
-        printf(" '%s'\n", e.data.scalar.value);
-    } else {
-        printf("\n");
-    }
-}
 
 typedef struct {
     partfx_node_t node;
@@ -105,6 +71,9 @@ void partfx_init(partfx_t *pfx) {
         arena_init();
     }
 }
+
+//TODO: Find a way to sync this with enum with Xmacros
+static const char *prop_names[PROP_COUNT] = { "PSLT", "MAXP" };
 
 void partfx_reset(partfx_t *pfx) {
     arena_reset();
@@ -130,21 +99,31 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
         exit(EXIT_FAILURE);
     }
 
-    yaml_node_t *root = yaml_document_get_root_node(&doc);
-    if (root->type == YAML_SCALAR_NODE) {
-        printf("[SCALAR] Value = '%s'\n", root->data.scalar.value);
-    }
-    else if (root->type == YAML_MAPPING_NODE) {
-        yaml_node_pair_t *pair = root->data.mapping.pairs.start;
-        printf("[MAPPING] %i -> %i\n", pair->key, pair->value);
-    }
-    else if (root->type == YAML_SEQUENCE_NODE) {
-        printf("[SEQUENCE]\n");
+    int i = 2;
+    while (1) {
+        yaml_node_t *node = yaml_document_get_node(&doc, i);
+        if (node == NULL) break;
+
+        if (node->type == YAML_SCALAR_NODE) {
+            printf("[SCALAR] Value = '%s'\n", node->data.scalar.value);
+        }
+        else if (node->type == YAML_MAPPING_NODE) {
+            yaml_node_pair_t *pair = node->data.mapping.pairs.start;
+            printf("[MAPPING] %i -> %i\n", pair->key, pair->value);
+        }
+        else if (node->type == YAML_SEQUENCE_NODE) {
+            printf("[SEQUENCE]\n");
+        }
+        ++i;
     }
 
     // Cleanup
     yaml_document_delete(&doc);
     yaml_parser_delete(&parser);
+
+    for (int i = 0; i < PROP_COUNT; ++i) {
+        printf("[PROP TYPE] -> '%s'\n", prop_names[i]);
+    }
 }
 
 void partfx_query(partfx_t *pfx, const char *name, void *out) {

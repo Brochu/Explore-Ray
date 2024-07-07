@@ -1,8 +1,13 @@
 #ifndef PARTFX_H
 #define PARTFX_H
 
-#define MAX_NODES 128
 #define TYPE_SIZE 32
+
+typedef enum {
+    PSTL,
+    MAXP,
+    PROP_COUNT,
+} Partfx_Prop;
 
 typedef struct {
     char type[TYPE_SIZE];
@@ -15,7 +20,7 @@ typedef struct {
 
     //TODO: Find a way to preallocate X props (with max concrete prop size), let's say X = 100?
     //TODO: Maybe we only store indices in the yaml_document_t??
-    partfx_node_t *_props[MAX_NODES];
+    partfx_node_t *_props[PROP_COUNT];
 } partfx_t;
 
 void partfx_init(partfx_t *pfx);
