@@ -82,7 +82,7 @@ void partfx_reset(partfx_t *pfx) {
 
 void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
     yaml_parser_t parser = { 0 };
-    yaml_event_t e;
+    yaml_event_t e = { 0 };
 
     // Initialize parser
     if(!yaml_parser_initialize(&parser)) {
@@ -94,6 +94,14 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
     // Set input string
     yaml_parser_set_input_string(&parser, (unsigned char *)data, length);
 
+    while (e.type != YAML_MAPPING_START_EVENT) {
+        if (!yaml_parser_parse(&parser, &e)) {
+            printf("Could not parse next event!\n");
+            print_problem((&parser));
+            exit(EXIT_FAILURE);
+        }
+    }
+
     partfx_node_t *current = NULL;
     int stack = 0;
     do {
@@ -101,6 +109,9 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             printf("Could not parse next event!\n");
             print_problem((&parser));
             exit(EXIT_FAILURE);
+        }
+        if (e.type == YAML_STREAM_END_EVENT) {
+            break;
         }
 
         //TODO: Goal here is to use current and stack to keep status between loops
@@ -110,6 +121,22 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
         }
         else {
             printf("[%s]\n", event_str(e.type));
+        }
+        if (current == NULL) {
+            //TODO: Temp set
+            current = (partfx_node_t *)1;
+        }
+        else {
+            if (e.type == YAML_MAPPING_START_EVENT) {
+                stack++;
+            }
+            else if (e.type == YAML_MAPPING_END_EVENT) {
+                stack--;
+            }
+            if (stack == 0) {
+                current = NULL;
+                printf("\n");
+            }
         }
     } while(e.type != YAML_STREAM_END_EVENT);
 
