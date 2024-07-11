@@ -13,6 +13,7 @@ typedef struct {
     size_t p; //Progress in frame #
     float t; //Progress in normalized value
 
+    size_t _prop_len;
     partfx_node_t *_props[MAX_PROPS];
 } partfx_t;
 

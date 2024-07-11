@@ -31,6 +31,11 @@ void LoadParticleEffect(int idx) {
     sprintf_s(path, 128, "%s/%s", FOLDER, cat.paths[pickidx]);
     data = LoadFileText(path);
     partfx_parse(&fx, data, strlen(data));
+
+    printf("[FX] The parsed partfx has %zu properties\n", fx._prop_len);
+    for (int i = 0; i < fx._prop_len; ++i) {
+        printf("[PROP] name = '%s'\n", fx._props[i]->type);
+    }
 }
 
 void InitParticleViewer() {

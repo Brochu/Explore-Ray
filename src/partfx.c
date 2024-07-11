@@ -110,22 +110,22 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             print_problem((&parser));
             exit(EXIT_FAILURE);
         }
-        if (e.type == YAML_STREAM_END_EVENT) {
-            break;
-        }
 
-        if (e.type == YAML_SCALAR_EVENT) {
-            printf("[%s] -> '%s'\n", event_str(e.type), e.data.scalar.value);
-        }
-        else {
-            printf("[%s]\n", event_str(e.type));
-        }
         if (current == NULL && e.data.scalar.value != NULL) {
-            //TODO: Temp set
-            printf("[NEW NODE] value = '%s'\n", e.data.scalar.value);
-            current = (partfx_node_t *)1;
+            //printf("[NEW NODE] value = '%s'\n", e.data.scalar.value);
+            current = (partfx_node_t *)arena_alloc(sizeof(partfx_node_t));
+            strncpy_s(current->type, TYPE_SIZE, (char *)e.data.scalar.value, e.data.scalar.length);
+
+            pfx->_props[pfx->_prop_len++] = current;
         }
         else {
+            if (e.type == YAML_SCALAR_EVENT) {
+                //printf("[TYPE=%s] '%s'\n", event_str(e.type), e.data.scalar.value);
+            }
+            else {
+                //printf("[TYPE=%s]\n", event_str(e.type));
+            }
+
             if (e.type == YAML_MAPPING_START_EVENT) {
                 stack++;
             }
@@ -134,7 +134,7 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             }
             if (stack == 0) {
                 current = NULL;
-                printf("\n");
+                //printf("---------\n");
             }
         }
     } while(e.type != YAML_STREAM_END_EVENT);
