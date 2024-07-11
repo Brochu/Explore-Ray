@@ -137,6 +137,11 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             if (stack == 0) {
                 current = NULL;
                 printf("---------\n");
+                //TEMP
+                if (pfx->_prop_len > 2) {
+                    break;
+                }
+                //-------------------------
             }
         }
     } while(e.type != YAML_STREAM_END_EVENT);
