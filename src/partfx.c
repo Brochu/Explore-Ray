@@ -112,7 +112,7 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
         }
 
         if (current == NULL && e.data.scalar.value != NULL) {
-            //printf("[NEW NODE] value = '%s'\n", e.data.scalar.value);
+            printf("[NEW NODE] value = '%s'\n", e.data.scalar.value);
             current = (partfx_node_t *)arena_alloc(sizeof(partfx_node_t));
             strncpy_s(current->type, TYPE_SIZE, (char *)e.data.scalar.value, e.data.scalar.length);
 
@@ -120,12 +120,14 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
         }
         else {
             if (e.type == YAML_SCALAR_EVENT) {
-                //printf("[TYPE=%s] '%s'\n", event_str(e.type), e.data.scalar.value);
+                printf("[TYPE=%s] '%s'\n", event_str(e.type), e.data.scalar.value);
             }
             else {
-                //printf("[TYPE=%s]\n", event_str(e.type));
+                printf("[TYPE=%s]\n", event_str(e.type));
             }
 
+            //TODO: Look into how to handle nested structures here
+            // Also need to find how to handle sequences (maybe some struct with a pointer and a count?)
             if (e.type == YAML_MAPPING_START_EVENT) {
                 stack++;
             }
@@ -134,7 +136,7 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             }
             if (stack == 0) {
                 current = NULL;
-                //printf("---------\n");
+                printf("---------\n");
             }
         }
     } while(e.type != YAML_STREAM_END_EVENT);
