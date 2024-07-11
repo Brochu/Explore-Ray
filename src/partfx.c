@@ -114,16 +114,15 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             break;
         }
 
-        //TODO: Goal here is to use current and stack to keep status between loops
-        // For now, just create a list of top level nodes
         if (e.type == YAML_SCALAR_EVENT) {
             printf("[%s] -> '%s'\n", event_str(e.type), e.data.scalar.value);
         }
         else {
             printf("[%s]\n", event_str(e.type));
         }
-        if (current == NULL) {
+        if (current == NULL && e.data.scalar.value != NULL) {
             //TODO: Temp set
+            printf("[NEW NODE] value = '%s'\n", e.data.scalar.value);
             current = (partfx_node_t *)1;
         }
         else {
