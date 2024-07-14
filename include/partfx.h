@@ -4,9 +4,13 @@
 #define TYPE_SIZE 32
 #define MAX_PROPS 64
 
-typedef struct {
+struct partfx_node_t {
     char type[TYPE_SIZE];
-} partfx_node_t;
+
+    size_t size;
+    struct partfx_node_t *n;
+};
+typedef struct partfx_node_t partfx_node_t;
 
 typedef struct {
     size_t length; //Total amount of frames

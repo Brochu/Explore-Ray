@@ -29,6 +29,7 @@ void *arena_alloc(size_t size) {
 
     void *res = next;
     next += size;
+    memset(res, 0, size);
     return res;
 }
 void arena_reset() {
