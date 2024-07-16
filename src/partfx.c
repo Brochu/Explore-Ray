@@ -26,7 +26,6 @@ void *arena_alloc(size_t size) {
     if ((next + size) > arena + ARENA_SIZE) {
         assert(0 && "partfx arena ran out of memory");
     }
-
     void *res = next;
     next += size;
     memset(res, 0, size);
@@ -37,7 +36,6 @@ void arena_reset() {
 }
 void arena_clear() {
     free(arena);
-
     arena = NULL;
     next = NULL;
 }
@@ -46,9 +44,9 @@ void arena_clear() {
 #define print_problem(parser)                    \
     do {                                         \
         printf("[YAML] ERROR:\n%s : %zu (%i)\n", \
-            parser->problem,                      \
-            parser->problem_offset,               \
-            parser->problem_value);               \
+            parser->problem,                     \
+            parser->problem_offset,              \
+            parser->problem_value);              \
     } while(0)
 
 const char *event_str(yaml_event_type_t type) {
@@ -67,6 +65,13 @@ const char *event_str(yaml_event_type_t type) {
         default: return "N/A";
     }
 }
+
+#define MAX_VAL 64
+
+typedef struct {
+    partfx_node_t node;
+    char val[MAX_VAL];
+} partfx_val_t;
 
 void partfx_init(partfx_t *pfx) {
     memset(pfx, 0, sizeof(partfx_t));
@@ -105,6 +110,9 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
 
     partfx_node_t *current = NULL;
     int stack = 0;
+    char name[TYPE_SIZE];
+    name[0] = '\0';
+
     do {
         if (!yaml_parser_parse(&parser, &e)) {
             printf("Could not parse next event!\n");
@@ -112,16 +120,17 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
             exit(EXIT_FAILURE);
         }
 
-        if (current == NULL && e.data.scalar.value != NULL) {
-            printf("[NEW NODE] value = '%s'\n", e.data.scalar.value);
-            current = (partfx_node_t *)arena_alloc(sizeof(partfx_node_t));
-            strncpy_s(current->type, TYPE_SIZE, (char *)e.data.scalar.value, e.data.scalar.length);
-
-            pfx->_props[pfx->_prop_len++] = current;
+        if (name[0] == '\0' && e.data.scalar.value != NULL) {
+            printf("[TYPE=%s] value = '%s'\n", event_str(e.type), e.data.scalar.value);
+            strncpy_s(name, TYPE_SIZE, (char *)e.data.scalar.value, e.data.scalar.length);
         }
         else {
             if (e.type == YAML_SCALAR_EVENT) {
                 printf("[TYPE=%s] '%s'\n", event_str(e.type), e.data.scalar.value);
+                partfx_val_t *valnode = arena_alloc(sizeof(partfx_val_t));
+                strncpy_s(valnode->node.type, TYPE_SIZE, name, strlen(name));
+                strncpy_s(valnode->val, 64, (char *)e.data.scalar.value, e.data.scalar.length);
+                current = (partfx_node_t *)valnode;
             }
             else {
                 printf("[TYPE=%s]\n", event_str(e.type));
@@ -136,8 +145,12 @@ void partfx_parse(partfx_t *pfx, const char *data, size_t length) {
                 stack--;
             }
             if (stack == 0) {
+                pfx->_props[pfx->_prop_len++] = current;
+
+                name[0] = '\0';
                 current = NULL;
                 printf("---------\n");
+
                 //TEMP
                 if (pfx->_prop_len > 2) {
                     break;
