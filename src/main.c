@@ -21,7 +21,6 @@ int main(int argc, char **argv) {
     time_t t;
     srand((unsigned) time(&t));
 
-    printf("[MAIN] Program START\n");
     if (argc > 1 && strcmp(argv[1], "-strtest") == 0) {
         char *og = "0123456789012345678901234567890123456789";
         char dest[64];
@@ -42,23 +41,24 @@ int main(int argc, char **argv) {
         }
         return 0;
     }
-    else if (argc > 1 && strcmp(argv[1], "-icons") == 0) {
+
+    printf("[MAIN] Program START\n");
+    printf("[MAIN] Drawing main window...\n");
+
+    InitWindow(WIDTH, HEIGHT, "[ALPHA] Raylib Exploration");
+    SetTargetFPS(60);
+    GuiLoadStyle("styles/style_cyber.rgs");
+
+    if (argc > 1 && strcmp(argv[1], "-icons") == 0) {
         appId = ICONS;
     }
     else if (argc > 1 && strcmp(argv[1], "-mp") == 0) {
         appId = MP;
+        InitParticleViewer();
     }
-
-    printf("[MAIN] Drawing main window...\n");
-    InitWindow(WIDTH, HEIGHT, "[ALPHA] Raylib Exploration");
-    InitParticleViewer();
-
-    SetTargetFPS(60);
-    GuiLoadStyle("styles/style_cyber.rgs");
 
     while(!WindowShouldClose()) {
         BeginDrawing();
-
         ClearBackground(BLACK);
 
         //TODO: Add handling inputs for each applications
