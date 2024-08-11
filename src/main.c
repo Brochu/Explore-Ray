@@ -75,6 +75,7 @@ int main(int argc, char **argv) {
             DrawParticleViewer();
         }
         else if (appId == BOIDS) {
+            TickBoidsApp();
             DrawBoidsApp();
         }
 

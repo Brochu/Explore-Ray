@@ -3,6 +3,7 @@
 
 void InitBoidsApp();
 
+void TickBoidsApp();
 void DrawBoidsApp();
 
 void DropBoidsApp();
