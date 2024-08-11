@@ -10,7 +10,14 @@
 #define WIDTH 800
 #define HEIGHT 600
 
+typedef enum {
+    INVALID,
+    ICONS,
+    MP,
+} App;
+
 int main(int argc, char **argv) {
+    App appId = INVALID;
     time_t t;
     srand((unsigned) time(&t));
 
@@ -26,8 +33,7 @@ int main(int argc, char **argv) {
         printf("og = '%s', dest = '%s'\n", og, dest);
         return 0;
     }
-
-    if (argc > 1 && strcmp(argv[1], "-randtest") == 0) {
+    else if (argc > 1 && strcmp(argv[1], "-randtest") == 0) {
         float lo = 10.2f;
         float hi = 15.8f;
         for (int i = 0; i < 25; ++i) {
@@ -35,6 +41,12 @@ int main(int argc, char **argv) {
             printf("Generated a random number = %f\n", r);
         }
         return 0;
+    }
+    else if (argc > 1 && strcmp(argv[1], "-icons") == 0) {
+        appId = ICONS;
+    }
+    else if (argc > 1 && strcmp(argv[1], "-mp") == 0) {
+        appId = MP;
     }
 
     printf("[MAIN] Drawing main window...\n");
@@ -48,10 +60,12 @@ int main(int argc, char **argv) {
         BeginDrawing();
 
         ClearBackground(BLACK);
-        if (argc > 1 && strcmp(argv[1], "-icons") == 0) {
+
+        //TODO: Add handling inputs for each applications
+        if (appId == ICONS) {
             DrawIconSwatch();
         }
-        else if (argc > 1 && strcmp(argv[1], "-particles") == 0) {
+        else if (appId == MP) {
             DrawParticleViewer();
         }
 

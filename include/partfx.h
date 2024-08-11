@@ -6,6 +6,7 @@
 
 typedef struct {
     char type[TYPE_SIZE];
+    // Do we need to add parent node link here? Keep it null for root
 } partfx_node_t;
 
 typedef struct {
