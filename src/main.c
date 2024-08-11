@@ -1,5 +1,6 @@
 #include "iconswatch.h"
 #include "partviewer.h"
+#include "boids.h"
 
 #include <stdio.h>
 #include <time.h>
@@ -14,6 +15,7 @@ typedef enum {
     INVALID,
     ICONS,
     MP,
+    BOIDS,
 } App;
 
 int main(int argc, char **argv) {
@@ -56,6 +58,10 @@ int main(int argc, char **argv) {
         appId = MP;
         InitParticleViewer();
     }
+    else if (argc > 1 && strcmp(argv[1], "-boids") == 0) {
+        appId = BOIDS;
+        InitBoidsApp();
+    }
 
     while(!WindowShouldClose()) {
         BeginDrawing();
@@ -68,11 +74,22 @@ int main(int argc, char **argv) {
         else if (appId == MP) {
             DrawParticleViewer();
         }
+        else if (appId == BOIDS) {
+            DrawBoidsApp();
+        }
 
         EndDrawing();
     }
 
-    DropParticleViewer();
+    if (appId == ICONS) {
+    }
+    else if (appId == MP) {
+        DropParticleViewer();
+    }
+    else if (appId == BOIDS) {
+        DropBoidsApp();
+    }
+
     CloseWindow();
     printf("[MAIN] Program END\n");
     return 0;
