@@ -1,12 +1,17 @@
 #include "boids.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "raylib.h"
 #include "raygui.h"
 #include "raymath.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
 #define NUM_BOIDS 1
+
+float rand_float(float lo, float hi) {
+    return lo + ((float)rand() / RAND_MAX) * (hi - lo);
+}
 
 typedef struct { 
     Vector3 pos[NUM_BOIDS];
@@ -54,8 +59,15 @@ void InitBoidsApp() {
     };
 
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
-        boids.pos[i] = (Vector3) { 0.f, 0.f, 0.f };
-        boids.fwd[i] = (Vector3) { 1.f, 0.f, 0.f };
+        float rx = (float)rand() / RAND_MAX;
+        float ry = (float)rand() / RAND_MAX;
+        float rz = (float)rand() / RAND_MAX;
+        boids.pos[i] = (Vector3) { rx, ry, rz };
+
+        rx = (float)rand() / RAND_MAX;
+        ry = (float)rand() / RAND_MAX;
+        rz = (float)rand() / RAND_MAX;
+        boids.fwd[i] = (Vector3) { rx, ry, rz };
     }
     print_boids(boids);
 }
