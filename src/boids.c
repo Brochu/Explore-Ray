@@ -7,7 +7,7 @@
 #include "raymath.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
-#define NUM_BOIDS 1
+#define NUM_BOIDS 100
 
 float rand_float(float lo, float hi) {
     return lo + ((float)rand() / RAND_MAX) * (hi - lo);
@@ -40,9 +40,30 @@ void drawBounds(Vector3 pos, Vector3 size) {
 }
 
 void drawBoid(Vector3 pos, Vector3 dir) {
-    //TODO: Find a way to draw a pyramid
-    DrawCube(pos, 0.1f, 0.1f, 0.1f, BLUE);
-    DrawLine3D(pos, Vector3Add(pos, dir), RED);
+    Vector3 ndir = Vector3Scale(Vector3Normalize(dir), 0.75f);
+    Vector3 up = { 0.f, 0.5f, 0.f };
+    Vector3 left = Vector3Scale(Vector3CrossProduct(ndir, up), 0.5f);
+    up = Vector3CrossProduct(ndir, left);
+
+    Vector3 p0 = Vector3Add(pos, up);
+    Vector3 p1 = Vector3Add(pos, Vector3Subtract(left, up));
+    Vector3 p2 = Vector3Subtract(pos, Vector3Add(left, up));
+    Vector3 apex = Vector3Add(pos, ndir);
+
+    DrawLine3D(p0, p1, BLUE);
+    DrawLine3D(p0, p2, BLUE);
+    DrawLine3D(p0, apex, BLUE);
+    DrawLine3D(p1, apex, BLUE);
+    DrawLine3D(p2, apex, BLUE);
+
+    DrawTriangle3D(p0, p1, p2, ColorAlpha(BLUE, 0.75f));
+    DrawTriangle3D(p0, p1, p2, ColorAlpha(BLUE, 0.75f));
+    DrawTriangle3D(p0, apex, p1, ColorAlpha(BLUE, 0.75f));
+    DrawTriangle3D(p2, apex, p0, ColorAlpha(BLUE, 0.75f));
+    DrawTriangle3D(p1, apex, p2, ColorAlpha(BLUE, 0.75f));
+
+    Ray r = { .position = pos, .direction = dir };
+    DrawRay(r, RED);
 }
 
 void InitBoidsApp() {
@@ -59,14 +80,14 @@ void InitBoidsApp() {
     };
 
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
-        float rx = (float)rand() / RAND_MAX;
-        float ry = (float)rand() / RAND_MAX;
-        float rz = (float)rand() / RAND_MAX;
+        float rx = rand_float(-boundSize.x/2, boundSize.x/2);
+        float ry = rand_float(-boundSize.y/2, boundSize.y/2);
+        float rz = rand_float(-boundSize.z/2, boundSize.z/2);
         boids.pos[i] = (Vector3) { rx, ry, rz };
 
-        rx = (float)rand() / RAND_MAX;
-        ry = (float)rand() / RAND_MAX;
-        rz = (float)rand() / RAND_MAX;
+        rx = rand_float(-1.f, 1.f);
+        ry = rand_float(-1.f, 1.f);
+        rz = rand_float(-1.f, 1.f);
         boids.fwd[i] = (Vector3) { rx, ry, rz };
     }
     print_boids(boids);
