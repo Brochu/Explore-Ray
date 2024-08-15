@@ -7,7 +7,7 @@
 #include "raymath.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
-#define NUM_BOIDS 100
+#define NUM_BOIDS 15
 
 float rand_float(float lo, float hi) {
     return lo + ((float)rand() / RAND_MAX) * (hi - lo);
@@ -34,36 +34,27 @@ Vector3 camPos = { 0.f, 5.f, 20.f };
 Vector3 camTarget = { 0.f, 0.f, 0.f };
 Vector3 camUp = { 0.f, 1.f, 0.f };
 
+typedef enum {
+    DM_DEFAULT,
+    DM_DEBUG
+} DrawMode;
+DrawMode drawmode = DM_DEFAULT;
+
 void drawBounds(Vector3 pos, Vector3 size) {
     DrawCubeWiresV(pos, size, GREEN);
     DrawCubeV(pos, size, ColorAlpha(GREEN, 0.15f));
 }
 
 void drawBoid(Vector3 pos, Vector3 dir) {
-    Vector3 ndir = Vector3Scale(Vector3Normalize(dir), 0.75f);
-    Vector3 up = { 0.f, 0.5f, 0.f };
-    Vector3 left = Vector3Scale(Vector3CrossProduct(ndir, up), 0.5f);
-    up = Vector3CrossProduct(ndir, left);
+    if (drawmode == DM_DEBUG) {
+        //Ray r = { .position = pos, .direction = dir };
+        //DrawRay(r, RED);
+        DrawLine3D(pos, Vector3Add(pos, dir), RED);
+    }
 
-    Vector3 p0 = Vector3Add(pos, up);
-    Vector3 p1 = Vector3Add(pos, Vector3Subtract(left, up));
-    Vector3 p2 = Vector3Subtract(pos, Vector3Add(left, up));
-    Vector3 apex = Vector3Add(pos, ndir);
-
-    DrawLine3D(p0, p1, BLUE);
-    DrawLine3D(p0, p2, BLUE);
-    DrawLine3D(p0, apex, BLUE);
-    DrawLine3D(p1, apex, BLUE);
-    DrawLine3D(p2, apex, BLUE);
-
-    DrawTriangle3D(p0, p1, p2, ColorAlpha(BLUE, 0.75f));
-    DrawTriangle3D(p0, p1, p2, ColorAlpha(BLUE, 0.75f));
-    DrawTriangle3D(p0, apex, p1, ColorAlpha(BLUE, 0.75f));
-    DrawTriangle3D(p2, apex, p0, ColorAlpha(BLUE, 0.75f));
-    DrawTriangle3D(p1, apex, p2, ColorAlpha(BLUE, 0.75f));
-
-    Ray r = { .position = pos, .direction = dir };
-    DrawRay(r, RED);
+    Vector3 end = Vector3Add(pos, Vector3Scale(Vector3Normalize(dir), 0.5f));
+    DrawCylinderWiresEx(pos, end, 0.2f, 0.f, 3, BLACK);
+    DrawCylinderEx(pos, end, 0.2f, 0.f, 3, BLUE);
 }
 
 void InitBoidsApp() {
@@ -94,6 +85,12 @@ void InitBoidsApp() {
 }
 
 void TickBoidsApp() {
+    if (IsKeyPressed(KEY_R)) {
+        //TODO: Handle mode draw modes later?
+        if (drawmode == DM_DEFAULT) drawmode = DM_DEBUG;
+        else if (drawmode == DM_DEBUG) drawmode = DM_DEFAULT;
+    }
+
     UpdateCamera(&camera, CAMERA_THIRD_PERSON);
     //TODO: Step movements for boids
 }
