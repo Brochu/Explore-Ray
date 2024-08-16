@@ -6,11 +6,11 @@
 #include "raymath.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
-#define NUM_BOIDS 15
+#define NUM_BOIDS 100
 #define BOIDS_SIDES 4
 #define BOIDS_START_RAD 0.2f
 #define BOIDS_END_RAD 0.f
-#define BOIDS_SPEED 10.f
+#define BOIDS_SPEED 5.f
 
 float rand_float(float lo, float hi) {
     return lo + ((float)rand() / RAND_MAX) * (hi - lo);
@@ -124,10 +124,11 @@ void TickBoidsApp() {
 }
 
 void DrawBoidsApp() {
-    GuiStatusBar(RECT(0, 585, 800, 15), TextFormat("simulating %zu boids", NUM_BOIDS));
+    GuiStatusBar(RECT(0, 585, 800, 15), TextFormat("simulating %zu boids; %zu FPS", NUM_BOIDS, GetFPS()));
 
     BeginMode3D(camera);
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
+        //TODO: Look into instanciating the meshes to render in one draw call
         drawBoid(boids.pos[i], boids.fwd[i]);
     }
 
