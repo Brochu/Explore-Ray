@@ -108,5 +108,5 @@ void DrawBoidsApp() {
 }
 
 void DropBoidsApp() {
-    printf("[BOIDS] dropping boids viewer application\n");
+    TraceLog(LOG_DEBUG, "[BOIDS] dropping boids viewer application\n");
 }
