@@ -34,7 +34,7 @@ void print_boids(boids_state state) {
 Vector3 boundSize = { 15.f, 10.f, 10.f };
 
 Camera3D camera;
-Vector3 camPos = { 0.f, 5.f, 20.f };
+Vector3 camPos = { 0.f, 3.f, 25.f };
 Vector3 camTarget = { 0.f, 0.f, 0.f };
 Vector3 camUp = { 0.f, 1.f, 0.f };
 
@@ -43,11 +43,6 @@ typedef enum {
     DM_DEBUG
 } DrawMode;
 DrawMode drawmode = DM_DEFAULT;
-
-void drawBounds(Vector3 pos, Vector3 size) {
-    DrawCubeWiresV(pos, size, GREEN);
-    DrawCubeV(pos, size, ColorAlpha(GREEN, 0.15f));
-}
 
 void drawBoid(Vector3 pos, Vector3 dir) {
     if (drawmode == DM_DEBUG) {
@@ -63,17 +58,17 @@ void drawBoid(Vector3 pos, Vector3 dir) {
 // Recreate grid each frame? limit the amount of other boids to check
 Vector3 rule1(int idx) {
     TraceLog(LOG_DEBUG, "[BOIDS] Calc rule 1 for boid at idx = %zu", idx);
-    return (Vector3){};
+    return (Vector3){ .x = 0.f, .y = 0.f, .z = 0.f };
 }
 
 Vector3 rule2(int idx) {
     TraceLog(LOG_DEBUG, "[BOIDS] Calc rule 2 for boid at idx = %zu", idx);
-    return (Vector3){};
+    return (Vector3){ .x = 0.f, .y = 0.f, .z = 0.f };
 }
 
 Vector3 rule3(int idx) {
     TraceLog(LOG_DEBUG, "[BOIDS] Calc rule 3 for boid at idx = %zu", idx);
-    return (Vector3){};
+    return (Vector3){ .x = 0.f, .y = 0.f, .z = 0.f };
 }
 
 void InitBoidsApp() {
@@ -149,7 +144,9 @@ void DrawBoidsApp() {
         drawBoid(boids.pos[i], boids.fwd[i]);
     }
 
-    drawBounds(camTarget, boundSize);
+    // Bounds
+    DrawCubeWiresV(camTarget, boundSize, GREEN);
+    DrawCubeV(camTarget, boundSize, ColorAlpha(GREEN, 0.15f));
     EndMode3D();
 }
 
