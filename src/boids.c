@@ -59,6 +59,23 @@ void drawBoid(Vector3 pos, Vector3 dir) {
     DrawCylinderEx(pos, end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLUE);
 }
 
+//TODO: Setup grid for faster distance lookups
+// Recreate grid each frame? limit the amount of other boids to check
+Vector3 rule1(int idx) {
+    TraceLog(LOG_DEBUG, "[BOIDS] Calc rule 1 for boid at idx = %zu", idx);
+    return (Vector3){};
+}
+
+Vector3 rule2(int idx) {
+    TraceLog(LOG_DEBUG, "[BOIDS] Calc rule 2 for boid at idx = %zu", idx);
+    return (Vector3){};
+}
+
+Vector3 rule3(int idx) {
+    TraceLog(LOG_DEBUG, "[BOIDS] Calc rule 3 for boid at idx = %zu", idx);
+    return (Vector3){};
+}
+
 void InitBoidsApp() {
     SetTraceLogLevel(LOG_DEBUG);
     TraceLog(LOG_DEBUG, "[BOIDS] Starting boids viewer application");
