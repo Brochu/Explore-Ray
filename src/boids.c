@@ -1,13 +1,16 @@
 #include "boids.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include "raylib.h"
 #include "raygui.h"
 #include "raymath.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
-#define NUM_BOIDS 100
+#define NUM_BOIDS 15
+#define BOIDS_SIDES 4
+#define BOIDS_START_RAD 0.2f
+#define BOIDS_END_RAD 0.f
+#define BOIDS_SPEED 10.f
 
 float rand_float(float lo, float hi) {
     return lo + ((float)rand() / RAND_MAX) * (hi - lo);
@@ -16,6 +19,7 @@ float rand_float(float lo, float hi) {
 typedef struct { 
     Vector3 pos[NUM_BOIDS];
     Vector3 fwd[NUM_BOIDS];
+    float speed;
 } boids_state;
 boids_state boids;
 
@@ -47,14 +51,12 @@ void drawBounds(Vector3 pos, Vector3 size) {
 
 void drawBoid(Vector3 pos, Vector3 dir) {
     if (drawmode == DM_DEBUG) {
-        //Ray r = { .position = pos, .direction = dir };
-        //DrawRay(r, RED);
         DrawLine3D(pos, Vector3Add(pos, dir), RED);
     }
 
     Vector3 end = Vector3Add(pos, Vector3Scale(Vector3Normalize(dir), 0.5f));
-    DrawCylinderWiresEx(pos, end, 0.2f, 0.f, 3, BLACK);
-    DrawCylinderEx(pos, end, 0.2f, 0.f, 3, BLUE);
+    DrawCylinderWiresEx(pos, end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLACK);
+    DrawCylinderEx(pos, end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLUE);
 }
 
 void InitBoidsApp() {
@@ -79,7 +81,9 @@ void InitBoidsApp() {
         rx = rand_float(-1.f, 1.f);
         ry = rand_float(-1.f, 1.f);
         rz = rand_float(-1.f, 1.f);
-        boids.fwd[i] = (Vector3) { rx, ry, rz };
+        boids.fwd[i] = Vector3Normalize((Vector3) { rx, ry, rz });
+
+        boids.speed = BOIDS_SPEED;
     }
     print_boids(boids);
 }
@@ -92,7 +96,31 @@ void TickBoidsApp() {
     }
 
     UpdateCamera(&camera, CAMERA_THIRD_PERSON);
-    //TODO: Step movements for boids
+    for (size_t i = 0; i < NUM_BOIDS; ++i) {
+        Vector3 mod = Vector3Scale(Vector3Scale(boids.fwd[i], boids.speed), GetFrameTime());
+        boids.pos[i] = Vector3Add(boids.pos[i], mod);
+
+        if (boids.pos[i].x < -boundSize.x/2) {
+            boids.pos[i].x += boundSize.x;
+        }
+        else if (boids.pos[i].x > boundSize.x/2) {
+            boids.pos[i].x -= boundSize.x;
+        }
+
+        if (boids.pos[i].y < -boundSize.y/2) {
+            boids.pos[i].y += boundSize.y;
+        }
+        else if (boids.pos[i].y > boundSize.y/2) {
+            boids.pos[i].y -= boundSize.y;
+        }
+
+        if (boids.pos[i].z < -boundSize.z/2) {
+            boids.pos[i].z += boundSize.z;
+        }
+        else if (boids.pos[i].z > boundSize.z/2) {
+            boids.pos[i].z -= boundSize.z;
+        }
+    }
 }
 
 void DrawBoidsApp() {
