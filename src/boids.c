@@ -6,11 +6,15 @@
 #include "raymath.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
-#define NUM_BOIDS 15
+#define NUM_BOIDS 25
 #define BOIDS_SIDES 4
 #define BOIDS_START_RAD 0.2f
 #define BOIDS_END_RAD 0.f
 #define BOIDS_SPEED 5.f
+
+#define RULE_DIST 5.f
+#define BOUND_FORCE 1.f
+#define MAX_SPEED 0.5f
 
 float rand_float(float lo, float hi) {
     return lo + ((float)rand() / RAND_MAX) * (hi - lo);
@@ -56,23 +60,50 @@ void drawBoid(Vector3 pos, Vector3 dir) {
 
 //TODO: Setup grid for faster distance lookups
 // Recreate grid each frame? limit the amount of other boids to check
-Vector3 rule1(int idx) {
-    TraceLog(LOG_DEBUG, "[BOIDS] Calc rule 1 for boid at idx = %zu", idx);
+Vector3 calcCenterRule(size_t idx) {
     return (Vector3){ .x = 0.f, .y = 0.f, .z = 0.f };
 }
 
-Vector3 rule2(int idx) {
-    TraceLog(LOG_DEBUG, "[BOIDS] Calc rule 2 for boid at idx = %zu", idx);
+Vector3 calcDistRule(size_t idx) {
     return (Vector3){ .x = 0.f, .y = 0.f, .z = 0.f };
 }
 
-Vector3 rule3(int idx) {
-    TraceLog(LOG_DEBUG, "[BOIDS] Calc rule 3 for boid at idx = %zu", idx);
+Vector3 calcMatchRule(size_t idx) {
     return (Vector3){ .x = 0.f, .y = 0.f, .z = 0.f };
 }
 
-Vector3 ruleBounds(int idx) {
-    return (Vector3){ .x = 0.f, .y = 0.f, .z = 0.f };
+void applyBoundRule(size_t idx) {
+    Vector3 *p = &boids.pos[idx];
+    Vector3 *v = &boids.vel[idx];
+
+    if (p->x < -boundSize.x/2) {
+        v->x = BOUND_FORCE;
+    }
+    else if (p->x > boundSize.x/2) {
+        v->x = -BOUND_FORCE;
+    }
+
+    if (p->y < -boundSize.y/2) {
+        v->y = BOUND_FORCE;
+    }
+    else if (p->y > boundSize.y/2) {
+        v->y = -BOUND_FORCE;
+    }
+
+    if (p->z < -boundSize.z/2) {
+        v->z = BOUND_FORCE;
+    }
+    else if (p->z > boundSize.z/2) {
+        v->z = -BOUND_FORCE;
+    }
+}
+
+void applySpeedRule(size_t idx) {
+    float len = Vector3Length(boids.vel[idx]);
+
+    if (len > MAX_SPEED) {
+        boids.vel[idx] = Vector3Scale(Vector3Normalize(boids.vel[idx]), len);
+    }
 }
 
 void InitBoidsApp() {
@@ -97,7 +128,7 @@ void InitBoidsApp() {
         rx = rand_float(-1.f, 1.f);
         ry = rand_float(-1.f, 1.f);
         rz = rand_float(-1.f, 1.f);
-        boids.vel[i] = Vector3Normalize((Vector3) { rx, ry, rz });
+        boids.vel[i] = (Vector3) { rx, ry, rz };
 
         boids.speed = BOIDS_SPEED;
     }
@@ -105,37 +136,23 @@ void InitBoidsApp() {
 }
 
 void TickBoidsApp() {
+    UpdateCamera(&camera, CAMERA_THIRD_PERSON);
+
     if (IsKeyPressed(KEY_R)) {
         //TODO: Handle mode draw modes later?
         if (drawmode == DM_DEFAULT) drawmode = DM_DEBUG;
         else if (drawmode == DM_DEBUG) drawmode = DM_DEFAULT;
     }
 
-    UpdateCamera(&camera, CAMERA_THIRD_PERSON);
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
-        Vector3 mod = Vector3Scale(boids.vel[i], boids.speed * GetFrameTime());
-        boids.pos[i] = Vector3Add(boids.pos[i], mod);
+        Vector3 cv = calcCenterRule(i);
+        Vector3 dv = calcDistRule(i);
+        Vector3 mv = calcMatchRule(i);
+        applyBoundRule(i);
+        applySpeedRule(i);
 
-        if (boids.pos[i].x < -boundSize.x/2) {
-            boids.pos[i].x += boundSize.x;
-        }
-        else if (boids.pos[i].x > boundSize.x/2) {
-            boids.pos[i].x -= boundSize.x;
-        }
-
-        if (boids.pos[i].y < -boundSize.y/2) {
-            boids.pos[i].y += boundSize.y;
-        }
-        else if (boids.pos[i].y > boundSize.y/2) {
-            boids.pos[i].y -= boundSize.y;
-        }
-
-        if (boids.pos[i].z < -boundSize.z/2) {
-            boids.pos[i].z += boundSize.z;
-        }
-        else if (boids.pos[i].z > boundSize.z/2) {
-            boids.pos[i].z -= boundSize.z;
-        }
+        boids.vel[i] = Vector3Add(boids.vel[i], Vector3Add(cv, Vector3Add(dv, mv)));
+        boids.pos[i] = Vector3Add(boids.pos[i], Vector3Scale(boids.vel[i], BOIDS_SPEED * GetFrameTime()));
     }
 }
 
