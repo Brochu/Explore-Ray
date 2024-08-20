@@ -6,7 +6,7 @@
 #include "raymath.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
-#define NUM_BOIDS 25
+#define NUM_BOIDS 15
 #define BOIDS_SIDES 4
 #define BOIDS_START_RAD 0.2f
 #define BOIDS_END_RAD 0.f
@@ -14,7 +14,7 @@
 
 #define RULE_DIST 5.f
 #define BOUND_FORCE 1.f
-#define MAX_SPEED 0.5f
+#define MAX_SPEED 1.f
 
 float rand_float(float lo, float hi) {
     return lo + ((float)rand() / RAND_MAX) * (hi - lo);
@@ -102,7 +102,7 @@ void applySpeedRule(size_t idx) {
     float len = Vector3Length(boids.vel[idx]);
 
     if (len > MAX_SPEED) {
-        boids.vel[idx] = Vector3Scale(Vector3Normalize(boids.vel[idx]), len);
+        boids.vel[idx] = Vector3Scale(Vector3Normalize(boids.vel[idx]), MAX_SPEED);
     }
 }
 
@@ -169,6 +169,16 @@ void DrawBoidsApp() {
     DrawCubeWiresV(camTarget, boundSize, GREEN);
     DrawCubeV(camTarget, boundSize, ColorAlpha(GREEN, 0.15f));
     EndMode3D();
+
+    if (drawmode == DM_DEBUG) {
+        for (size_t i = 0; i < NUM_BOIDS; ++i) {
+            Vector2 spos = GetWorldToScreen(boids.pos[i], camera);
+            float speed = Vector3Length(boids.vel[i]);
+
+            const char *txt = TextFormat("%f", speed);
+            DrawText(txt, (int)spos.x, (int)spos.y, 10, WHITE);
+        }
+    }
 }
 
 void DropBoidsApp() {
