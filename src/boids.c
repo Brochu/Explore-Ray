@@ -151,13 +151,13 @@ void TickBoidsApp() {
     }
 
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
-        Vector3 cv = calcCenterRule(i);
-        Vector3 dv = calcDistRule(i);
-        Vector3 mv = calcMatchRule(i);
+        Vector3 centerVel = calcCenterRule(i);
+        Vector3 distVel = calcDistRule(i);
+        Vector3 matchVel = calcMatchRule(i);
         applyBoundRule(i);
         applySpeedRule(i);
 
-        boids.vel[i] = Vector3Add(boids.vel[i], Vector3Add(cv, Vector3Add(dv, mv)));
+        boids.vel[i] = Vector3Add(boids.vel[i], Vector3Add(centerVel, Vector3Add(distVel, matchVel)));
         boids.pos[i] = Vector3Add(boids.pos[i], Vector3Scale(boids.vel[i], BOIDS_SPEED * GetFrameTime()));
     }
 }
