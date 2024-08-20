@@ -6,7 +6,7 @@
 #include "raymath.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
-#define NUM_BOIDS 100
+#define NUM_BOIDS 15
 #define BOIDS_SIDES 4
 #define BOIDS_START_RAD 0.2f
 #define BOIDS_END_RAD 0.f
@@ -18,7 +18,7 @@ float rand_float(float lo, float hi) {
 
 typedef struct { 
     Vector3 pos[NUM_BOIDS];
-    Vector3 fwd[NUM_BOIDS];
+    Vector3 vel[NUM_BOIDS];
     float speed;
 } boids_state;
 boids_state boids;
@@ -26,7 +26,7 @@ boids_state boids;
 void print_boids(boids_state state) {
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
         Vector3 p = state.pos[i];
-        Vector3 f = state.fwd[i];
+        Vector3 f = state.vel[i];
         TraceLog(LOG_DEBUG, "[BOIDS][%zu] pos: (%f, %f, %f); fwd: (%f, %f, %f)", i, p.x, p.y, p.z, f.x, f.y, f.z);
     }
 }
@@ -71,6 +71,10 @@ Vector3 rule3(int idx) {
     return (Vector3){ .x = 0.f, .y = 0.f, .z = 0.f };
 }
 
+Vector3 ruleBounds(int idx) {
+    return (Vector3){ .x = 0.f, .y = 0.f, .z = 0.f };
+}
+
 void InitBoidsApp() {
     SetTraceLogLevel(LOG_DEBUG);
     TraceLog(LOG_DEBUG, "[BOIDS] Starting boids viewer application");
@@ -93,7 +97,7 @@ void InitBoidsApp() {
         rx = rand_float(-1.f, 1.f);
         ry = rand_float(-1.f, 1.f);
         rz = rand_float(-1.f, 1.f);
-        boids.fwd[i] = Vector3Normalize((Vector3) { rx, ry, rz });
+        boids.vel[i] = Vector3Normalize((Vector3) { rx, ry, rz });
 
         boids.speed = BOIDS_SPEED;
     }
@@ -109,7 +113,7 @@ void TickBoidsApp() {
 
     UpdateCamera(&camera, CAMERA_THIRD_PERSON);
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
-        Vector3 mod = Vector3Scale(Vector3Scale(boids.fwd[i], boids.speed), GetFrameTime());
+        Vector3 mod = Vector3Scale(boids.vel[i], boids.speed * GetFrameTime());
         boids.pos[i] = Vector3Add(boids.pos[i], mod);
 
         if (boids.pos[i].x < -boundSize.x/2) {
@@ -141,7 +145,7 @@ void DrawBoidsApp() {
     BeginMode3D(camera);
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
         //TODO: Look into instanciating the meshes to render in one draw call
-        drawBoid(boids.pos[i], boids.fwd[i]);
+        drawBoid(boids.pos[i], boids.vel[i]);
     }
 
     // Bounds
