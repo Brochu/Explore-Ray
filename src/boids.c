@@ -77,24 +77,30 @@ void applyBoundRule(size_t idx) {
     Vector3 *v = &boids.vel[idx];
 
     if (p->x < -boundSize.x/2) {
-        v->x = BOUND_FORCE;
+        v->x *= -1.f;
+        p->x = -boundSize.x/2;
     }
     else if (p->x > boundSize.x/2) {
-        v->x = -BOUND_FORCE;
+        v->x *= -1.f;
+        p->x = boundSize.x/2;
     }
 
     if (p->y < -boundSize.y/2) {
-        v->y = BOUND_FORCE;
+        v->y *= -1.f;
+        p->y = -boundSize.y/2;
     }
     else if (p->y > boundSize.y/2) {
-        v->y = -BOUND_FORCE;
+        v->y *= -1.f;
+        p->y = boundSize.y/2;
     }
 
     if (p->z < -boundSize.z/2) {
-        v->z = BOUND_FORCE;
+        v->z *= -1.f;
+        p->z = -boundSize.y/2;
     }
     else if (p->z > boundSize.z/2) {
-        v->z = -BOUND_FORCE;
+        v->z *= -1.f;
+        p->z = boundSize.y/2;
     }
 }
 
@@ -125,9 +131,9 @@ void InitBoidsApp() {
         float rz = rand_float(-boundSize.z/2, boundSize.z/2);
         boids.pos[i] = (Vector3) { rx, ry, rz };
 
-        rx = rand_float(-1.f, 1.f);
-        ry = rand_float(-1.f, 1.f);
-        rz = rand_float(-1.f, 1.f);
+        rx = rand_float(-0.75f, 0.75f);
+        ry = rand_float(-0.75f, 0.75f);
+        rz = rand_float(-0.75f, 0.75f);
         boids.vel[i] = (Vector3) { rx, ry, rz };
 
         boids.speed = BOIDS_SPEED;
