@@ -11,7 +11,7 @@
 #define BOIDS_START_RAD 0.2f
 #define BOIDS_END_RAD 0.f
 
-#define CENTER_FACTOR 0.002f // Rule 1
+#define CENTER_FACTOR 0.004f // Rule 1
 #define AVOID_FACTOR 0.05f    // Rule 2
 #define MATCH_FACTOR 0.05f    // Rule 3
 #define TURN_FACTOR 0.1f
@@ -75,12 +75,27 @@ Vector3 calcCenterRule(size_t idx) {
 
 Vector3 calcDistRule(size_t idx) {
     Vector3 total = { 0.f, 0.f, 0.f };
-    return total;
+    for (size_t i = 0; i < NUM_BOIDS; ++i) {
+        if (i == idx) continue;
+
+        Vector3 diff = Vector3Subtract(boids.pos[idx], boids.pos[i]);
+        if (Vector3Length(diff) < 1.f) {
+            total = Vector3Add(total, diff);
+        }
+    }
+    return Vector3Scale(total, AVOID_FACTOR);
 }
 
 Vector3 calcMatchRule(size_t idx) {
     Vector3 total = { 0.f, 0.f, 0.f };
-    return total;
+
+    for (size_t i = 0; i < NUM_BOIDS; ++i) {
+        if (i == idx) continue;
+        total = Vector3Add(total, boids.vel[i]);
+    }
+    total = Vector3Scale(total, 1.f / (NUM_BOIDS - 1));
+
+    return Vector3Scale(Vector3Subtract(total, boids.vel[idx]), MATCH_FACTOR);
 }
 
 void applyBoundRule(size_t idx) {
