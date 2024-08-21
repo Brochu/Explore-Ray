@@ -15,7 +15,9 @@
 #define RULE_DIST 5.f
 #define BOUND_FORCE 1.f
 #define MAX_SPEED 1.f
-#define CENTER_DROP 100.f
+#define CENTER_DROP 250.f
+#define DIST_VAL 1.f
+#define MATCH_DROP 8.f
 
 float rand_float(float lo, float hi) {
     return lo + ((float)rand() / RAND_MAX) * (hi - lo);
@@ -74,7 +76,18 @@ Vector3 calcCenterRule(size_t idx) {
 }
 
 Vector3 calcDistRule(size_t idx) {
-    return (Vector3){ .x = 0.f, .y = 0.f, .z = 0.f };
+    Vector3 total = { 0.f, 0.f, 0.f };
+
+    for (size_t i = 0; i < NUM_BOIDS; ++i) {
+        if (i == idx) continue;
+
+        Vector3 diff = Vector3Subtract(boids.pos[i], boids.pos[idx]);
+        if (Vector3Length(diff) < DIST_VAL) {
+            total = Vector3Subtract(total, diff);
+        }
+    }
+    //TODO: Debug this, the velocity change happens too fast
+    return total;
 }
 
 Vector3 calcMatchRule(size_t idx) {
