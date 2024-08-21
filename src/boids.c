@@ -13,11 +13,11 @@
 #define BOIDS_SPEED 5.f
 
 #define RULE_DIST 5.f
-#define BOUND_FORCE 1.f
-#define MAX_SPEED 2.f
-#define CENTER_DROP 250.f
-#define DIST_VAL 1.f
-#define MATCH_DROP 10.f
+#define BOUND_FORCE 0.5f
+#define MAX_SPEED 1.f
+#define CENTER_DROP 100.f
+#define DIST_VAL 0.8f
+#define MATCH_DROP 8.f
 
 float rand_float(float lo, float hi) {
     return lo + ((float)rand() / RAND_MAX) * (hi - lo);
