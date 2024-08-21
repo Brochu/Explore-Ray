@@ -10,12 +10,10 @@
 #define BOIDS_SIDES 4
 #define BOIDS_START_RAD 0.2f
 #define BOIDS_END_RAD 0.f
-#define BOIDS_SPEED 5.f
 
-#define RULE_DIST 5.f
-#define BOUND_FORCE 0.5f
-#define MAX_SPEED 1.f
-#define CENTER_DROP 100.f
+#define TURN_FACTOR 0.1f
+#define MAX_SPEED 0.5f
+#define CENTER_DROP 200.f
 #define DIST_VAL 0.8f
 #define MATCH_DROP 8.f
 
@@ -77,61 +75,37 @@ Vector3 calcCenterRule(size_t idx) {
 
 Vector3 calcDistRule(size_t idx) {
     Vector3 total = { 0.f, 0.f, 0.f };
-
-    for (size_t i = 0; i < NUM_BOIDS; ++i) {
-        if (i == idx) continue;
-
-        Vector3 diff = Vector3Subtract(boids.pos[i], boids.pos[idx]);
-        if (Vector3Length(diff) < DIST_VAL) {
-            total = Vector3Subtract(total, diff);
-        }
-    }
-    //TODO: Debug this, the velocity change happens too fast
     return total;
 }
 
 Vector3 calcMatchRule(size_t idx) {
     Vector3 total = { 0.f, 0.f, 0.f };
-
-    for (size_t i = 0; i < NUM_BOIDS; ++i) {
-        if (i == idx) continue;
-        total = Vector3Add(total, boids.vel[i]);
-    }
-    total = Vector3Scale(total, 1.f / (NUM_BOIDS - 1));
-    //TODO: Debug this, seems unstable
-    return Vector3Scale(Vector3Subtract(total, boids.vel[idx]), (1.f / MATCH_DROP));
+    return total;
 }
 
 void applyBoundRule(size_t idx) {
-    //TODO: Debug this, should not react this sharply
     Vector3 *p = &boids.pos[idx];
     Vector3 *v = &boids.vel[idx];
 
     if (p->x < -boundSize.x/2) {
-        v->x *= -1.f;
-        p->x = -boundSize.x/2;
+        v->x += TURN_FACTOR;
     }
-    else if (p->x > boundSize.x/2) {
-        v->x *= -1.f;
-        p->x = boundSize.x/2;
+    if (p->x > boundSize.x/2) {
+        v->x -= TURN_FACTOR;
     }
 
     if (p->y < -boundSize.y/2) {
-        v->y *= -1.f;
-        p->y = -boundSize.y/2;
+        v->y += TURN_FACTOR;
     }
-    else if (p->y > boundSize.y/2) {
-        v->y *= -1.f;
-        p->y = boundSize.y/2;
+    if (p->y > boundSize.x/2) {
+        v->y -= TURN_FACTOR;
     }
 
-    if (p->z < -boundSize.z/2) {
-        v->z *= -1.f;
-        p->z = -boundSize.y/2;
+    if (p->z < -boundSize.y/2) {
+        v->z += TURN_FACTOR;
     }
-    else if (p->z > boundSize.z/2) {
-        v->z *= -1.f;
-        p->z = boundSize.y/2;
+    if (p->z > boundSize.x/2) {
+        v->z -= TURN_FACTOR;
     }
 }
 
@@ -166,8 +140,6 @@ void InitBoidsApp() {
         ry = rand_float(-0.75f, 0.75f);
         rz = rand_float(-0.75f, 0.75f);
         boids.vel[i] = (Vector3) { rx, ry, rz };
-
-        boids.speed = BOIDS_SPEED;
     }
     print_boids(boids);
 }
@@ -182,14 +154,11 @@ void TickBoidsApp() {
     }
 
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
-        Vector3 centerVel = calcCenterRule(i);
-        Vector3 distVel = calcDistRule(i);
-        Vector3 matchVel = calcMatchRule(i);
+        boids.vel[i] = Vector3Add(boids.vel[i], calcCenterRule(i));
         applyBoundRule(i);
-        //applySpeedRule(i);
+        applySpeedRule(i);
 
-        boids.vel[i] = Vector3Add(boids.vel[i], Vector3Add(centerVel, Vector3Add(distVel, matchVel)));
-        boids.pos[i] = Vector3Add(boids.pos[i], Vector3Scale(boids.vel[i], BOIDS_SPEED * GetFrameTime()));
+        boids.pos[i] = Vector3Add(boids.pos[i], boids.vel[i]);
     }
 }
 
