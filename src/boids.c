@@ -11,11 +11,11 @@
 #define BOIDS_START_RAD 0.2f
 #define BOIDS_END_RAD 0.f
 
+#define CENTER_FACTOR 0.002f // Rule 1
+#define AVOID_FACTOR 0.05f    // Rule 2
+#define MATCH_FACTOR 0.05f    // Rule 3
 #define TURN_FACTOR 0.1f
-#define MAX_SPEED 0.5f
-#define CENTER_DROP 200.f
-#define DIST_VAL 0.8f
-#define MATCH_DROP 8.f
+#define MAX_SPEED 0.25f
 
 float rand_float(float lo, float hi) {
     return lo + ((float)rand() / RAND_MAX) * (hi - lo);
@@ -70,7 +70,7 @@ Vector3 calcCenterRule(size_t idx) {
     }
     total = Vector3Scale(total, 1.f / (NUM_BOIDS - 1));
 
-    return Vector3Scale(Vector3Subtract(total, boids.pos[idx]), (1.f / CENTER_DROP));
+    return Vector3Scale(Vector3Subtract(total, boids.pos[idx]), CENTER_FACTOR);
 }
 
 Vector3 calcDistRule(size_t idx) {
