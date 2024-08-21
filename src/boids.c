@@ -15,6 +15,7 @@
 #define RULE_DIST 5.f
 #define BOUND_FORCE 1.f
 #define MAX_SPEED 1.f
+#define CENTER_DROP 100.f
 
 float rand_float(float lo, float hi) {
     return lo + ((float)rand() / RAND_MAX) * (hi - lo);
@@ -61,7 +62,15 @@ void drawBoid(Vector3 pos, Vector3 dir) {
 //TODO: Setup grid for faster distance lookups
 // Recreate grid each frame? limit the amount of other boids to check
 Vector3 calcCenterRule(size_t idx) {
-    return (Vector3){ .x = 0.f, .y = 0.f, .z = 0.f };
+    Vector3 total = { 0.f, 0.f, 0.f };
+
+    for (size_t i = 0; i < NUM_BOIDS; ++i) {
+        if (i == idx) continue;
+        total = Vector3Add(total, boids.pos[i]);
+    }
+    total = Vector3Scale(total, 1.f / (NUM_BOIDS - 1));
+
+    return Vector3Scale(Vector3Subtract(total, boids.pos[idx]), (1.f / CENTER_DROP));
 }
 
 Vector3 calcDistRule(size_t idx) {
