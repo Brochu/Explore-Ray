@@ -98,11 +98,12 @@ Vector3 calcMatchRule(size_t idx) {
         total = Vector3Add(total, boids.vel[i]);
     }
     total = Vector3Scale(total, 1.f / (NUM_BOIDS - 1));
-
+    //TODO: Debug this, seems unstable
     return Vector3Scale(Vector3Subtract(total, boids.vel[idx]), (1.f / MATCH_DROP));
 }
 
 void applyBoundRule(size_t idx) {
+    //TODO: Debug this, should not react this sharply
     Vector3 *p = &boids.pos[idx];
     Vector3 *v = &boids.vel[idx];
 
@@ -185,7 +186,7 @@ void TickBoidsApp() {
         Vector3 distVel = calcDistRule(i);
         Vector3 matchVel = calcMatchRule(i);
         applyBoundRule(i);
-        applySpeedRule(i);
+        //applySpeedRule(i);
 
         boids.vel[i] = Vector3Add(boids.vel[i], Vector3Add(centerVel, Vector3Add(distVel, matchVel)));
         boids.pos[i] = Vector3Add(boids.pos[i], Vector3Scale(boids.vel[i], BOIDS_SPEED * GetFrameTime()));
