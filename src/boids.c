@@ -14,10 +14,10 @@
 
 #define RULE_DIST 5.f
 #define BOUND_FORCE 1.f
-#define MAX_SPEED 1.f
+#define MAX_SPEED 2.f
 #define CENTER_DROP 250.f
 #define DIST_VAL 1.f
-#define MATCH_DROP 8.f
+#define MATCH_DROP 10.f
 
 float rand_float(float lo, float hi) {
     return lo + ((float)rand() / RAND_MAX) * (hi - lo);
@@ -91,7 +91,15 @@ Vector3 calcDistRule(size_t idx) {
 }
 
 Vector3 calcMatchRule(size_t idx) {
-    return (Vector3){ .x = 0.f, .y = 0.f, .z = 0.f };
+    Vector3 total = { 0.f, 0.f, 0.f };
+
+    for (size_t i = 0; i < NUM_BOIDS; ++i) {
+        if (i == idx) continue;
+        total = Vector3Add(total, boids.vel[i]);
+    }
+    total = Vector3Scale(total, 1.f / (NUM_BOIDS - 1));
+
+    return Vector3Scale(Vector3Subtract(total, boids.vel[idx]), (1.f / MATCH_DROP));
 }
 
 void applyBoundRule(size_t idx) {
