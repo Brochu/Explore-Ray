@@ -102,24 +102,24 @@ void applyBoundRule(size_t idx) {
     Vector3 *p = &boids.pos[idx];
     Vector3 *v = &boids.vel[idx];
 
-    if (p->x < -boundSize.x/2) {
+    if (p->x < -boundSize.x/2.f) {
         v->x += TURN_FACTOR;
     }
-    if (p->x > boundSize.x/2) {
+    if (p->x > boundSize.x/2.f) {
         v->x -= TURN_FACTOR;
     }
 
-    if (p->y < -boundSize.y/2) {
+    if (p->y < -boundSize.y/2.f) {
         v->y += TURN_FACTOR;
     }
-    if (p->y > boundSize.x/2) {
+    if (p->y > boundSize.x/2.f) {
         v->y -= TURN_FACTOR;
     }
 
-    if (p->z < -boundSize.y/2) {
+    if (p->z < -boundSize.y/2.f) {
         v->z += TURN_FACTOR;
     }
-    if (p->z > boundSize.x/2) {
+    if (p->z > boundSize.x/2.f) {
         v->z -= TURN_FACTOR;
     }
 }
@@ -170,6 +170,8 @@ void TickBoidsApp() {
 
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
         boids.vel[i] = Vector3Add(boids.vel[i], calcCenterRule(i));
+        boids.vel[i] = Vector3Add(boids.vel[i], calcDistRule(i));
+        boids.vel[i] = Vector3Add(boids.vel[i], calcMatchRule(i));
         applyBoundRule(i);
         applySpeedRule(i);
 
