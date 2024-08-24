@@ -27,8 +27,8 @@ void DrawIconSwatch() {
 
         int col = i / ROWS;
         int row = i % ROWS;
-        int x = PAD + XMAR + col * B_WIDTH;
-        int y = PAD + YMAR + row * B_HEIGHT;
+        float x = PAD + XMAR + col * B_WIDTH;
+        float y = PAD + YMAR + row * B_HEIGHT;
 
         if (GuiButton(RECT(x, y, B_WIDTH, B_HEIGHT), buttonText)) {
             printf("CLICKED on icon #%i\n", icon);
