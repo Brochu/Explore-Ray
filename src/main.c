@@ -67,22 +67,37 @@ int main(int argc, char **argv) {
     }
 
     while(!WindowShouldClose()) {
+        TracyCZoneN(mlctx, "MainLoop", 1);
+
         BeginDrawing();
         ClearBackground(BLACK);
 
         //TODO: Add handling inputs for each applications
         if (appId == ICONS) {
+            TracyCZoneN(iconctx, "Draw Icons", 1);
             DrawIconSwatch();
+            TracyCZoneEnd(iconctx);
         }
         else if (appId == MP) {
+            TracyCZoneN(partctx, "Draw Particles", 1);
             DrawParticleViewer();
+            TracyCZoneEnd(partctx);
         }
         else if (appId == BOIDS) {
+            TracyCZoneN(tboidctx, "Tick Boids", 1);
             TickBoidsApp();
+            TracyCZoneEnd(tboidctx);
+
+            TracyCZoneN(dboidctx, "Draw Boids", 1);
             DrawBoidsApp();
+            TracyCZoneEnd(dboidctx);
         }
 
+        TracyCZoneN(mdctx, "End Drawing", 1);
         EndDrawing();
+        TracyCZoneEnd(mdctx);
+
+        TracyCZoneEnd(mlctx);
         TracyCFrameMark
     }
 
