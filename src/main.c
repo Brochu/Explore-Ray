@@ -8,6 +8,8 @@
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
+#include "TracyC.h"
+
 #define WIDTH 800
 #define HEIGHT 600
 
@@ -19,6 +21,7 @@ typedef enum {
 } App;
 
 int main(int argc, char **argv) {
+    TracyCMessageL("TESTING!!");
     App appId = INVALID;
     time_t t;
     srand((unsigned) time(&t));
@@ -80,6 +83,7 @@ int main(int argc, char **argv) {
         }
 
         EndDrawing();
+        TracyCFrameMark
     }
 
     if (appId == ICONS) {

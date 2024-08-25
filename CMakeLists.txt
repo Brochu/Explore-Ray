@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.10)
 
-project (Explore-Ray C)
+project (Explore-Ray LANGUAGES C CXX)
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set (DEBUG_OPTIONS /Zi /Od)
@@ -28,6 +28,10 @@ set (source
     ${CMAKE_CURRENT_LIST_DIR}/src/boids.c
 )
 
+set (cppsource
+    ${CMAKE_CURRENT_LIST_DIR}/tracy/TracyClient.cpp
+)
+
 set (libs
     raylib.lib
     WinMM.lib
@@ -36,17 +40,21 @@ set (libs
 
 add_executable (Explore-Ray
     ${source}
+    ${cppsource}
     ${headers}
 )
 
 target_compile_options(Explore-Ray PUBLIC "$<$<CONFIG:DEBUG>:${DEBUG_OPTIONS}>")
 target_compile_options(Explore-Ray PUBLIC "$<$<CONFIG:RELEASE>:${RELEASE_OPTIONS}>")
+target_compile_definitions(Explore-Ray PRIVATE TRACY_ENABLE)
 
 target_include_directories(Explore-Ray
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/include
         ${CMAKE_CURRENT_LIST_DIR}/include/raylib
         ${CMAKE_CURRENT_LIST_DIR}/include/yaml
+        ${CMAKE_CURRENT_LIST_DIR}/tracy
+        ${CMAKE_CURRENT_LIST_DIR}/tracy/tracy
 )
 target_link_directories(Explore-Ray
     PRIVATE
