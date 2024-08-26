@@ -84,11 +84,11 @@ int main(int argc, char **argv) {
             TracyCZoneEnd(partctx);
         }
         else if (appId == BOIDS) {
-            TracyCZoneN(tboidctx, "Tick Boids", 1);
+            TracyCZoneN(tboidctx, "Tick Boids App", 1);
             TickBoidsApp();
             TracyCZoneEnd(tboidctx);
 
-            TracyCZoneN(dboidctx, "Draw Boids", 1);
+            TracyCZoneN(dboidctx, "Draw Boids App", 1);
             DrawBoidsApp();
             TracyCZoneEnd(dboidctx);
         }
