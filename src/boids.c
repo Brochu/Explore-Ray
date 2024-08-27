@@ -9,7 +9,7 @@
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
 #define NUM_BOIDS 15
 #define BOIDS_SIDES 4
-#define BOIDS_START_RAD 0.2f
+#define BOIDS_START_RAD 0.1f
 #define BOIDS_END_RAD 0.f
 
 #define CENTER_FACTOR 0.004f // Rule 1
@@ -60,7 +60,7 @@ void drawBoid(Vector3 pos, Vector3 dir) {
         DrawLine3D(pos, Vector3Add(pos, dir), RED);
     }
 
-    Vector3 end = Vector3Add(pos, Vector3Scale(Vector3Normalize(dir), 0.5f));
+    Vector3 end = Vector3Add(pos, Vector3Scale(Vector3Normalize(dir), 0.3f));
     DrawCylinderWiresEx(pos, end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLACK);
     DrawCylinderEx(pos, end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLUE);
 
@@ -186,10 +186,6 @@ void InitBoidsApp() {
 
     arr = calloc(count, sizeof(int));
     TracyCAlloc(arr, count * sizeof(int));
-
-    for (size_t i = 0; i < count; ++i) {
-        TraceLog(LOG_INFO, "We got a value -> arr[%zu] = %zu", i, arr[i]);
-    }
 }
 
 void TickBoidsApp() {
