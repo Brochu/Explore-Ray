@@ -218,14 +218,24 @@ void DrawBoidsApp() {
     TracyCZoneN(ctx, "Draw 3D", 1);
     BeginMode3D(camera);
 
-    //TODO: Figure out rotation matrix to target camera position
-    Matrix t = MatrixLookAt((Vector3){0}, camera.position, (Vector3){0.f, 1.f, 0.f});
+    Vector3 axis = camera.position;
+    Ray r;
+    r.position = (Vector3) { 0 };
+    r.direction = Vector3Normalize(camera.position);
+    r.direction = axis;
+    DrawRay(r, RED);
     //Matrix t = MatrixTranslate(2.f, 2.f, 2.f);
 
+    //TODO: Figure out rotation matrix to target camera position
+    Vector3 up = { 0.f, 1.f, 0.f };
+    Vector3 cross = Vector3Normalize(Vector3CrossProduct(axis, up));
+    float angle = Vector3Angle(axis, up);
+    Matrix t = MatrixRotate(cross, -angle);
+
     DrawMesh(boidMesh, boidMat0, t);
-    rlEnableWireMode();
-    DrawMesh(boidMesh, boidMat1, t);
-    rlDisableWireMode();
+    //rlEnableWireMode();
+    //DrawMesh(boidMesh, boidMat1, t);
+    //rlDisableWireMode();
 
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
         //TODO: Look into instanciating the meshes to render in one draw call
