@@ -168,6 +168,7 @@ void InitBoidsApp() {
     boidMat0.maps[MATERIAL_MAP_ALBEDO].color = BLUE;
     boidMat1 = LoadMaterialDefault();
     boidMat1.maps[MATERIAL_MAP_ALBEDO].color = BLACK;
+    //TODO: Write custom shaders to handle instancing
 
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
         float rx = rand_float(-boundSize.x/2, boundSize.x/2);
