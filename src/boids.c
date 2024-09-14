@@ -1,16 +1,18 @@
 #include "boids.h"
 
 #include <stdlib.h>
-#include "raylib.h"
 #include "raygui.h"
+#include "rlgl.h"
+#include "raylib.h"
 #include "raymath.h"
 #include "TracyC.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
-#define NUM_BOIDS 15
+#define NUM_BOIDS 2
 #define BOIDS_SIDES 4
-#define BOIDS_START_RAD 0.1f
+#define BOIDS_START_RAD 0.2f
 #define BOIDS_END_RAD 0.f
+#define BOIDS_HEIGHT 0.5f
 
 #define CENTER_FACTOR 0.004f // Rule 1
 #define AVOID_FACTOR 0.05f    // Rule 2
@@ -44,6 +46,10 @@ Vector3 camPos = { 0.f, 3.f, 25.f };
 Vector3 camTarget = { 0.f, 0.f, 0.f };
 Vector3 camUp = { 0.f, 1.f, 0.f };
 
+Mesh boidMesh;
+Material boidMat0;
+Material boidMat1;
+
 size_t count = 50;
 int *arr = NULL;
 
@@ -52,20 +58,6 @@ typedef enum {
     DM_DEBUG
 } DrawMode;
 DrawMode drawmode = DM_DEFAULT;
-
-void drawBoid(Vector3 pos, Vector3 dir) {
-    TracyCZoneN(dboidctx, "Draw Boid", 1);
-
-    if (drawmode == DM_DEBUG) {
-        DrawLine3D(pos, Vector3Add(pos, dir), RED);
-    }
-
-    Vector3 end = Vector3Add(pos, Vector3Scale(Vector3Normalize(dir), 0.3f));
-    DrawCylinderWiresEx(pos, end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLACK);
-    DrawCylinderEx(pos, end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLUE);
-
-    TracyCZoneEnd(dboidctx);
-}
 
 //TODO: Setup grid for faster distance lookups
 // Recreate grid each frame? limit the amount of other boids to check
@@ -171,6 +163,12 @@ void InitBoidsApp() {
         .projection = CAMERA_PERSPECTIVE
     };
 
+    boidMesh = GenMeshCone(2.f, 5.f, 4);
+    boidMat0 = LoadMaterialDefault();
+    boidMat0.maps[MATERIAL_MAP_ALBEDO].color = BLUE;
+    boidMat1 = LoadMaterialDefault();
+    boidMat1.maps[MATERIAL_MAP_ALBEDO].color = BLACK;
+
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
         float rx = rand_float(-boundSize.x/2, boundSize.x/2);
         float ry = rand_float(-boundSize.y/2, boundSize.y/2);
@@ -201,6 +199,7 @@ void TickBoidsApp() {
 
     TracyCZoneN(bctx, "Tick Boids Positions", 1);
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
+        //TODO: Look into other implementations, the movements are to rigid in this one
         boids.vel[i] = Vector3Add(boids.vel[i], calcCenterRule(i));
         boids.vel[i] = Vector3Add(boids.vel[i], calcDistRule(i));
         boids.vel[i] = Vector3Add(boids.vel[i], calcMatchRule(i));
@@ -217,9 +216,23 @@ void DrawBoidsApp() {
 
     TracyCZoneN(ctx, "Draw 3D", 1);
     BeginMode3D(camera);
+
+    Matrix t = MatrixTranslate(2.f, 2.f, 2.f);
+
+    DrawMesh(boidMesh, boidMat0, t);
+    rlEnableWireMode();
+    DrawMesh(boidMesh, boidMat1, t);
+    rlDisableWireMode();
+
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
         //TODO: Look into instanciating the meshes to render in one draw call
-        drawBoid(boids.pos[i], boids.vel[i]);
+        if (drawmode == DM_DEBUG) {
+            DrawLine3D(boids.pos[i], Vector3Add(boids.pos[i], boids.vel[i]), RED);
+        }
+
+        Vector3 end = Vector3Add(boids.pos[i], Vector3Scale(Vector3Normalize(boids.vel[i]), 0.3f));
+        DrawCylinderWiresEx(boids.pos[i], end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLACK);
+        DrawCylinderEx(boids.pos[i], end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLUE);
     }
 
     // Bounds
@@ -241,6 +254,7 @@ void DrawBoidsApp() {
 
 void DropBoidsApp() {
     TraceLog(LOG_DEBUG, "[BOIDS] dropping boids viewer application\n");
+    UnloadMesh(boidMesh);
 
     TracyCFree(arr);
     free(arr);
