@@ -163,7 +163,7 @@ void InitBoidsApp() {
         .projection = CAMERA_PERSPECTIVE
     };
 
-    boidMesh = GenMeshCone(2.f, 5.f, 4);
+    boidMesh = GenMeshCone(BOIDS_START_RAD, BOIDS_HEIGHT, BOIDS_SIDES);
     boidMat0 = LoadMaterialDefault();
     boidMat0.maps[MATERIAL_MAP_ALBEDO].color = BLUE;
     boidMat1 = LoadMaterialDefault();
@@ -218,7 +218,9 @@ void DrawBoidsApp() {
     TracyCZoneN(ctx, "Draw 3D", 1);
     BeginMode3D(camera);
 
-    Matrix t = MatrixTranslate(2.f, 2.f, 2.f);
+    //TODO: Figure out rotation matrix to target camera position
+    Matrix t = MatrixLookAt((Vector3){0}, camera.position, (Vector3){0.f, 1.f, 0.f});
+    //Matrix t = MatrixTranslate(2.f, 2.f, 2.f);
 
     DrawMesh(boidMesh, boidMat0, t);
     rlEnableWireMode();
@@ -230,10 +232,16 @@ void DrawBoidsApp() {
         if (drawmode == DM_DEBUG) {
             DrawLine3D(boids.pos[i], Vector3Add(boids.pos[i], boids.vel[i]), RED);
         }
+        Vector3 pos = boids.pos[i];
+        Vector3 vel = boids.vel[i];
+        Vector3 end = Vector3Add(pos, Vector3Scale(Vector3Normalize(vel), 0.3f));
 
-        Vector3 end = Vector3Add(boids.pos[i], Vector3Scale(Vector3Normalize(boids.vel[i]), 0.3f));
-        DrawCylinderWiresEx(boids.pos[i], end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLACK);
-        DrawCylinderEx(boids.pos[i], end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLUE);
+        //Matrix t = MatrixRotateXYZ(end);
+        //t = MatrixMultiply(t, MatrixTranslate(pos.x, pos.y, pos.z));
+        //DrawMesh(boidMesh, boidMat0, t);
+
+        DrawCylinderWiresEx(pos, end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLACK);
+        DrawCylinderEx(pos, end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLUE);
     }
 
     // Bounds
