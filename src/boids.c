@@ -8,17 +8,16 @@
 #include "TracyC.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
-#define NUM_BOIDS 2
+#define NUM_BOIDS 15
 #define BOIDS_SIDES 4
-#define BOIDS_START_RAD 0.2f
-#define BOIDS_END_RAD 0.f
+#define BOIDS_START_RAD 0.15f
 #define BOIDS_HEIGHT 0.5f
 
 #define CENTER_FACTOR 0.004f // Rule 1
 #define AVOID_FACTOR 0.05f    // Rule 2
 #define MATCH_FACTOR 0.05f    // Rule 3
 #define TURN_FACTOR 0.1f
-#define MAX_SPEED 0.25f
+#define MAX_SPEED 0.2f
 
 float rand_float(float lo, float hi) {
     return lo + ((float)rand() / RAND_MAX) * (hi - lo);
@@ -218,40 +217,25 @@ void DrawBoidsApp() {
     TracyCZoneN(ctx, "Draw 3D", 1);
     BeginMode3D(camera);
 
-    Vector3 axis = camera.position;
-    Ray r;
-    r.position = (Vector3) { 0 };
-    r.direction = Vector3Normalize(camera.position);
-    r.direction = axis;
-    DrawRay(r, RED);
-    //Matrix t = MatrixTranslate(2.f, 2.f, 2.f);
-
-    //TODO: Figure out rotation matrix to target camera position
-    Vector3 up = { 0.f, 1.f, 0.f };
-    Vector3 cross = Vector3Normalize(Vector3CrossProduct(axis, up));
-    float angle = Vector3Angle(axis, up);
-    Matrix t = MatrixRotate(cross, -angle);
-
-    DrawMesh(boidMesh, boidMat0, t);
-    //rlEnableWireMode();
-    //DrawMesh(boidMesh, boidMat1, t);
-    //rlDisableWireMode();
-
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
         //TODO: Look into instanciating the meshes to render in one draw call
         if (drawmode == DM_DEBUG) {
-            DrawLine3D(boids.pos[i], Vector3Add(boids.pos[i], boids.vel[i]), RED);
+            DrawLine3D(boids.pos[i], Vector3Add(boids.pos[i], Vector3Scale(boids.vel[i], 10.f)), RED);
         }
         Vector3 pos = boids.pos[i];
         Vector3 vel = boids.vel[i];
-        Vector3 end = Vector3Add(pos, Vector3Scale(Vector3Normalize(vel), 0.3f));
 
-        //Matrix t = MatrixRotateXYZ(end);
-        //t = MatrixMultiply(t, MatrixTranslate(pos.x, pos.y, pos.z));
-        //DrawMesh(boidMesh, boidMat0, t);
+        Vector3 cross = Vector3Normalize(Vector3CrossProduct(vel, camUp));
+        Matrix t = MatrixRotate(cross, -Vector3Angle(vel, camUp));
+        t = MatrixMultiply(t, MatrixTranslate(pos.x, pos.y, pos.z));
 
-        DrawCylinderWiresEx(pos, end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLACK);
-        DrawCylinderEx(pos, end, BOIDS_START_RAD, BOIDS_END_RAD, BOIDS_SIDES, BLUE);
+        DrawMesh(boidMesh, boidMat0, t);
+        rlEnableWireMode();
+        DrawMesh(boidMesh, boidMat1, t);
+        rlDisableWireMode();
+
+        //Matrix *transformPtr = NULL;
+        //DrawMeshInstanced(boidMesh, boidMat0, transformPtr, NUM_BOIDS);
     }
 
     // Bounds
