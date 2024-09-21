@@ -257,6 +257,8 @@ void DrawBoidsApp() {
 
 void DropBoidsApp() {
     TraceLog(LOG_DEBUG, "[BOIDS] dropping boids viewer application\n");
+    UnloadMaterial(boidMat0);
+    UnloadMaterial(boidMat1);
     UnloadMesh(boidMesh);
 
     TracyCFree(arr);
