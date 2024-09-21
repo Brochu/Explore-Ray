@@ -49,6 +49,8 @@ Mesh boidMesh;
 Material boidMat0;
 Material boidMat1;
 
+Material testMat;
+
 size_t count = 50;
 int *arr = NULL;
 
@@ -167,7 +169,13 @@ void InitBoidsApp() {
     boidMat0.maps[MATERIAL_MAP_ALBEDO].color = BLUE;
     boidMat1 = LoadMaterialDefault();
     boidMat1.maps[MATERIAL_MAP_ALBEDO].color = BLACK;
+
     //TODO: Write custom shaders to handle instancing
+    Shader prog = LoadShader(".\\shaders\\instance-vertex.glsl", ".\\shaders\\fragment.glsl");
+    //prog.locs[SHADER_LOC_VERTEX_POSITION] = GetShaderLocation(prog, "vertexPos");
+    prog.locs[SHADER_LOC_MATRIX_MVP] = GetShaderLocation(prog, "mvp");
+    testMat = LoadMaterialDefault();
+    testMat.shader = prog;
 
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
         float rx = rand_float(-boundSize.x/2, boundSize.x/2);
@@ -216,6 +224,9 @@ void DrawBoidsApp() {
 
     TracyCZoneN(ctx, "Draw 3D", 1);
     BeginMode3D(camera);
+
+    Matrix transform = MatrixIdentity();
+    DrawMesh(boidMesh, testMat, transform);
 
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
         //TODO: Look into instanciating the meshes to render in one draw call
