@@ -226,7 +226,12 @@ void DrawBoidsApp() {
     BeginMode3D(camera);
 
     Matrix transform = MatrixIdentity();
+    testMat.maps[MATERIAL_MAP_DIFFUSE].color = RED;
     DrawMesh(boidMesh, testMat, transform);
+    rlEnableWireMode();
+    testMat.maps[MATERIAL_MAP_DIFFUSE].color = BLACK;
+    DrawMesh(boidMesh, testMat, transform);
+    rlDisableWireMode();
 
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
         //TODO: Look into instanciating the meshes to render in one draw call
@@ -268,6 +273,7 @@ void DrawBoidsApp() {
 
 void DropBoidsApp() {
     TraceLog(LOG_DEBUG, "[BOIDS] dropping boids viewer application\n");
+    UnloadMaterial(testMat);
     UnloadMaterial(boidMat0);
     UnloadMaterial(boidMat1);
     UnloadMesh(boidMesh);
