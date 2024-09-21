@@ -174,6 +174,7 @@ void InitBoidsApp() {
     Shader prog = LoadShader(".\\shaders\\instance-vertex.glsl", ".\\shaders\\fragment.glsl");
     //prog.locs[SHADER_LOC_VERTEX_POSITION] = GetShaderLocation(prog, "vertexPos");
     prog.locs[SHADER_LOC_MATRIX_MVP] = GetShaderLocation(prog, "mvp");
+    prog.locs[SHADER_LOC_MATRIX_MODEL] = GetShaderLocationAttrib(prog, "instanceTransform");
     testMat = LoadMaterialDefault();
     testMat.shader = prog;
 
@@ -225,12 +226,16 @@ void DrawBoidsApp() {
     TracyCZoneN(ctx, "Draw 3D", 1);
     BeginMode3D(camera);
 
-    Matrix transform = MatrixIdentity();
+    Matrix mats[3] = {
+        MatrixIdentity(),
+        MatrixTranslate(-5.f, 0.f, 0.f),
+        MatrixTranslate(5.f, 0.f, 0.f),
+    };
     testMat.maps[MATERIAL_MAP_DIFFUSE].color = RED;
-    DrawMesh(boidMesh, testMat, transform);
+    DrawMeshInstanced(boidMesh, testMat, mats, 3);
     rlEnableWireMode();
     testMat.maps[MATERIAL_MAP_DIFFUSE].color = BLACK;
-    DrawMesh(boidMesh, testMat, transform);
+    DrawMeshInstanced(boidMesh, testMat, mats, 3);
     rlDisableWireMode();
 
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
