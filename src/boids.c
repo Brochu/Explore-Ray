@@ -8,7 +8,7 @@
 #include "TracyC.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
-#define NUM_BOIDS 15
+#define NUM_BOIDS 100
 #define BOIDS_SIDES 4
 #define BOIDS_START_RAD 0.15f
 #define BOIDS_HEIGHT 0.5f
@@ -164,13 +164,13 @@ void InitBoidsApp() {
         .projection = CAMERA_PERSPECTIVE
     };
 
+    //TODO: Simplify materials, we don't need that many
     boidMesh = GenMeshCone(BOIDS_START_RAD, BOIDS_HEIGHT, BOIDS_SIDES);
     boidMat0 = LoadMaterialDefault();
     boidMat0.maps[MATERIAL_MAP_ALBEDO].color = BLUE;
     boidMat1 = LoadMaterialDefault();
     boidMat1.maps[MATERIAL_MAP_ALBEDO].color = BLACK;
 
-    //TODO: Write custom shaders to handle instancing
     Shader prog = LoadShader(".\\shaders\\instance-vertex.glsl", ".\\shaders\\fragment.glsl");
     //prog.locs[SHADER_LOC_VERTEX_POSITION] = GetShaderLocation(prog, "vertexPos");
     prog.locs[SHADER_LOC_MATRIX_MVP] = GetShaderLocation(prog, "mvp");
@@ -226,38 +226,25 @@ void DrawBoidsApp() {
     TracyCZoneN(ctx, "Draw 3D", 1);
     BeginMode3D(camera);
 
-    Matrix mats[3] = {
-        MatrixIdentity(),
-        MatrixTranslate(-5.f, 0.f, 0.f),
-        MatrixTranslate(5.f, 0.f, 0.f),
-    };
-    testMat.maps[MATERIAL_MAP_DIFFUSE].color = RED;
-    DrawMeshInstanced(boidMesh, testMat, mats, 3);
-    rlEnableWireMode();
-    testMat.maps[MATERIAL_MAP_DIFFUSE].color = BLACK;
-    DrawMeshInstanced(boidMesh, testMat, mats, 3);
-    rlDisableWireMode();
-
+    Matrix instances[NUM_BOIDS];
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
-        //TODO: Look into instanciating the meshes to render in one draw call
-        if (drawmode == DM_DEBUG) {
-            DrawLine3D(boids.pos[i], Vector3Add(boids.pos[i], Vector3Scale(boids.vel[i], 10.f)), RED);
-        }
+        //TODO: Need to rework how debug works. Might need to only draw debug for boid at index 0
+        //if (drawmode == DM_DEBUG) {
+        //    DrawLine3D(boids.pos[i], Vector3Add(boids.pos[i], Vector3Scale(boids.vel[i], 10.f)), RED);
+        //}
         Vector3 pos = boids.pos[i];
         Vector3 vel = boids.vel[i];
 
         Vector3 cross = Vector3Normalize(Vector3CrossProduct(vel, camUp));
-        Matrix t = MatrixRotate(cross, -Vector3Angle(vel, camUp));
-        t = MatrixMultiply(t, MatrixTranslate(pos.x, pos.y, pos.z));
-
-        DrawMesh(boidMesh, boidMat0, t);
-        rlEnableWireMode();
-        DrawMesh(boidMesh, boidMat1, t);
-        rlDisableWireMode();
-
-        //Matrix *transformPtr = NULL;
-        //DrawMeshInstanced(boidMesh, boidMat0, transformPtr, NUM_BOIDS);
+        instances[i] = MatrixRotate(cross, -Vector3Angle(vel, camUp));
+        instances[i] = MatrixMultiply(instances[i], MatrixTranslate(pos.x, pos.y, pos.z));
     }
+    testMat.maps[MATERIAL_MAP_DIFFUSE].color = RED;
+    DrawMeshInstanced(boidMesh, testMat, instances, NUM_BOIDS);
+    rlEnableWireMode();
+    testMat.maps[MATERIAL_MAP_DIFFUSE].color = BLACK;
+    DrawMeshInstanced(boidMesh, testMat, instances, NUM_BOIDS);
+    rlDisableWireMode();
 
     // Bounds
     DrawCubeWiresV(camTarget, boundSize, GREEN);
