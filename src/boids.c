@@ -8,7 +8,7 @@
 #include "TracyC.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
-#define NUM_BOIDS 100
+#define NUM_BOIDS 25
 #define BOIDS_SIDES 4
 #define BOIDS_START_RAD 0.15f
 #define BOIDS_HEIGHT 0.5f
@@ -46,10 +46,11 @@ Vector3 camTarget = { 0.f, 0.f, 0.f };
 Vector3 camUp = { 0.f, 1.f, 0.f };
 
 Mesh boidMesh;
-Material boidMat0;
-Material boidMat1;
+Material boidMat;
 
+Mesh testMesh;
 Material testMat;
+
 
 size_t count = 50;
 int *arr = NULL;
@@ -59,6 +60,51 @@ typedef enum {
     DM_DEBUG
 } DrawMode;
 DrawMode drawmode = DM_DEFAULT;
+
+Mesh createBoidMesh() {
+    static const int TRIS = 4;
+    static const float verts[] = {
+         0, 0,  1,
+        -1, 0, -1,
+         1, 0, -1,
+
+         0, 0,  1,
+         0, 5,  0,
+        -1, 0, -1,
+
+         1, 0, -1,
+         0, 5,  0,
+         0, 0,  1,
+
+        -1, 0, -1,
+         0, 5,  0,
+         1, 0, -1,
+    };
+
+    Mesh m = { 0 };
+    m.vertices = RL_MALLOC(TRIS * 3 * 3 * sizeof(float));
+    m.texcoords = RL_MALLOC(TRIS * 3 * 2 * sizeof(float));
+    m.normals = RL_MALLOC(TRIS * 3 * 3 * sizeof(float));
+
+    m.vertexCount = TRIS * 3;
+    m.triangleCount = TRIS;
+
+    for (int i = 0; i < m.vertexCount; i++) {
+        m.vertices[i * 3 + 0] = verts[i * 3 + 0];
+        m.vertices[i * 3 + 1] = verts[i * 3 + 1];
+        m.vertices[i * 3 + 2] = verts[i * 3 + 2];
+
+        m.normals[i * 3 + 0] = 0.f;
+        m.normals[i * 3 + 1] = 0.f;
+        m.normals[i * 3 + 2] = 0.f;
+
+        m.texcoords[i * 2 + 0] = 0.f;
+        m.texcoords[i * 2 + 1] = 0.f;
+    }
+    UploadMesh(&m, false);
+
+    return m;
+}
 
 //TODO: Setup grid for faster distance lookups
 // Recreate grid each frame? limit the amount of other boids to check
@@ -164,19 +210,16 @@ void InitBoidsApp() {
         .projection = CAMERA_PERSPECTIVE
     };
 
-    //TODO: Simplify materials, we don't need that many
-    boidMesh = GenMeshCone(BOIDS_START_RAD, BOIDS_HEIGHT, BOIDS_SIDES);
-    boidMat0 = LoadMaterialDefault();
-    boidMat0.maps[MATERIAL_MAP_ALBEDO].color = BLUE;
-    boidMat1 = LoadMaterialDefault();
-    boidMat1.maps[MATERIAL_MAP_ALBEDO].color = BLACK;
-
     Shader prog = LoadShader(".\\shaders\\instance-vertex.glsl", ".\\shaders\\fragment.glsl");
-    //prog.locs[SHADER_LOC_VERTEX_POSITION] = GetShaderLocation(prog, "vertexPos");
     prog.locs[SHADER_LOC_MATRIX_MVP] = GetShaderLocation(prog, "mvp");
     prog.locs[SHADER_LOC_MATRIX_MODEL] = GetShaderLocationAttrib(prog, "instanceTransform");
+
+    boidMat = LoadMaterialDefault();
+    boidMat.shader = prog;
+    boidMesh = GenMeshCone(BOIDS_START_RAD, BOIDS_HEIGHT, BOIDS_SIDES);
+
+    testMesh = createBoidMesh();
     testMat = LoadMaterialDefault();
-    testMat.shader = prog;
 
     for (size_t i = 0; i < NUM_BOIDS; ++i) {
         float rx = rand_float(-boundSize.x/2, boundSize.x/2);
@@ -239,11 +282,24 @@ void DrawBoidsApp() {
         instances[i] = MatrixRotate(cross, -Vector3Angle(vel, camUp));
         instances[i] = MatrixMultiply(instances[i], MatrixTranslate(pos.x, pos.y, pos.z));
     }
+    boidMat.maps[MATERIAL_MAP_DIFFUSE].color = BLUE;
+    DrawMeshInstanced(boidMesh, boidMat, instances, NUM_BOIDS);
+    rlEnableWireMode();
+    boidMat.maps[MATERIAL_MAP_DIFFUSE].color = BLACK;
+    DrawMeshInstanced(boidMesh, boidMat, instances, NUM_BOIDS);
+    rlDisableWireMode();
+
+    Vector3 pos = boids.pos[0];
+    Vector3 vel = boids.vel[0];
+    Vector3 cross = Vector3Normalize(Vector3CrossProduct(vel, camUp));
+    Matrix t = MatrixRotate(cross, -Vector3Angle(vel, camUp));
+    t = MatrixMultiply(t, MatrixTranslate(pos.x, pos.y, pos.z));
+    DrawMesh(testMesh, testMat, t);
     testMat.maps[MATERIAL_MAP_DIFFUSE].color = RED;
-    DrawMeshInstanced(boidMesh, testMat, instances, NUM_BOIDS);
+    DrawMesh(testMesh, testMat, t);
     rlEnableWireMode();
     testMat.maps[MATERIAL_MAP_DIFFUSE].color = BLACK;
-    DrawMeshInstanced(boidMesh, testMat, instances, NUM_BOIDS);
+    DrawMesh(testMesh, testMat, t);
     rlDisableWireMode();
 
     // Bounds
@@ -265,9 +321,9 @@ void DrawBoidsApp() {
 
 void DropBoidsApp() {
     TraceLog(LOG_DEBUG, "[BOIDS] dropping boids viewer application\n");
-    UnloadMaterial(testMat);
-    UnloadMaterial(boidMat0);
-    UnloadMaterial(boidMat1);
+    UnloadMesh(testMesh);
+
+    UnloadMaterial(boidMat);
     UnloadMesh(boidMesh);
 
     TracyCFree(arr);
