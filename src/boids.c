@@ -320,7 +320,7 @@ void DrawBoidsApp() {
 }
 
 void DropBoidsApp() {
-    TraceLog(LOG_DEBUG, "[BOIDS] dropping boids viewer application\n");
+    TraceLog(LOG_DEBUG, "[BOIDS] dropping boids viewer application");
     UnloadMesh(testMesh);
 
     UnloadMaterial(boidMat);
