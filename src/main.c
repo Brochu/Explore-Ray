@@ -1,6 +1,7 @@
 #include "iconswatch.h"
 #include "partviewer.h"
 #include "boids.h"
+#include "iso.h"
 
 #include <stdio.h>
 #include <time.h>
@@ -18,6 +19,7 @@ typedef enum {
     ICONS,
     MP,
     BOIDS,
+    ISO,
 } App;
 
 int main(int argc, char **argv) {
@@ -65,6 +67,10 @@ int main(int argc, char **argv) {
         appId = BOIDS;
         InitBoidsApp();
     }
+    else if (argc > 1 && strcmp(argv[1], "-iso") == 0) {
+        appId = ISO;
+        InitIsoApp();
+    }
 
     while(!WindowShouldClose()) {
         TracyCZoneN(mlctx, "MainLoop", 1);
@@ -92,6 +98,15 @@ int main(int argc, char **argv) {
             DrawBoidsApp();
             TracyCZoneEnd(dboidctx);
         }
+        else if (appId == ISO) {
+            TracyCZoneN(tisoctx, "Tick Iso App", 1);
+            TickIsoApp();
+            TracyCZoneEnd(tisoctx);
+
+            TracyCZoneN(disoctx, "Draw Iso App", 1);
+            DrawIsoApp();
+            TracyCZoneEnd(disoctx);
+        }
 
         TracyCZoneN(mdctx, "End Drawing", 1);
         EndDrawing();
@@ -108,6 +123,9 @@ int main(int argc, char **argv) {
     }
     else if (appId == BOIDS) {
         DropBoidsApp();
+    }
+    else if (appId == ISO) {
+        DropIsoApp();
     }
 
     CloseWindow();

@@ -15,6 +15,8 @@ set (headers
     ${CMAKE_CURRENT_LIST_DIR}/include/partviewer.h
 
     ${CMAKE_CURRENT_LIST_DIR}/include/boids.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/include/iso.h
 )
 
 set (source
@@ -26,6 +28,8 @@ set (source
     ${CMAKE_CURRENT_LIST_DIR}/src/partviewer.c
 
     ${CMAKE_CURRENT_LIST_DIR}/src/boids.c
+
+    ${CMAKE_CURRENT_LIST_DIR}/src/iso.c
 )
 
 set (cppsource
