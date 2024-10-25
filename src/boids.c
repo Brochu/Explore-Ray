@@ -8,7 +8,7 @@
 #include "TracyC.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
-#define NUM_BOIDS 25
+#define NUM_BOIDS 250
 #define BOIDS_SIDES 4
 #define BOIDS_START_RAD 0.15f
 #define BOIDS_HEIGHT 0.5f
@@ -64,21 +64,21 @@ DrawMode drawmode = DM_DEFAULT;
 Mesh createBoidMesh() {
     static const int TRIS = 4;
     static const float verts[] = {
-         0, 0,  1,
-        -1, 0, -1,
-         1, 0, -1,
+         0.00, 0.00,  0.15,
+        -0.15, 0.00, -0.15,
+         0.15, 0.00, -0.15,
 
-         0, 0,  1,
-         0, 5,  0,
-        -1, 0, -1,
+         0.00, 0.00,  0.15,
+         0.00, 0.70,  0.00,
+        -0.15, 0.00, -0.15,
 
-         1, 0, -1,
-         0, 5,  0,
-         0, 0,  1,
+         0.15, 0.00, -0.15,
+         0.00, 0.70,  0.00,
+         0.00, 0.00,  0.15,
 
-        -1, 0, -1,
-         0, 5,  0,
-         1, 0, -1,
+        -0.15, 0.00, -0.15,
+         0.00, 0.70,  0.00,
+         0.15, 0.00, -0.15,
     };
 
     Mesh m = { 0 };
@@ -283,24 +283,24 @@ void DrawBoidsApp() {
         instances[i] = MatrixMultiply(instances[i], MatrixTranslate(pos.x, pos.y, pos.z));
     }
     boidMat.maps[MATERIAL_MAP_DIFFUSE].color = BLUE;
-    DrawMeshInstanced(boidMesh, boidMat, instances, NUM_BOIDS);
+    DrawMeshInstanced(testMesh, boidMat, instances, NUM_BOIDS);
     rlEnableWireMode();
     boidMat.maps[MATERIAL_MAP_DIFFUSE].color = BLACK;
-    DrawMeshInstanced(boidMesh, boidMat, instances, NUM_BOIDS);
+    DrawMeshInstanced(testMesh, boidMat, instances, NUM_BOIDS);
     rlDisableWireMode();
 
-    Vector3 pos = boids.pos[0];
-    Vector3 vel = boids.vel[0];
-    Vector3 cross = Vector3Normalize(Vector3CrossProduct(vel, camUp));
-    Matrix t = MatrixRotate(cross, -Vector3Angle(vel, camUp));
-    t = MatrixMultiply(t, MatrixTranslate(pos.x, pos.y, pos.z));
-    DrawMesh(testMesh, testMat, t);
-    testMat.maps[MATERIAL_MAP_DIFFUSE].color = RED;
-    DrawMesh(testMesh, testMat, t);
-    rlEnableWireMode();
-    testMat.maps[MATERIAL_MAP_DIFFUSE].color = BLACK;
-    DrawMesh(testMesh, testMat, t);
-    rlDisableWireMode();
+    //Vector3 pos = boids.pos[0];
+    //Vector3 vel = boids.vel[0];
+    //Vector3 cross = Vector3Normalize(Vector3CrossProduct(vel, camUp));
+    //Matrix t = MatrixRotate(cross, -Vector3Angle(vel, camUp));
+    //t = MatrixMultiply(t, MatrixTranslate(pos.x, pos.y, pos.z));
+    //DrawMesh(testMesh, testMat, t);
+    //testMat.maps[MATERIAL_MAP_DIFFUSE].color = RED;
+    //DrawMesh(testMesh, testMat, t);
+    //rlEnableWireMode();
+    //testMat.maps[MATERIAL_MAP_DIFFUSE].color = BLACK;
+    //DrawMesh(testMesh, testMat, t);
+    //rlDisableWireMode();
 
     // Bounds
     DrawCubeWiresV(camTarget, boundSize, GREEN);
