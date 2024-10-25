@@ -1,5 +1,6 @@
 #include "iso.h"
 
+#include "math.h"
 #include "raylib.h"
 #include "raygui.h"
 #include "raymath.h"
@@ -27,7 +28,7 @@ sheet_t floors = { 0, 7, 160, 80, 29, 5 }; // floors.png
 sheet_t exits = { 0, 493, 160, 80, 8, 5 }; // floors.png
 sheet_t walls = { 0, 13, 108, 226, 44, 17 }; // walls.png
 sheet_t char_n = { 0, 1642, 98, 90, 128, 8 }; // mainchar.gif
-sheet_t char_r = { 0, 0, 103, 90, 128, 8 }; // run.png
+sheet_t char_r = { 0, 0, 103, 98, 128, 8 }; // run.png
 
 typedef size_t tile_t;
 tile_t map[MAP_DIMS * MAP_DIMS] = { 0 };
@@ -57,11 +58,14 @@ void DrawIsoApp() {
     Vector2 txtpos = Vector2Add(mpos, (Vector2){ .x = 0, .y = -20 });
     DrawCircle(VECPOS(mpos), 5.f, RED);
     DrawLine(VECPOS(center), VECPOS(mpos), BLUE);
-    DrawText("HEY", VECPOS(txtpos), 15, WHITE);
+    Vector2 ray = Vector2Subtract(center, mpos);
+    float angle = ((atan2f(ray.x, ray.y) + PI) / (2*PI)) * 16;
+    int index = (int)angle;
+    DrawText(TextFormat("%i", index), VECPOS(txtpos), 15, WHITE);
 
     Rectangle rect = {
         .x = (float)char_r.xoffset + (char_r.width * ((findex / 6) % char_r.stride)),
-        .y = (float)char_r.yoffset,
+        .y = (float)char_r.yoffset + (char_r.height * (15-index)),
         .width = (float)char_r.width,
         .height = (float)char_r.height
     };
