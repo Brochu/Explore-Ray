@@ -59,13 +59,13 @@ void DrawIsoApp() {
     DrawCircle(VECPOS(mpos), 5.f, RED);
     DrawLine(VECPOS(center), VECPOS(mpos), BLUE);
     Vector2 ray = Vector2Subtract(center, mpos);
-    float angle = ((atan2f(ray.x, ray.y) + PI) / (2*PI)) * 16;
-    int index = (int)angle;
-    DrawText(TextFormat("%i", index), VECPOS(txtpos), 15, WHITE);
+    float angle = atan2f(ray.x, ray.y) * (8.f/PI);
+    float index = roundf(angle) + 8;
+    DrawText(TextFormat("%f : %f", angle, index), VECPOS(txtpos), 15, WHITE);
 
     Rectangle rect = {
         .x = (float)char_r.xoffset + (char_r.width * ((findex / 6) % char_r.stride)),
-        .y = (float)char_r.yoffset + (char_r.height * (15-index)),
+        .y = (float)char_r.yoffset + (char_r.height * (16-index)),
         .width = (float)char_r.width,
         .height = (float)char_r.height
     };
