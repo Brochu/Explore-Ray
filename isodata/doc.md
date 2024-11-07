@@ -46,7 +46,6 @@ Diablo Series - Case Study
 + function added for mass repair (~ref3)
     * makes it way faster
 
-
 ## Diablo III + Reaper of Souls
 - identify flow too easy/useless (~ref2)
     * can identify anywhere
