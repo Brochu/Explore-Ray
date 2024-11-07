@@ -35,6 +35,7 @@ tile_t map[MAP_DIMS * MAP_DIMS] = { 0 };
 
 size_t findex = 0;
 Texture2D chartex;
+Texture2D floortex;
 
 int find_sprite_index(Vector2 cpos, Vector2 mpos) {
     Vector2 ray = Vector2Subtract(cpos, mpos);
@@ -48,7 +49,8 @@ int dmode = 0;
 void InitIsoApp() {
     SetTraceLogLevel(LOG_DEBUG);
     TraceLog(LOG_DEBUG, "[ISO] Starting isometric viewer application");
-    chartex = LoadTexture("isodata\\mainchar.gif");
+    //chartex = LoadTexture("isodata\\mainchar.gif");
+    floortex = LoadTexture("isodata\\floors.png");
 }
 
 void TickIsoApp() {
@@ -64,24 +66,36 @@ void TickIsoApp() {
 void DrawIsoApp() {
     Vector2 center = { .x = (float)GetScreenWidth()/2, .y = (float)GetScreenHeight()/2 };
     Vector2 mpos = GetMousePosition();
-    int index = find_sprite_index(center, mpos);
+    Rectangle rect;
+    Vector2 pos;
 
-    Rectangle rect = {
-        .x = (float)char_n.xoffset + (char_n.width * ((findex / 6) % char_n.stride)),
+    //TODO: Draw map here
+    // Highlight correct tile
+    rect = (Rectangle) {
+        .x = (float)floors.xoffset,
+        .y = (float)floors.yoffset + (floors.height * ((findex / SPRITE_DELAY) % 5)),
+        .width = (float)floors.width,
+        .height = (float)floors.height
+    };
+    pos = Vector2Add(center, (Vector2) { .x = 0, .y = 150 });
+    DrawTextureRec(floortex, rect, pos, WHITE);
+
+    int index = find_sprite_index(center, mpos);
+    /*
+    rect = (Rectangle) {
+        .x = (float)char_n.xoffset + (char_n.width * ((findex / SPRITE_DELAY) % char_n.stride)),
         .y = (float)char_n.yoffset + (char_n.height * index),
         .width = (float)char_n.width,
         .height = (float)char_n.height
     };
-    Vector2 pos = Vector2Subtract(center, (Vector2) { .x = (float)char_n.width/2, .y = (float)char_n.height/2 });
+    pos = Vector2Subtract(center, (Vector2) { .x = (float)char_n.width/2, .y = (float)char_n.height/2 });
     DrawTextureRec(chartex, rect, pos, WHITE);
+    */
 
     if (dmode == 1) {
         DrawCircle(VECPOS(mpos), 5.f, RED);
         DrawLine(VECPOS(center), VECPOS(mpos), BLUE);
     }
-
-    //TODO: Draw map here
-    // Highlight correct tile
 
     GuiStatusBar(RECT(0, 585, 800, 15),
         TextFormat("highlight pos (%i, %i); %zu FPS; Sprite Index = %i",
@@ -94,5 +108,6 @@ void DrawIsoApp() {
 
 void DropIsoApp() {
     TraceLog(LOG_DEBUG, "[ISO] Dropping isometric viewer application");
-    UnloadTexture(chartex);
+    UnloadTexture(floortex);
+    //UnloadTexture(chartex);
 }
