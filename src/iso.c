@@ -36,7 +36,14 @@ tile_t map[MAP_DIMS * MAP_DIMS] = { 0 };
 size_t findex = 0;
 Texture2D chartex;
 
-int drawmode = 0;
+int find_sprite_index(Vector2 cpos, Vector2 mpos) {
+    Vector2 ray = Vector2Subtract(cpos, mpos);
+
+    float angle = -1 * (atan2f(ray.x, ray.y) * (8.f/PI));
+    return ((int)(roundf(angle) + 8) % 16);
+}
+
+int dmode = 0;
 
 void InitIsoApp() {
     SetTraceLogLevel(LOG_DEBUG);
@@ -50,16 +57,14 @@ void TickIsoApp() {
 
     if (IsKeyPressed(KEY_R)) {
         //TODO: Handle mode draw modes later?
-        if (drawmode == 0) drawmode = 1;
-        else if (drawmode == 1) drawmode = 0;
+        if (dmode == 0) dmode = 1;
+        else if (dmode == 1) dmode = 0;
     }
 }
 void DrawIsoApp() {
     Vector2 center = { .x = (float)GetScreenWidth()/2, .y = (float)GetScreenHeight()/2 };
     Vector2 mpos = GetMousePosition();
-    Vector2 ray = Vector2Subtract(center, mpos);
-    float angle = -1 * (atan2f(ray.x, ray.y) * (8.f/PI));
-    int index = ((int)(roundf(angle) + 8) % 16);
+    int index = find_sprite_index(center, mpos);
 
     Rectangle rect = {
         .x = (float)char_n.xoffset + (char_n.width * ((findex / 6) % char_n.stride)),
@@ -70,7 +75,7 @@ void DrawIsoApp() {
     Vector2 pos = Vector2Subtract(center, (Vector2) { .x = (float)char_n.width/2, .y = (float)char_n.height/2 });
     DrawTextureRec(chartex, rect, pos, WHITE);
 
-    if (drawmode == 1) {
+    if (dmode == 1) {
         DrawCircle(VECPOS(mpos), 5.f, RED);
         DrawLine(VECPOS(center), VECPOS(mpos), BLUE);
     }
@@ -79,10 +84,10 @@ void DrawIsoApp() {
     // Highlight correct tile
 
     GuiStatusBar(RECT(0, 585, 800, 15),
-        TextFormat("highlight pos (%i, %i); %zu FPS; Angle = %f; Index = %i",
+        TextFormat("highlight pos (%i, %i); %zu FPS; Sprite Index = %i",
             hover.x, hover.y,
             GetFPS(),
-            angle, index)
+            index)
     );
     findex++;
 }
