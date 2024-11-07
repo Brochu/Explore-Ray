@@ -71,7 +71,7 @@ void TickIsoApp() {
         else if (dmode == 1) dmode = 0;
     }
 
-    camera.zoom = fmaxf(fabsf(sinf((findex / 20.f))), 0.01);
+    camera.zoom = fmaxf(fabsf(sinf((findex / 20.f))), 0.01f);
 }
 
 void DrawIsoApp() {
