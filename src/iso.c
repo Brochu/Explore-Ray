@@ -1,6 +1,5 @@
 #include "iso.h"
 
-#include "math.h"
 #include "raylib.h"
 #include "raygui.h"
 #include "raymath.h"
@@ -44,6 +43,8 @@ int find_sprite_index(Vector2 cpos, Vector2 mpos) {
     return ((int)(roundf(angle) + 8) % 16);
 }
 
+Camera2D camera;
+
 int dmode = 0;
 
 void InitIsoApp() {
@@ -51,6 +52,13 @@ void InitIsoApp() {
     TraceLog(LOG_DEBUG, "[ISO] Starting isometric viewer application");
     //chartex = LoadTexture("isodata\\mainchar.gif");
     floortex = LoadTexture("isodata\\floors.png");
+
+    camera = (Camera2D) {
+        .offset = (Vector2) { .x = (float)GetScreenWidth()/2, .y = (float)GetScreenHeight()/2 },
+        .target = (Vector2) { .x = (float)GetScreenWidth()/2, .y = (float)GetScreenHeight()/2 },
+        .rotation = 0.f,
+        .zoom = 1.0f,
+    };
 }
 
 void TickIsoApp() {
@@ -62,13 +70,17 @@ void TickIsoApp() {
         if (dmode == 0) dmode = 1;
         else if (dmode == 1) dmode = 0;
     }
+
+    camera.zoom = fmaxf(fabsf(sinf((findex / 20.f))), 0.01);
 }
+
 void DrawIsoApp() {
     Vector2 center = { .x = (float)GetScreenWidth()/2, .y = (float)GetScreenHeight()/2 };
     Vector2 mpos = GetMousePosition();
     Rectangle rect;
     Vector2 pos;
 
+    BeginMode2D(camera);
     //TODO: Draw map here
     // Highlight correct tile
     rect = (Rectangle) {
@@ -96,6 +108,7 @@ void DrawIsoApp() {
         DrawCircle(VECPOS(mpos), 5.f, RED);
         DrawLine(VECPOS(center), VECPOS(mpos), BLUE);
     }
+    EndMode2D();
 
     GuiStatusBar(RECT(0, 585, 800, 15),
         TextFormat("highlight pos (%i, %i); %zu FPS; Sprite Index = %i",
