@@ -50,7 +50,7 @@ int dmode = 0;
 void InitIsoApp() {
     SetTraceLogLevel(LOG_DEBUG);
     TraceLog(LOG_DEBUG, "[ISO] Starting isometric viewer application");
-    //chartex = LoadTexture("isodata\\mainchar.gif");
+    chartex = LoadTexture("isodata\\mainchar.gif");
     floortex = LoadTexture("isodata\\floors.png");
 
     camera = (Camera2D) {
@@ -93,7 +93,6 @@ void DrawIsoApp() {
     DrawTextureRec(floortex, rect, pos, WHITE);
 
     int index = find_sprite_index(center, mpos);
-    /*
     rect = (Rectangle) {
         .x = (float)char_n.xoffset + (char_n.width * ((findex / SPRITE_DELAY) % char_n.stride)),
         .y = (float)char_n.yoffset + (char_n.height * index),
@@ -102,7 +101,6 @@ void DrawIsoApp() {
     };
     pos = Vector2Subtract(center, (Vector2) { .x = (float)char_n.width/2, .y = (float)char_n.height/2 });
     DrawTextureRec(chartex, rect, pos, WHITE);
-    */
 
     if (dmode == 1) {
         DrawCircle(VECPOS(mpos), 5.f, RED);
@@ -122,5 +120,5 @@ void DrawIsoApp() {
 void DropIsoApp() {
     TraceLog(LOG_DEBUG, "[ISO] Dropping isometric viewer application");
     UnloadTexture(floortex);
-    //UnloadTexture(chartex);
+    UnloadTexture(chartex);
 }
