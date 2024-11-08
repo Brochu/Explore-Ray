@@ -8,6 +8,7 @@
 #define VECPOS(v) (int)v.x, (int)v.y
 #define MAP_DIMS 25
 #define SPRITE_DELAY 6
+#define SPEED 5
 
 typedef struct {
     int x;
@@ -44,6 +45,8 @@ int find_sprite_index(Vector2 cpos, Vector2 mpos) {
 }
 
 Camera2D camera;
+Vector2 center;
+Vector2 charpos;
 
 int dmode = 0;
 
@@ -59,6 +62,8 @@ void InitIsoApp() {
         .rotation = 0.f,
         .zoom = 1.0f,
     };
+    center = (Vector2) { .x = (float)GetScreenWidth()/2, .y = (float)GetScreenHeight()/2 };
+    charpos = center;
 }
 
 void TickIsoApp() {
@@ -71,11 +76,28 @@ void TickIsoApp() {
         else if (dmode == 1) dmode = 0;
     }
 
-    camera.zoom = fmaxf(fabsf(sinf((findex / 20.f))), 0.01f);
+    Vector2 movement = Vector2Zero();
+    float unit = 1.f;
+    if (IsKeyDown(KEY_W)) {
+        movement.y -= unit;
+    }
+    if (IsKeyDown(KEY_S)) {
+        movement.y += unit;
+    }
+    if (IsKeyDown(KEY_A)) {
+        movement.x -= unit;
+    }
+    if (IsKeyDown(KEY_D)) {
+        movement.x += unit;
+    }
+    movement = Vector2Scale(Vector2Normalize(movement), SPEED);
+
+    //camera.zoom = fmaxf(fabsf(sinf((findex / 20.f))), 0.01f);
+    //TODO: Add deltatime here
+    charpos = Vector2Add(charpos, movement);
 }
 
 void DrawIsoApp() {
-    Vector2 center = { .x = (float)GetScreenWidth()/2, .y = (float)GetScreenHeight()/2 };
     Vector2 mpos = GetMousePosition();
     Rectangle rect;
     Vector2 pos;
@@ -92,19 +114,18 @@ void DrawIsoApp() {
     pos = Vector2Add(center, (Vector2) { .x = 0, .y = 150 });
     DrawTextureRec(floortex, rect, pos, WHITE);
 
-    int index = find_sprite_index(center, mpos);
+    int index = find_sprite_index(charpos, mpos);
     rect = (Rectangle) {
         .x = (float)char_n.xoffset + (char_n.width * ((findex / SPRITE_DELAY) % char_n.stride)),
         .y = (float)char_n.yoffset + (char_n.height * index),
         .width = (float)char_n.width,
         .height = (float)char_n.height
     };
-    pos = Vector2Subtract(center, (Vector2) { .x = (float)char_n.width/2, .y = (float)char_n.height/2 });
-    DrawTextureRec(chartex, rect, pos, WHITE);
+    DrawTextureRec(chartex, rect, Vector2Subtract(charpos, (Vector2) {.x = char_n.width/2.f, .y = char_n.height/2.f}), WHITE);
 
     if (dmode == 1) {
         DrawCircle(VECPOS(mpos), 5.f, RED);
-        DrawLine(VECPOS(center), VECPOS(mpos), BLUE);
+        DrawLine(VECPOS(charpos), VECPOS(mpos), BLUE);
     }
     EndMode2D();
 
