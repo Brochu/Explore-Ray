@@ -3,6 +3,7 @@
 #include "raylib.h"
 #include "raygui.h"
 #include "raymath.h"
+#include "stdlib.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
 #define VECPOS(v) (int)v.x, (int)v.y
@@ -34,6 +35,13 @@ sheet_t necro_r = { 0, 0, 103, 98, 128, 8 }; // necro-walk.gif
 typedef size_t tile_t;
 tile_t map[MAP_DIMS * MAP_DIMS] = { 0 };
 
+Vector2 get_tile_pos(sheet_t *tinfo, int x, int y) {
+    return (Vector2) {
+        .x = (x - y) * tinfo->width/2.f,
+        .y = (x + y) * tinfo->height/2.f,
+    };
+}
+
 size_t findex = 0;
 Texture2D chartex;
 Texture2D floortex;
@@ -43,6 +51,10 @@ int find_sprite_index(Vector2 cpos, Vector2 mpos) {
 
     float angle = -1 * (atan2f(ray.x, ray.y) * (8.f/PI));
     return ((int)(roundf(angle) + 8) % 16);
+}
+
+Vector2 sprite_pos(sheet_t *sinfo, Vector2 pos) {
+    return Vector2Subtract(pos, (Vector2) { .x = sinfo->width/2.f, sinfo->height/2.f });
 }
 
 Camera2D camera;
@@ -106,14 +118,18 @@ void DrawIsoApp() {
     BeginMode2D(camera);
     //TODO: Draw map here
     // Highlight correct tile
-    rect = (Rectangle) {
-        .x = (float)floors.xoffset,
-        .y = (float)floors.yoffset + (floors.height * ((findex / SPRITE_DELAY) % 5)),
-        .width = (float)floors.width,
-        .height = (float)floors.height
-    };
-    pos = (Vector2) { 0.f, 150.f };
-    DrawTextureRec(floortex, rect, pos, WHITE);
+    for (int y = MAP_DIMS; y >= 0; --y) {
+        for (int x = MAP_DIMS; x >= 0; --x) {
+            rect = (Rectangle) {
+                .x = (float)floors.xoffset,
+                .y = (float)floors.yoffset,
+                .width = (float)floors.width,
+                .height = (float)floors.height
+            };
+            pos = get_tile_pos(&floors, x, y);
+            DrawTextureRec(floortex, rect, pos, WHITE);
+        }
+    }
 
     int index = find_sprite_index(charpos, mpos);
     rect = (Rectangle) {
@@ -122,7 +138,7 @@ void DrawIsoApp() {
         .width = (float)necro_r.width,
         .height = (float)necro_r.height
     };
-    DrawTextureRec(chartex, rect, Vector2Subtract(charpos, (Vector2) {.x = necro_r.width/2.f, .y = necro_r.height/2.f}), WHITE);
+    DrawTextureRec(chartex, rect, sprite_pos(&necro_r, charpos), WHITE);
 
     if (dmode == 1) {
         DrawCircle(VECPOS(mpos), 5.f, RED);
