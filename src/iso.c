@@ -28,8 +28,8 @@ typedef struct {
 sheet_t floors = { 0, 7, 160, 80, 29, 5 }; // floors.png
 sheet_t exits = { 0, 493, 160, 80, 8, 5 }; // floors.png
 sheet_t walls = { 0, 13, 108, 226, 44, 17 }; // walls.png
-sheet_t necro_n = { 0, 1642, 98, 90, 128, 8 }; // necro.gif
 sheet_t necro_w = { 0, 0, 93, 97, 128, 8 }; // necro-walk.gif
+sheet_t necro_r = { 0, 0, 103, 98, 128, 8 }; // necro-walk.gif
 
 typedef size_t tile_t;
 tile_t map[MAP_DIMS * MAP_DIMS] = { 0 };
@@ -49,12 +49,12 @@ Camera2D camera;
 Vector2 charpos;
 Vector2 mpos;
 
-int dmode = 1;
+int dmode = 0;
 
 void InitIsoApp() {
     SetTraceLogLevel(LOG_DEBUG);
     TraceLog(LOG_DEBUG, "[ISO] Starting isometric viewer application");
-    chartex = LoadTexture("isodata\\necro-walk.png");
+    chartex = LoadTexture("isodata\\necro-run.png");
     floortex = LoadTexture("isodata\\floors.png");
 
     camera = (Camera2D) {
@@ -117,12 +117,12 @@ void DrawIsoApp() {
 
     int index = find_sprite_index(charpos, mpos);
     rect = (Rectangle) {
-        .x = (float)necro_w.xoffset + (necro_w.width * ((findex / SPRITE_DELAY) % necro_w.stride)),
-        .y = (float)necro_w.yoffset + (necro_w.height * index),
-        .width = (float)necro_w.width,
-        .height = (float)necro_w.height
+        .x = (float)necro_r.xoffset + (necro_r.width * ((findex / SPRITE_DELAY) % necro_r.stride)),
+        .y = (float)necro_r.yoffset + (necro_r.height * index),
+        .width = (float)necro_r.width,
+        .height = (float)necro_r.height
     };
-    DrawTextureRec(chartex, rect, Vector2Subtract(charpos, (Vector2) {.x = necro_w.width/2.f, .y = necro_w.height/2.f}), WHITE);
+    DrawTextureRec(chartex, rect, Vector2Subtract(charpos, (Vector2) {.x = necro_r.width/2.f, .y = necro_r.height/2.f}), WHITE);
 
     if (dmode == 1) {
         DrawCircle(VECPOS(mpos), 5.f, RED);
