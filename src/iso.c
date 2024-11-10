@@ -28,7 +28,8 @@ typedef struct {
 sheet_t floors = { 0, 7, 160, 80, 29, 5 }; // floors.png
 sheet_t exits = { 0, 493, 160, 80, 8, 5 }; // floors.png
 sheet_t walls = { 0, 13, 108, 226, 44, 17 }; // walls.png
-sheet_t char_n = { 0, 1642, 98, 90, 128, 8 }; // mainchar.gif
+sheet_t necro_n = { 0, 1642, 98, 90, 128, 8 }; // necro.gif
+sheet_t necro_w = { 0, 0, 93, 97, 128, 8 }; // necro-walk.gif
 
 typedef size_t tile_t;
 tile_t map[MAP_DIMS * MAP_DIMS] = { 0 };
@@ -47,13 +48,14 @@ int find_sprite_index(Vector2 cpos, Vector2 mpos) {
 Camera2D camera;
 Vector2 center;
 Vector2 charpos;
+Vector2 mpos;
 
 int dmode = 0;
 
 void InitIsoApp() {
     SetTraceLogLevel(LOG_DEBUG);
     TraceLog(LOG_DEBUG, "[ISO] Starting isometric viewer application");
-    chartex = LoadTexture("isodata\\mainchar.gif");
+    chartex = LoadTexture("isodata\\necro-walk.png");
     floortex = LoadTexture("isodata\\floors.png");
 
     camera = (Camera2D) {
@@ -63,6 +65,12 @@ void InitIsoApp() {
         .zoom = 1.0f,
     };
     center = (Vector2) { .x = (float)GetScreenWidth()/2, .y = (float)GetScreenHeight()/2 };
+    //TODO: Try to move this to center now that we have camera?
+    // Need to understand how to get mouse position after camera transform
+    /*
+    RLAPI Vector2 GetScreenToWorld2D(Vector2 position, Camera2D camera);    // Get the world space position for a 2d camera screen space position
+    RLAPI Matrix GetCameraMatrix2D(Camera2D camera);                        // Get camera 2d transform matrix
+    // */
     charpos = center;
 }
 
@@ -92,13 +100,13 @@ void TickIsoApp() {
     }
     movement = Vector2Scale(Vector2Normalize(movement), SPEED);
 
-    //camera.zoom = fmaxf(fabsf(sinf((findex / 20.f))), 0.01f);
     //TODO: Add deltatime here
     charpos = Vector2Add(charpos, movement);
+    camera.target = charpos;
+    mpos = GetMousePosition();
 }
 
 void DrawIsoApp() {
-    Vector2 mpos = GetMousePosition();
     Rectangle rect;
     Vector2 pos;
 
@@ -116,12 +124,12 @@ void DrawIsoApp() {
 
     int index = find_sprite_index(charpos, mpos);
     rect = (Rectangle) {
-        .x = (float)char_n.xoffset + (char_n.width * ((findex / SPRITE_DELAY) % char_n.stride)),
-        .y = (float)char_n.yoffset + (char_n.height * index),
-        .width = (float)char_n.width,
-        .height = (float)char_n.height
+        .x = (float)necro_w.xoffset + (necro_w.width * ((findex / SPRITE_DELAY) % necro_w.stride)),
+        .y = (float)necro_w.yoffset + (necro_w.height * index),
+        .width = (float)necro_w.width,
+        .height = (float)necro_w.height
     };
-    DrawTextureRec(chartex, rect, Vector2Subtract(charpos, (Vector2) {.x = char_n.width/2.f, .y = char_n.height/2.f}), WHITE);
+    DrawTextureRec(chartex, rect, Vector2Subtract(charpos, (Vector2) {.x = necro_w.width/2.f, .y = necro_w.height/2.f}), WHITE);
 
     if (dmode == 1) {
         DrawCircle(VECPOS(mpos), 5.f, RED);
