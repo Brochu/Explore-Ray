@@ -46,11 +46,10 @@ int find_sprite_index(Vector2 cpos, Vector2 mpos) {
 }
 
 Camera2D camera;
-Vector2 center;
 Vector2 charpos;
 Vector2 mpos;
 
-int dmode = 0;
+int dmode = 1;
 
 void InitIsoApp() {
     SetTraceLogLevel(LOG_DEBUG);
@@ -64,14 +63,8 @@ void InitIsoApp() {
         .rotation = 0.f,
         .zoom = 1.0f,
     };
-    center = (Vector2) { .x = (float)GetScreenWidth()/2, .y = (float)GetScreenHeight()/2 };
-    //TODO: Try to move this to center now that we have camera?
-    // Need to understand how to get mouse position after camera transform
-    /*
-    RLAPI Vector2 GetScreenToWorld2D(Vector2 position, Camera2D camera);    // Get the world space position for a 2d camera screen space position
-    RLAPI Matrix GetCameraMatrix2D(Camera2D camera);                        // Get camera 2d transform matrix
-    // */
-    charpos = center;
+
+    charpos = Vector2Zero();
 }
 
 void TickIsoApp() {
@@ -103,7 +96,7 @@ void TickIsoApp() {
     //TODO: Add deltatime here
     charpos = Vector2Add(charpos, movement);
     camera.target = charpos;
-    mpos = GetMousePosition();
+    mpos = GetScreenToWorld2D(GetMousePosition(), camera);
 }
 
 void DrawIsoApp() {
@@ -119,7 +112,7 @@ void DrawIsoApp() {
         .width = (float)floors.width,
         .height = (float)floors.height
     };
-    pos = Vector2Add(center, (Vector2) { .x = 0, .y = 150 });
+    pos = (Vector2) { 0.f, 150.f };
     DrawTextureRec(floortex, rect, pos, WHITE);
 
     int index = find_sprite_index(charpos, mpos);
