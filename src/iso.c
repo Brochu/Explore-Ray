@@ -28,7 +28,7 @@ typedef struct {
     int size;
     int stride;
 } sheet_t;
-sheet_t floors = { 0, 7, 160, 80, 29, 5 }; // floors.png
+sheet_t floors = { 0, 8, 160, 80, 29, 5 }; // floors.png
 sheet_t exits = { 0, 493, 160, 80, 8, 5 }; // floors.png
 sheet_t walls = { 0, 13, 108, 226, 44, 17 }; // walls.png
 sheet_t necro_w = { 0, 0, 93, 97, 128, 8 }; // necro-walk.gif
@@ -104,7 +104,7 @@ void InitIsoApp() {
 
     charpos = Vector2Zero();
     for (int i = 0; i < MAP_DIMS*MAP_DIMS; ++i) {
-        map[i] = rand() % 20;
+        map[i] = rand() % 21;
     }
 }
 
@@ -174,6 +174,11 @@ void DrawIsoApp() {
         }
     }
 
+    // SHADOW
+    Vector2 shadowpos = Vector2Add(charpos, (Vector2){ .x = 0.f, .y = 45.f });
+    DrawEllipse(VECPOS(shadowpos), 20.f, 8.f, ColorAlpha(BLACK, 0.5f));
+
+    // CHAR
     int index = find_sprite_index(charpos, mpos);
     rect = (Rectangle) {
         .x = (float)necro_r.xoffset + (necro_r.width * ((findex / SPRITE_DELAY) % necro_r.stride)),
