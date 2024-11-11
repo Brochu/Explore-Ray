@@ -1,15 +1,17 @@
 #include "iso.h"
 
+#include "stdlib.h"
+#include "time.h"
+
 #include "raylib.h"
 #include "raygui.h"
 #include "raymath.h"
-#include "stdlib.h"
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
 #define VECPOS(v) (int)v.x, (int)v.y
-#define MAP_DIMS 25
+#define MAP_DIMS 10
 #define SPRITE_DELAY 6
-#define SPEED 5
+#define SPEED 250.f
 
 typedef struct {
     int x;
@@ -33,12 +35,33 @@ sheet_t necro_w = { 0, 0, 93, 97, 128, 8 }; // necro-walk.gif
 sheet_t necro_r = { 0, 0, 103, 98, 128, 8 }; // necro-walk.gif
 
 typedef size_t tile_t;
-tile_t map[MAP_DIMS * MAP_DIMS] = { 0 };
+tile_t map[MAP_DIMS * MAP_DIMS] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+};
 
 Vector2 get_tile_pos(sheet_t *tinfo, int x, int y) {
     return (Vector2) {
         .x = (x - y) * tinfo->width/2.f,
         .y = (x + y) * tinfo->height/2.f,
+    };
+}
+pos_t get_tile_coord(sheet_t *tinfo, Vector2 pos) {
+    //TODO : this might need some work, not very accurate
+    pos.x = pos.x / (tinfo->width);
+    pos.y = pos.y / (tinfo->height);
+
+    return (pos_t) {
+        .x = (int)(pos.x + pos.y),
+        .y = -1 * (int)(pos.x - pos.y),
     };
 }
 
@@ -64,8 +87,11 @@ Vector2 mpos;
 int dmode = 0;
 
 void InitIsoApp() {
+    srand((unsigned int)time(NULL));
+
     SetTraceLogLevel(LOG_DEBUG);
     TraceLog(LOG_DEBUG, "[ISO] Starting isometric viewer application");
+
     chartex = LoadTexture("isodata\\necro-run.png");
     floortex = LoadTexture("isodata\\floors.png");
 
@@ -77,14 +103,13 @@ void InitIsoApp() {
     };
 
     charpos = Vector2Zero();
+    for (int i = 0; i < MAP_DIMS*MAP_DIMS; ++i) {
+        map[i] = rand() % 20;
+    }
 }
 
 void TickIsoApp() {
-    //TODO: Update logic here
-    // Find current highlighted coord
-
     if (IsKeyPressed(KEY_R)) {
-        //TODO: Handle mode draw modes later?
         if (dmode == 0) dmode = 1;
         else if (dmode == 1) dmode = 0;
     }
@@ -103,12 +128,14 @@ void TickIsoApp() {
     if (IsKeyDown(KEY_D)) {
         movement.x += unit;
     }
-    movement = Vector2Scale(Vector2Normalize(movement), SPEED);
+    movement = Vector2Scale(Vector2Normalize(movement), SPEED * GetFrameTime());
 
-    //TODO: Add deltatime here
     charpos = Vector2Add(charpos, movement);
     camera.target = charpos;
     mpos = GetScreenToWorld2D(GetMousePosition(), camera);
+
+    // Find current highlighted coord
+    hover = get_tile_coord(&floors, mpos);
 }
 
 void DrawIsoApp() {
@@ -116,18 +143,34 @@ void DrawIsoApp() {
     Vector2 pos;
 
     BeginMode2D(camera);
-    //TODO: Draw map here
-    // Highlight correct tile
-    for (int y = MAP_DIMS; y >= 0; --y) {
-        for (int x = MAP_DIMS; x >= 0; --x) {
+    for (int y = MAP_DIMS-1; y >= 0; --y) {
+        for (int x = MAP_DIMS-1; x >= 0; --x) {
+            size_t tileidx = map[(y * MAP_DIMS) + x];
+            size_t xoff = tileidx % floors.stride;
+            size_t yoff = tileidx / floors.stride;
             rect = (Rectangle) {
-                .x = (float)floors.xoffset,
-                .y = (float)floors.yoffset,
+                .x = (float)floors.xoffset + (xoff * floors.width),
+                .y = (float)floors.yoffset + (yoff * floors.height),
                 .width = (float)floors.width,
                 .height = (float)floors.height
             };
             pos = get_tile_pos(&floors, x, y);
             DrawTextureRec(floortex, rect, pos, WHITE);
+        }
+    }
+
+    for (int y = MAP_DIMS-1; y >= 0; --y) {
+        for (int x = MAP_DIMS-1; x >= 0; --x) {
+            if (dmode == 1) {
+                Vector2 debugpos = Vector2Subtract(get_tile_pos(&floors, x, y), (Vector2){ .x = -50.f, .y = -25.f });
+                size_t tileidx = map[(y * MAP_DIMS) + x];
+                size_t xoff = tileidx % floors.stride;
+                size_t yoff = tileidx / floors.stride;
+                const char *output = TextFormat("[%zu](%zu, %zu)", tileidx, xoff, yoff);
+                DrawText(output, VECPOS(debugpos), 8, WHITE);
+                DrawCircle(VECPOS(mpos), 5.f, RED);
+                DrawLine(VECPOS(charpos), VECPOS(mpos), BLUE);
+            }
         }
     }
 
