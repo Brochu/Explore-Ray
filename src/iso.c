@@ -131,6 +131,10 @@ void InitIsoApp() {
         map[i] = rand() % 6;
     }
     map[45] = 11;
+    map[46] = 28;
+    map[47] = 27;
+    map[66] = 26;
+    map[67] = 25;
 }
 
 void TickIsoApp() {
@@ -155,14 +159,14 @@ void TickIsoApp() {
     }
 
     if (Vector2LengthSqr(movement) > EPSILON) {
-        movement = Vector2Scale(Vector2Normalize(movement), WALK_SPEED * GetFrameTime());
+        movement = Vector2Scale(Vector2Normalize(movement), RUN_SPEED * GetFrameTime());
         if (animidx == 0) {
-            animidx = 1;
+            animidx = AN_RUN;
             findex = 0;
         }
     } else {
-        if (animidx == 1) {
-            animidx = 0;
+        if (animidx != 0) {
+            animidx = AN_IDLE;
             findex = 0;
         }
     }
@@ -176,7 +180,19 @@ void TickIsoApp() {
     mpos = GetScreenToWorld2D(GetMousePosition(), camera);
 
     // Find current highlighted coord
-    hover = get_tile_coord(&floors, mpos);
+    //TODO: Need to convert this to a function to avoid GOTO lul
+    for (int y = 0; y < MAP_DIMS; ++y) {
+        for (int x = 0; x < MAP_DIMS; ++x) {
+            Vector2 tilepos = get_tile_pos(&floors, x, y);
+            if (is_in_tile(&floors, tilepos, mpos)) {
+                hover = (pos_t) { .x = x, .y = y };
+                goto end;
+            }
+        }
+    }
+    hover = (pos_t) { .x = -1, .y = -1 };
+end:
+    (hover);
 }
 
 void DrawIsoApp() {
@@ -196,8 +212,9 @@ void DrawIsoApp() {
                 .height = (float)floors.height
             };
             pos = get_tile_pos(&floors, x, y);
-            bool highlight = is_in_tile(&floors, pos, mpos);
-            DrawTextureRec(floortex, rect, sprite_pos(&floors, pos), (highlight) ? WHITE : GRAY);
+            bool highlight = false;
+            if (hover.x == x && hover.y == y) { highlight = true; }
+            DrawTextureRec(floortex, rect, sprite_pos(&floors, pos), (highlight) ? GRAY : WHITE);
         }
     }
 
