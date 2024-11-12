@@ -193,15 +193,32 @@ void DrawIsoApp() {
         }
     }
 
-    for (int y = MAP_DIMS-1; y >= 0; --y) {
-        for (int x = MAP_DIMS-1; x >= 0; --x) {
-            if (dmode == 1) {
+    if (dmode == 1) {
+        for (int y = MAP_DIMS-1; y >= 0; --y) {
+            for (int x = MAP_DIMS-1; x >= 0; --x) {
                 Vector2 debugpos = get_tile_pos(&floors, x, y);
                 size_t tileidx = map[(y * MAP_DIMS) + x];
                 size_t xoff = tileidx % floors.stride;
                 size_t yoff = tileidx / floors.stride;
                 const char *output = TextFormat("[%zu](%zu, %zu)", tileidx, xoff, yoff);
                 DrawText(output, VECPOS(debugpos), 8, WHITE);
+
+                //TODO: Compare mouse positions with all these corners for each tiles?
+                // Might be an optim possible with limiting the amont of tiles to check
+                DrawCircleV(debugpos, 2.f, YELLOW);
+                Vector2 l = Vector2Subtract(debugpos, (Vector2) { .x = floors.width/2.f, .y = 0.f });
+                DrawCircleV(l, 2.f, GREEN);
+                Vector2 t = Vector2Subtract(debugpos, (Vector2) { .x = 0.f, .y = floors.height/2.f });
+                DrawCircleV(t, 2.f, RED);
+                Vector2 r = Vector2Add(debugpos, (Vector2) { .x = floors.width/2.f, .y = 0.f });
+                DrawCircleV(r, 2.f, BLUE);
+                Vector2 b = Vector2Add(debugpos, (Vector2) { .x = 0.f, .y = floors.height/2.f });
+                DrawCircleV(b, 2.f, WHITE);
+
+                DrawLineV(l, t, GRAY);
+                DrawLineV(t, r, GRAY);
+                DrawLineV(r, b, GRAY);
+                DrawLineV(b, l, GRAY);
             }
         }
     }
