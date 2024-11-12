@@ -81,6 +81,12 @@ pos_t get_tile_coord(sheet_t *tinfo, Vector2 pos) {
         .y = (int)(pos.y - pos.x),
     };
 }
+bool is_in_tile(sheet_t *tinfo, Vector2 tilepos, Vector2 mouse) {
+    float dx = fabsf(mouse.x - tilepos.x);
+    float dy = fabsf(mouse.y - tilepos.y);
+
+    return (dx / (tinfo->width/2.f) + dy / (tinfo->height/2.f)) <= 1.f;
+}
 
 Camera2D camera;
 Texture2D floortex;
@@ -187,8 +193,7 @@ void DrawIsoApp() {
                 .height = (float)floors.height
             };
             pos = get_tile_pos(&floors, x, y);
-            bool highlight = false;
-            if (hover.x == x && hover.y == y) { highlight = true; }
+            bool highlight = is_in_tile(&floors, pos, mpos);
             DrawTextureRec(floortex, rect, sprite_pos(&floors, pos), (highlight) ? WHITE : GRAY);
         }
     }
@@ -203,8 +208,6 @@ void DrawIsoApp() {
                 const char *output = TextFormat("[%zu](%zu, %zu)", tileidx, xoff, yoff);
                 DrawText(output, VECPOS(debugpos), 8, WHITE);
 
-                //TODO: Compare mouse positions with all these corners for each tiles?
-                // Might be an optim possible with limiting the amont of tiles to check
                 DrawCircleV(debugpos, 2.f, YELLOW);
                 Vector2 l = Vector2Subtract(debugpos, (Vector2) { .x = floors.width/2.f, .y = 0.f });
                 DrawCircleV(l, 2.f, GREEN);
@@ -214,7 +217,6 @@ void DrawIsoApp() {
                 DrawCircleV(r, 2.f, BLUE);
                 Vector2 b = Vector2Add(debugpos, (Vector2) { .x = 0.f, .y = floors.height/2.f });
                 DrawCircleV(b, 2.f, WHITE);
-
                 DrawLineV(l, t, GRAY);
                 DrawLineV(t, r, GRAY);
                 DrawLineV(r, b, GRAY);
