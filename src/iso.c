@@ -11,13 +11,19 @@
 #define VECPOS(v) (int)v.x, (int)v.y
 #define MAP_DIMS 10
 #define SPRITE_DELAY 6
-#define SPEED 250.f
+#define WALK_SPEED 150.f
+#define RUN_SPEED 250.f
 
-typedef struct {
-    int x;
-    int y;
-} pos_t;
-pos_t hover = { 0, 0 };
+enum ANIMS {
+    AN_IDLE,
+    AN_WALK,
+    AN_RUN,
+    AN_COUNT,
+};
+Texture2D chartex[AN_COUNT];
+size_t findex = 0;
+Vector2 charpos;
+size_t animidx = 0;
 
 //TODO: Should think of a system to embed this data with the image somehow?
 typedef struct {
@@ -31,21 +37,30 @@ typedef struct {
 sheet_t floors = { 0, 8, 160, 80, 29, 5 }; // floors.png
 sheet_t exits = { 0, 493, 160, 80, 8, 5 }; // floors.png
 sheet_t walls = { 0, 13, 108, 226, 44, 17 }; // walls.png
-sheet_t necro_w = { 0, 0, 93, 97, 128, 8 }; // necro-walk.gif
-sheet_t necro_r = { 0, 0, 103, 98, 128, 8 }; // necro-walk.gif
+sheet_t necro[AN_COUNT] = {
+    { 0, 0, 98, 90, 128, 8 }, // necro-neutral.png
+    { 0, 0, 93, 97, 128, 8 }, // necro-walk.png
+    { 0, 0, 103, 98, 128, 8 }, // necro-run.png
+};
+
+typedef struct {
+    int x;
+    int y;
+} pos_t;
+pos_t hover = { 0, 0 };
 
 typedef size_t tile_t;
 tile_t map[MAP_DIMS * MAP_DIMS] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
+    00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
+    00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
+    00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
+    00, 00, 00, 00, 11, 00, 00, 00, 00, 00,
+    00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
+    00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
+    00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
+    00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
+    00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
 };
 
 Vector2 get_tile_pos(sheet_t *tinfo, int x, int y) {
@@ -65,9 +80,9 @@ pos_t get_tile_coord(sheet_t *tinfo, Vector2 pos) {
     };
 }
 
-size_t findex = 0;
-Texture2D chartex;
+Camera2D camera;
 Texture2D floortex;
+Vector2 mpos;
 
 int find_sprite_index(Vector2 cpos, Vector2 mpos) {
     Vector2 ray = Vector2Subtract(cpos, mpos);
@@ -80,10 +95,6 @@ Vector2 sprite_pos(sheet_t *sinfo, Vector2 pos) {
     return Vector2Subtract(pos, (Vector2) { .x = sinfo->width/2.f, sinfo->height/2.f });
 }
 
-Camera2D camera;
-Vector2 charpos;
-Vector2 mpos;
-
 int dmode = 0;
 
 void InitIsoApp() {
@@ -92,7 +103,9 @@ void InitIsoApp() {
     SetTraceLogLevel(LOG_DEBUG);
     TraceLog(LOG_DEBUG, "[ISO] Starting isometric viewer application");
 
-    chartex = LoadTexture("isodata\\necro-run.png");
+    chartex[AN_IDLE] = LoadTexture("isodata\\necro-idle.png");
+    chartex[AN_WALK] = LoadTexture("isodata\\necro-walk.png");
+    chartex[AN_RUN] = LoadTexture("isodata\\necro-run.png");
     floortex = LoadTexture("isodata\\floors.png");
 
     camera = (Camera2D) {
@@ -104,8 +117,9 @@ void InitIsoApp() {
 
     charpos = Vector2Zero();
     for (int i = 0; i < MAP_DIMS*MAP_DIMS; ++i) {
-        map[i] = rand() % 21;
+        map[i] = rand() % 6;
     }
+    map[45] = 11;
 }
 
 void TickIsoApp() {
@@ -128,7 +142,19 @@ void TickIsoApp() {
     if (IsKeyDown(KEY_D)) {
         movement.x += unit;
     }
-    movement = Vector2Scale(Vector2Normalize(movement), SPEED * GetFrameTime());
+
+    if (Vector2LengthSqr(movement) > EPSILON) {
+        movement = Vector2Scale(Vector2Normalize(movement), WALK_SPEED * GetFrameTime());
+        if (animidx == 0) {
+            animidx = 1;
+            findex = 0;
+        }
+    } else {
+        if (animidx == 1) {
+            animidx = 0;
+            findex = 0;
+        }
+    }
 
     charpos = Vector2Add(charpos, movement);
     camera.target = charpos;
@@ -175,18 +201,19 @@ void DrawIsoApp() {
     }
 
     // SHADOW
-    Vector2 shadowpos = Vector2Add(charpos, (Vector2){ .x = 0.f, .y = 45.f });
+    Vector2 shadowpos = Vector2Add(charpos, (Vector2){ .x = 0.f, .y = 40.f });
     DrawEllipse(VECPOS(shadowpos), 20.f, 8.f, ColorAlpha(BLACK, 0.5f));
 
     // CHAR
     int index = find_sprite_index(charpos, mpos);
+    sheet_t *sheet = &necro[animidx];
     rect = (Rectangle) {
-        .x = (float)necro_r.xoffset + (necro_r.width * ((findex / SPRITE_DELAY) % necro_r.stride)),
-        .y = (float)necro_r.yoffset + (necro_r.height * index),
-        .width = (float)necro_r.width,
-        .height = (float)necro_r.height
+        .x = (float)sheet->xoffset + (sheet->width * ((findex / SPRITE_DELAY) % sheet->stride)),
+        .y = (float)sheet->yoffset + (sheet->height * index),
+        .width = (float)sheet->width,
+        .height = (float)sheet->height
     };
-    DrawTextureRec(chartex, rect, sprite_pos(&necro_r, charpos), WHITE);
+    DrawTextureRec(chartex[animidx], rect, sprite_pos(sheet, charpos), WHITE);
 
     if (dmode == 1) {
         DrawCircle(VECPOS(mpos), 5.f, RED);
@@ -206,5 +233,7 @@ void DrawIsoApp() {
 void DropIsoApp() {
     TraceLog(LOG_DEBUG, "[ISO] Dropping isometric viewer application");
     UnloadTexture(floortex);
-    UnloadTexture(chartex);
+    UnloadTexture(chartex[AN_RUN]);
+    UnloadTexture(chartex[AN_WALK]);
+    UnloadTexture(chartex[AN_IDLE]);
 }
