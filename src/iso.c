@@ -55,7 +55,7 @@ tile_t map[MAP_DIMS * MAP_DIMS] = {
     00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
     00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
     00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
-    00, 00, 00, 00, 11, 00, 00, 00, 00, 00,
+    00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
     00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
     00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
     00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
@@ -70,13 +70,14 @@ Vector2 get_tile_pos(sheet_t *tinfo, int x, int y) {
     };
 }
 pos_t get_tile_coord(sheet_t *tinfo, Vector2 pos) {
-    //TODO : this might need some work, not very accurate
+    //TODO : v2, works better, but still not ideal
+    Vector2Add(pos, (Vector2) { .x = tinfo->width/1.f, .y = tinfo->height/1.f });
     pos.x = pos.x / (tinfo->width);
     pos.y = pos.y / (tinfo->height);
 
     return (pos_t) {
         .x = (int)(pos.x + pos.y),
-        .y = -1 * (int)(pos.x - pos.y),
+        .y = (int)(pos.y - pos.x),
     };
 }
 
@@ -181,21 +182,21 @@ void DrawIsoApp() {
                 .height = (float)floors.height
             };
             pos = get_tile_pos(&floors, x, y);
-            DrawTextureRec(floortex, rect, pos, WHITE);
+            bool highlight = false;
+            if (hover.x == x && hover.y == y) { highlight = true; }
+            DrawTextureRec(floortex, rect, sprite_pos(&floors, pos), (highlight) ? WHITE : GRAY);
         }
     }
 
     for (int y = MAP_DIMS-1; y >= 0; --y) {
         for (int x = MAP_DIMS-1; x >= 0; --x) {
             if (dmode == 1) {
-                Vector2 debugpos = Vector2Subtract(get_tile_pos(&floors, x, y), (Vector2){ .x = -50.f, .y = -25.f });
+                Vector2 debugpos = get_tile_pos(&floors, x, y);
                 size_t tileidx = map[(y * MAP_DIMS) + x];
                 size_t xoff = tileidx % floors.stride;
                 size_t yoff = tileidx / floors.stride;
                 const char *output = TextFormat("[%zu](%zu, %zu)", tileidx, xoff, yoff);
                 DrawText(output, VECPOS(debugpos), 8, WHITE);
-                DrawCircle(VECPOS(mpos), 5.f, RED);
-                DrawLine(VECPOS(charpos), VECPOS(mpos), BLUE);
             }
         }
     }
@@ -222,7 +223,8 @@ void DrawIsoApp() {
     EndMode2D();
 
     GuiStatusBar(RECT(0, 585, 800, 15),
-        TextFormat("highlight pos (%i, %i); %zu FPS; Sprite Index = %i",
+        TextFormat("mouse pos (%f, %f); highlight pos (%i, %i); %i FPS; Sprite Index = %i",
+            mpos.x, mpos.y,
             hover.x, hover.y,
             GetFPS(),
             index)
