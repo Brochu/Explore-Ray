@@ -22,6 +22,7 @@ enum ANIMS {
 };
 Texture2D chartex[AN_COUNT];
 size_t findex = 0;
+//TODO: look into storing tile coords pos + sub-tile pos separately?
 Vector2 charpos;
 size_t animidx = 0;
 
@@ -157,6 +158,10 @@ void TickIsoApp() {
         }
     }
 
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        //TODO: Store desired tile/sub-tile positions from mouse pos
+        TraceLog(LOG_DEBUG, "[ISO] Mouse clicked, move to position: mpos = (%f, %f)", mpos.x, mpos.y);
+    }
     charpos = Vector2Add(charpos, movement);
     camera.target = charpos;
     mpos = GetScreenToWorld2D(GetMousePosition(), camera);
