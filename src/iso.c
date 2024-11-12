@@ -9,7 +9,7 @@
 
 #define RECT(x, y, w, h) ((Rectangle){x, y, w, h})
 #define VECPOS(v) (int)v.x, (int)v.y
-#define MAP_DIMS 10
+#define MAP_DIMS 20
 #define SPRITE_DELAY 6
 #define WALK_SPEED 150.f
 #define RUN_SPEED 250.f
@@ -51,6 +51,8 @@ typedef struct {
 pos_t hover = { 0, 0 };
 
 typedef size_t tile_t;
+tile_t map[MAP_DIMS * MAP_DIMS];
+/*
 tile_t map[MAP_DIMS * MAP_DIMS] = {
     00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
     00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
@@ -63,6 +65,7 @@ tile_t map[MAP_DIMS * MAP_DIMS] = {
     00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
     00, 00, 00, 00, 00, 00, 00, 00, 00, 00,
 };
+*/
 
 Vector2 get_tile_pos(sheet_t *tinfo, int x, int y) {
     return (Vector2) {
@@ -208,17 +211,12 @@ void DrawIsoApp() {
                 const char *output = TextFormat("[%zu](%zu, %zu)", tileidx, xoff, yoff);
                 DrawText(output, VECPOS(debugpos), 8, WHITE);
 
-                DrawCircleV(debugpos, 2.f, YELLOW);
                 Vector2 l = Vector2Subtract(debugpos, (Vector2) { .x = floors.width/2.f, .y = 0.f });
-                DrawCircleV(l, 2.f, GREEN);
                 Vector2 t = Vector2Subtract(debugpos, (Vector2) { .x = 0.f, .y = floors.height/2.f });
-                DrawCircleV(t, 2.f, RED);
-                Vector2 r = Vector2Add(debugpos, (Vector2) { .x = floors.width/2.f, .y = 0.f });
-                DrawCircleV(r, 2.f, BLUE);
-                Vector2 b = Vector2Add(debugpos, (Vector2) { .x = 0.f, .y = floors.height/2.f });
-                DrawCircleV(b, 2.f, WHITE);
                 DrawLineV(l, t, GRAY);
+                Vector2 r = Vector2Add(debugpos, (Vector2) { .x = floors.width/2.f, .y = 0.f });
                 DrawLineV(t, r, GRAY);
+                Vector2 b = Vector2Add(debugpos, (Vector2) { .x = 0.f, .y = floors.height/2.f });
                 DrawLineV(r, b, GRAY);
                 DrawLineV(b, l, GRAY);
             }
@@ -247,7 +245,7 @@ void DrawIsoApp() {
     EndMode2D();
 
     GuiStatusBar(RECT(0, 585, 800, 15),
-        TextFormat("mouse pos (%f, %f); highlight pos (%i, %i); %i FPS; Sprite Index = %i",
+        TextFormat("mouse pos (%.03f, %.03f); highlight pos (%i, %i); %i FPS; Sprite Index = %i",
             mpos.x, mpos.y,
             hover.x, hover.y,
             GetFPS(),
