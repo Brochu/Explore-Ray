@@ -90,6 +90,17 @@ bool is_in_tile(sheet_t *tinfo, Vector2 tilepos, Vector2 mouse) {
 
     return (dx / (tinfo->width/2.f) + dy / (tinfo->height/2.f)) <= 1.f;
 }
+Vector2 to_tile_space(sheet_t *tinfo, Vector2 pos) {
+    //TODO : Opposite of what I thought
+    // Need to convert this to matrix mult
+    // Need to invert matrix in order to go from screen space to tile space
+    float tw = tinfo->width * 0.50f;
+    float th = tinfo->height * 0.25f;
+    float x = (pos.x * tw) + (pos.y * -tw);
+    float y = (pos.x * th) + (pos.y * th);
+
+    return (Vector2) { .x = x, .y = y };
+}
 
 Camera2D camera;
 Texture2D floortex;
@@ -261,9 +272,11 @@ void DrawIsoApp() {
     }
     EndMode2D();
 
+    Vector2 tilespace = to_tile_space(&floors, (Vector2){ 1.f, 0.f });
     GuiStatusBar(RECT(0, 585, 800, 15),
-        TextFormat("mouse pos (%.03f, %.03f); highlight pos (%i, %i); %i FPS; Sprite Index = %i",
+        TextFormat("mouse pos (%.03f, %.03f); tilespace (%.03f, %.03f); highlight pos (%i, %i); %i FPS; Sprite Index = %i",
             mpos.x, mpos.y,
+            tilespace.x, tilespace.y,
             hover.x, hover.y,
             GetFPS(),
             index)
