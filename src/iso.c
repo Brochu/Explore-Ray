@@ -69,6 +69,8 @@ tile_t map[MAP_DIMS * MAP_DIMS] = {
 */
 
 Vector2 get_tile_pos(sheet_t *tinfo, int x, int y) {
+    if (x <= -1 && y <= -1) return (Vector2) { .x = -1, .y = -1 };
+
     return (Vector2) {
         .x = (x - y) * tinfo->width/2.f,
         .y = (x + y) * tinfo->height/2.f,
@@ -109,6 +111,9 @@ Texture2D floortex;
 Vector2 mpos;
 
 int find_sprite_index(Vector2 cpos, Vector2 tpos) {
+    // invalid target tile
+    if (tpos.x < 0 && tpos.y < 0) return 0;
+
     Vector2 ray = Vector2Subtract(cpos, tpos);
 
     float angle = -1 * (atan2f(ray.x, ray.y) * (8.f/PI));
@@ -228,17 +233,18 @@ void DrawIsoApp() {
                 size_t yoff = tileidx / floors.stride;
                 const char *output = TextFormat("[%zu](%zu, %zu)", tileidx, xoff, yoff);
                 DrawText(output, VECPOS(debugpos), 8, WHITE);
-                DrawCircleV(debugpos, 2.f, BLUE);
 
-                Color c = (target.x == x && target.y == y) ? RED : GRAY;
+                if (target.x == x && target.y == y) {
+                    DrawCircleV(debugpos, 10.f, YELLOW);
+                }
                 Vector2 l = Vector2Subtract(debugpos, (Vector2) { .x = floors.width/2.f, .y = 0.f });
                 Vector2 t = Vector2Subtract(debugpos, (Vector2) { .x = 0.f, .y = floors.height/2.f });
-                DrawLineV(l, t, c);
+                DrawLineV(l, t, GRAY);
                 Vector2 r = Vector2Add(debugpos, (Vector2) { .x = floors.width/2.f, .y = 0.f });
-                DrawLineV(t, r, c);
+                DrawLineV(t, r, GRAY);
                 Vector2 b = Vector2Add(debugpos, (Vector2) { .x = 0.f, .y = floors.height/2.f });
-                DrawLineV(r, b, c);
-                DrawLineV(b, l, c);
+                DrawLineV(r, b, GRAY);
+                DrawLineV(b, l, GRAY);
             }
         }
     }
