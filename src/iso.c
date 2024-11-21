@@ -108,8 +108,8 @@ Camera2D camera;
 Texture2D floortex;
 Vector2 mpos;
 
-int find_sprite_index(Vector2 cpos, Vector2 mpos) {
-    Vector2 ray = Vector2Subtract(cpos, mpos);
+int find_sprite_index(Vector2 cpos, Vector2 tpos) {
+    Vector2 ray = Vector2Subtract(cpos, tpos);
 
     float angle = -1 * (atan2f(ray.x, ray.y) * (8.f/PI));
     return ((int)(roundf(angle) + 8) % 16);
@@ -228,6 +228,7 @@ void DrawIsoApp() {
                 size_t yoff = tileidx / floors.stride;
                 const char *output = TextFormat("[%zu](%zu, %zu)", tileidx, xoff, yoff);
                 DrawText(output, VECPOS(debugpos), 8, WHITE);
+                DrawCircleV(debugpos, 2.f, BLUE);
 
                 Color c = (target.x == x && target.y == y) ? RED : GRAY;
                 Vector2 l = Vector2Subtract(debugpos, (Vector2) { .x = floors.width/2.f, .y = 0.f });
@@ -247,7 +248,7 @@ void DrawIsoApp() {
     DrawEllipse(VECPOS(shadowpos), 20.f, 8.f, ColorAlpha(BLACK, 0.5f));
 
     // CHAR
-    int index = find_sprite_index(charpos, mpos);
+    int index = find_sprite_index(charpos, get_tile_pos(&floors, target.x, target.y));
     sheet_t *sheet = &necro[animidx];
     rect = (Rectangle) {
         .x = (float)sheet->xoffset + (sheet->width * ((findex / SPRITE_DELAY) % sheet->stride)),
