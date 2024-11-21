@@ -49,6 +49,7 @@ typedef struct {
     int y;
 } pos_t;
 pos_t hover = { 0, 0 };
+pos_t target = { -1, -1 };
 
 typedef size_t tile_t;
 tile_t map[MAP_DIMS * MAP_DIMS];
@@ -89,6 +90,18 @@ Vector2 to_tile_space(sheet_t *tinfo, Vector2 pos) {
     float y = (pos.x * th) + (pos.y * th);
 
     return (Vector2) { .x = x, .y = y };
+}
+pos_t get_hover_tile(Vector2 mpos) {
+    for (int y = 0; y < MAP_DIMS; ++y) {
+        for (int x = 0; x < MAP_DIMS; ++x) {
+            Vector2 tilepos = get_tile_pos(&floors, x, y);
+            if (is_in_tile(&floors, tilepos, mpos)) {
+                return (pos_t) { .x = x, .y = y };
+            }
+        }
+    }
+
+    return (pos_t) { .x = -1, .y = -1 };
 }
 
 Camera2D camera;
@@ -143,6 +156,15 @@ void TickIsoApp() {
         else if (dmode == 1) dmode = 0;
     }
 
+    mpos = GetScreenToWorld2D(GetMousePosition(), camera);
+    hover = get_hover_tile(mpos);
+
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        //TODO: Store desired tile/sub-tile positions from mouse pos
+        //TraceLog(LOG_DEBUG, "[ISO] Mouse clicked, current tile (%i, %i)", hover.x, hover.y);
+        target = hover;
+    }
+
     Vector2 movement = Vector2Zero();
     float unit = 1.f;
     if (IsKeyDown(KEY_W)) {
@@ -170,29 +192,8 @@ void TickIsoApp() {
             findex = 0;
         }
     }
-
-    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-        //TODO: Store desired tile/sub-tile positions from mouse pos
-        TraceLog(LOG_DEBUG, "[ISO] Mouse clicked, move to position: mpos = (%f, %f)", mpos.x, mpos.y);
-    }
     charpos = Vector2Add(charpos, movement);
     camera.target = charpos;
-    mpos = GetScreenToWorld2D(GetMousePosition(), camera);
-
-    // Find current highlighted coord
-    //TODO: Need to convert this to a function to avoid GOTO lul
-    for (int y = 0; y < MAP_DIMS; ++y) {
-        for (int x = 0; x < MAP_DIMS; ++x) {
-            Vector2 tilepos = get_tile_pos(&floors, x, y);
-            if (is_in_tile(&floors, tilepos, mpos)) {
-                hover = (pos_t) { .x = x, .y = y };
-                goto end;
-            }
-        }
-    }
-    hover = (pos_t) { .x = -1, .y = -1 };
-end:
-    (hover);
 }
 
 void DrawIsoApp() {
@@ -228,14 +229,15 @@ void DrawIsoApp() {
                 const char *output = TextFormat("[%zu](%zu, %zu)", tileidx, xoff, yoff);
                 DrawText(output, VECPOS(debugpos), 8, WHITE);
 
+                Color c = (target.x == x && target.y == y) ? RED : GRAY;
                 Vector2 l = Vector2Subtract(debugpos, (Vector2) { .x = floors.width/2.f, .y = 0.f });
                 Vector2 t = Vector2Subtract(debugpos, (Vector2) { .x = 0.f, .y = floors.height/2.f });
-                DrawLineV(l, t, GRAY);
+                DrawLineV(l, t, c);
                 Vector2 r = Vector2Add(debugpos, (Vector2) { .x = floors.width/2.f, .y = 0.f });
-                DrawLineV(t, r, GRAY);
+                DrawLineV(t, r, c);
                 Vector2 b = Vector2Add(debugpos, (Vector2) { .x = 0.f, .y = floors.height/2.f });
-                DrawLineV(r, b, GRAY);
-                DrawLineV(b, l, GRAY);
+                DrawLineV(r, b, c);
+                DrawLineV(b, l, c);
             }
         }
     }
