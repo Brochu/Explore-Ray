@@ -73,17 +73,6 @@ Vector2 get_tile_pos(sheet_t *tinfo, int x, int y) {
         .y = (x + y) * tinfo->height/2.f,
     };
 }
-pos_t get_tile_coord(sheet_t *tinfo, Vector2 pos) {
-    //TODO : v2, works better, but still not ideal
-    Vector2Add(pos, (Vector2) { .x = tinfo->width/1.f, .y = tinfo->height/1.f });
-    pos.x = pos.x / (tinfo->width);
-    pos.y = pos.y / (tinfo->height);
-
-    return (pos_t) {
-        .x = (int)(pos.x + pos.y),
-        .y = (int)(pos.y - pos.x),
-    };
-}
 bool is_in_tile(sheet_t *tinfo, Vector2 tilepos, Vector2 mouse) {
     float dx = fabsf(mouse.x - tilepos.x);
     float dy = fabsf(mouse.y - tilepos.y);
