@@ -22,9 +22,9 @@ enum ANIMS {
 };
 Texture2D chartex[AN_COUNT];
 size_t findex = 0;
-//TODO: look into storing tile coords pos + sub-tile pos separately?
 Vector2 charpos;
 size_t animidx = 0;
+//TODO: Store the character's current tile (center tile)
 
 //TODO: Should think of a system to embed this data with the image somehow?
 typedef struct {
@@ -76,24 +76,23 @@ Vector2 get_tile_pos(sheet_t *tinfo, int x, int y) {
         .y = (x + y) * tinfo->height/2.f,
     };
 }
+pos_t get_center_tile(sheet_t *tinfo) {
+    float xpy = (charpos.y / (tinfo->height/2.f) + 2.f);
+    float xmy = charpos.x / (tinfo->width/2.f);
+
+    int tx = (int)((xpy + xmy) / 2.f);
+    int ty = (int)((xpy - xmy) / 2.f);
+
+    return (pos_t) { tx, ty };
+};
 bool is_in_tile(sheet_t *tinfo, Vector2 tilepos, Vector2 mouse) {
     float dx = fabsf(mouse.x - tilepos.x);
     float dy = fabsf(mouse.y - tilepos.y);
 
     return (dx / (tinfo->width/2.f) + dy / (tinfo->height/2.f)) <= 1.f;
 }
-Vector2 to_tile_space(sheet_t *tinfo, Vector2 pos) {
-    //TODO : Opposite of what I thought
-    // Need to convert this to matrix mult
-    // Need to invert matrix in order to go from screen space to tile space
-    float tw = tinfo->width * 0.50f;
-    float th = tinfo->height * 0.25f;
-    float x = (pos.x * tw) + (pos.y * -tw);
-    float y = (pos.x * th) + (pos.y * th);
-
-    return (Vector2) { .x = x, .y = y };
-}
 pos_t get_hover_tile(Vector2 mpos) {
+    //TODO: Find a way to check less tiles
     for (int y = 0; y < MAP_DIMS; ++y) {
         for (int x = 0; x < MAP_DIMS; ++x) {
             Vector2 tilepos = get_tile_pos(&floors, x, y);
@@ -234,6 +233,11 @@ void DrawIsoApp() {
                 const char *output = TextFormat("[%zu](%zu, %zu)", tileidx, xoff, yoff);
                 DrawText(output, VECPOS(debugpos), 8, WHITE);
 
+                pos_t c = get_center_tile(&floors);
+                if (c.x == x && c.y == y) {
+                    DrawCircleV(debugpos, 10.f, GREEN);
+                }
+
                 if (target.x == x && target.y == y) {
                     DrawCircleV(debugpos, 10.f, YELLOW);
                 }
@@ -270,11 +274,9 @@ void DrawIsoApp() {
     }
     EndMode2D();
 
-    Vector2 tilespace = to_tile_space(&floors, (Vector2){ 1.f, 0.f });
     GuiStatusBar(RECT(0, 585, 800, 15),
-        TextFormat("mouse pos (%.03f, %.03f); tilespace (%.03f, %.03f); highlight pos (%i, %i); %i FPS; Sprite Index = %i",
+        TextFormat("mouse pos (%.03f, %.03f); highlight pos (%i, %i); %i FPS; Sprite Index = %i",
             mpos.x, mpos.y,
-            tilespace.x, tilespace.y,
             hover.x, hover.y,
             GetFPS(),
             index)
