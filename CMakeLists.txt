@@ -3,8 +3,8 @@ cmake_minimum_required (VERSION 3.10)
 project (Explore-Ray LANGUAGES C CXX)
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set (DEBUG_OPTIONS /Zi /Od)
-set (RELEASE_OPTIONS /O2)
+set (DEBUG_OPTIONS /MDd /Zi /Od)
+set (RELEASE_OPTIONS /MD /O2)
 
 set (headers
     ${CMAKE_CURRENT_LIST_DIR}/include/raylib/raygui.h
