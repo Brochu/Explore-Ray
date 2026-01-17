@@ -51,6 +51,10 @@ struct partfx_node_s {
 // Main particle effect structure
 typedef struct {
     partfx_node_t *root;  // Root map containing all properties
+
+    size_t num_frames;
+    size_t p;
+    float t;
 } partfx_t;
 
 // Core API

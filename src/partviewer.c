@@ -22,6 +22,7 @@ char *data = NULL;
 Vector2 scroll = { 0 };
 Rectangle view = { 0 };
 
+Camera3D camera = { 0 };
 Texture texture = { 0 };
 
 void LoadParticleEffect(int idx) {
@@ -33,14 +34,14 @@ void LoadParticleEffect(int idx) {
     char path[128];
     sprintf_s(path, 128, "%s/%s", FOLDER, cat.paths[pickidx]);
     data = LoadFileText(path);
-    
+
     if (!partfx_parse(&fx, data, strlen(data))) {
         printf("[ERROR] Failed to parse particle effect\n");
         return;
     }
 
     printf("[FX] Successfully parsed: %s\n", cat.paths[pickidx]);
-    
+
     // Print tree for debugging
     if (fx.root != NULL) {
         partfx_print_tree(fx.root, 0);
@@ -61,9 +62,24 @@ void LoadParticleEffect(int idx) {
             }
         }
     }
+
+    partfx_node_t *sub_part = partfx_get(fx.root, "KSSM");
+    if (sub_part != NULL) {
+        partfx_node_t *end_frame = partfx_get(sub_part, "endFrame");
+        if (end_frame != NULL) {
+            fx.num_frames = end_frame->data.as_int;
+            fx.p = 0;
+            fx.t = 0.f;
+        }
+    }
 }
 
 void InitParticleViewer() {
+    camera.position = (Vector3){ 10.f, 10.f, 10.f };
+    camera.target = (Vector3){ 0.f, 0.f, 0.f };
+    camera.up = (Vector3){ 0.f, 1.f, 0.f };
+    camera.fovy = 45.f;
+
     ParseCatalog(&cat);
     partfx_init(&fx);
 
@@ -80,34 +96,37 @@ void DrawParticleViewer() {
     // Extract particle data from the tree
     char contents[2048];
     contents[0] = '\0';
-    
+
     if (fx.root != NULL) {
         // Get DNA type
         const char *dna_type = partfx_get_string(fx.root, "DNAType", "UNKNOWN");
-        
+
         char line[128];
         sprintf_s(line, sizeof(line), "Type: %s\n\n", dna_type);
         strcat_s(contents, sizeof(contents), line);
-        
+
+        sprintf_s(line, sizeof(line), "Time: p = %lli / %lli; t = %f\n\n", fx.p, fx.num_frames, fx.t);
+        strcat_s(contents, sizeof(contents), line);
+
         // Try to extract common GPSM properties
         if (strcmp(dna_type, "GPSM<UniqueID32>") == 0) {
             int maxp = partfx_get_int(fx.root, "MAXP", -1);
             float grte = partfx_get_float(fx.root, "GRTE", -1.0f);
             int ltme = partfx_get_int(fx.root, "LTME", -1);
             float size = partfx_get_float(fx.root, "SIZE", -1.0f);
-            
+
             sprintf_s(line, sizeof(line), "MAXP: %d\n", maxp);
             strcat_s(contents, sizeof(contents), line);
-            
+
             sprintf_s(line, sizeof(line), "GRTE: %.2f\n", grte);
             strcat_s(contents, sizeof(contents), line);
-            
+
             sprintf_s(line, sizeof(line), "LTME: %d\n", ltme);
             strcat_s(contents, sizeof(contents), line);
-            
+
             sprintf_s(line, sizeof(line), "SIZE: %.2f\n\n", size);
             strcat_s(contents, sizeof(contents), line);
-            
+
             // Get texture
             partfx_node_t *texr = partfx_get(fx.root, "TEXR");
             if (texr != NULL) {
@@ -120,14 +139,14 @@ void DrawParticleViewer() {
                     }
                 }
             }
-            
+
             // Get model
             const char *model = partfx_get_string(fx.root, "PMDL", NULL);
             if (model != NULL) {
                 sprintf_s(line, sizeof(line), "Model: %s\n\n", model);
                 strcat_s(contents, sizeof(contents), line);
             }
-            
+
             // Check for color animation
             partfx_node_t *pmcl = partfx_get(fx.root, "PMCL");
             if (pmcl != NULL) {
@@ -138,7 +157,7 @@ void DrawParticleViewer() {
                         size_t key_count = partfx_sequence_length(keys);
                         sprintf_s(line, sizeof(line), "Color Keys: %zu\n", key_count);
                         strcat_s(contents, sizeof(contents), line);
-                        
+
                         // Show first color
                         if (key_count > 0) {
                             partfx_node_t *first = partfx_sequence_get(keys, 0);
@@ -149,13 +168,13 @@ void DrawParticleViewer() {
                                     partfx_node_t *g = partfx_sequence_get(first, 1);
                                     partfx_node_t *b = partfx_sequence_get(first, 2);
                                     partfx_node_t *a = partfx_sequence_get(first, 3);
-                                    
+
                                     if (r && g && b && a) {
                                         float rf = (r->type == NODE_FLOAT) ? r->data.as_float : (float)r->data.as_int;
                                         float gf = (g->type == NODE_FLOAT) ? g->data.as_float : (float)g->data.as_int;
                                         float bf = (b->type == NODE_FLOAT) ? b->data.as_float : (float)b->data.as_int;
                                         float af = (a->type == NODE_FLOAT) ? a->data.as_float : (float)a->data.as_int;
-                                        
+
                                         sprintf_s(line, sizeof(line), "First Color: (%.2f, %.2f, %.2f, %.2f)\n", 
                                                   rf, gf, bf, af);
                                         strcat_s(contents, sizeof(contents), line);
@@ -171,20 +190,20 @@ void DrawParticleViewer() {
         else if (strcmp(dna_type, "WPSM<UniqueID32>") == 0) {
             int pslt = partfx_get_int(fx.root, "PSLT", -1);
             float trat = partfx_get_float(fx.root, "TRAT", -1.0f);
-            
+
             sprintf_s(line, sizeof(line), "PSLT: 0x%08X\n", pslt);
             strcat_s(contents, sizeof(contents), line);
-            
+
             sprintf_s(line, sizeof(line), "TRAT: %.2f\n\n", trat);
             strcat_s(contents, sizeof(contents), line);
-            
+
             // Get attached particle system
             const char *apsm = partfx_get_string(fx.root, "APSM", NULL);
             if (apsm != NULL) {
                 sprintf_s(line, sizeof(line), "Attached System:\n  %s\n\n", apsm);
                 strcat_s(contents, sizeof(contents), line);
             }
-            
+
             // Get collision response
             const char *colr = partfx_get_string(fx.root, "COLR", NULL);
             if (colr != NULL) {
@@ -200,8 +219,9 @@ void DrawParticleViewer() {
     GuiLabel((Rectangle){15 + scroll.x, 60 + scroll.y, 340, 600}, contents);
     EndScissorMode();
 
-    
-    DrawTexture(texture, GetScreenWidth()/2 - texture.width/2, GetScreenHeight()/2 - texture.height/2, WHITE);
+    BeginMode3D(camera);
+    DrawBillboard(camera, texture, (Vector3) { 0.f, 0.f, 0.f }, 5.f, WHITE);
+    EndMode3D();
 
     if (GuiDropdownBox(RECT(15, 30, 250, 15), options, &pickidx, picking)) {
         if (picking) {
@@ -209,6 +229,9 @@ void DrawParticleViewer() {
         }
         picking = !picking;
     }
+
+    fx.p = (fx.p+1) % fx.num_frames;
+    fx.t = (float)fx.p / fx.num_frames;
 }
 
 void DropParticleViewer() {
