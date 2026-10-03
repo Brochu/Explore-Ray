@@ -78,3 +78,6 @@ _deps
 .cache
 _build
 *.raddbg
+
+# RAD debugger info
+*.rdi
